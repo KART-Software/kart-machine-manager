@@ -14,4 +14,4 @@ class Application(WindowListener):
         sys.exit(app.exec_())
 
     def onInitClick(self) -> None:
-        print('')
+        print("")

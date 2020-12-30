@@ -3,19 +3,28 @@
 ## 開発環境
 
 pipenvでパッケージ管理しています
-
-### 起動
-    pipenv run start
-
-### テスト
-    pipenv run test
-
-### 型チェック
-    pipenv run type-check
-
-### フォーマット
-    pipenv run format
-
+ビルドツールはmakeを使用してください
 
 参考
 https://qiita.com/y-tsutsu/items/54c10e0b2c6b565c887a
+https://blog.mktia.com/make-command-on-windows/
+
+以下のコマンドはappディレクトリで行ってください
+
+### pipenv環境構築
+    pipenv install --dev
+
+### 起動(デバッグ)
+    make debug
+
+### テスト
+    make test
+
+### 型チェック
+    make type-check
+
+### フォーマット
+    make format
+
+### 静的解析
+    make lint
