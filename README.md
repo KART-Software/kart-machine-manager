@@ -1,4 +1,4 @@
-# kart-instrument-panel
+# kart-machine-manager
 
 ## 開発環境
 
