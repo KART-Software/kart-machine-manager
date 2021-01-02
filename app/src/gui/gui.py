@@ -15,3 +15,5 @@ class MainWindow(QDialog):
     def __init__(self, listener: WindowListener):
         super(MainWindow, self).__init__(None)
         self.listener = listener
+    
+    
