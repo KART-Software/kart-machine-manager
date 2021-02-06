@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from src.gui import MainWindow, WindowListener
+from app.src.gui import MainWindow, WindowListener
 
 
 class Application(WindowListener):
