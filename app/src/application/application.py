@@ -1,17 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QApplication
-from app.src.gui import MainWindow, WindowListener
+from ..gui.gui import Gui
 
+class Application:
 
-class Application(WindowListener):
+    gui: Gui
+
     def __init__(self):
         super().__init__()
 
     def initialize(self) -> None:
-        app = QApplication(sys.argv)
-        self.window = MainWindow(self)
-        self.window.showMaximized()
-        sys.exit(app.exec_())
-
-    def onInitClick(self) -> None:
-        print("")
+        self.gui = Gui()
+        sys.exit(self.gui.app.exec_())

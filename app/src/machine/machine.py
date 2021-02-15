@@ -4,6 +4,7 @@ from enum import IntEnum
 class MachineException(BaseException):
     pass
 
+
 class CanTimeoutException(MachineException):
     pass
 

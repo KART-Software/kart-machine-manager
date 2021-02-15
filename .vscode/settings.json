@@ -1,6 +1,11 @@
 {
     "python.pythonPath": "${workspaceFolder}/app/.venv/bin/python",
+    "python.formatting.blackPath": "${workspaceFolder}/app/.venv/lib/python3.8/site-packages/black",
+    "python.analysis.extraPaths": [
+        "./app"
+    ],
     "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    "python.linting.flake8Enabled": false,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black"
 }
