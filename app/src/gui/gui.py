@@ -12,3 +12,11 @@ class Gui:
         self.engine.load(os.path.join(os.path.dirname(__file__), "main.qml"))
         if not self.engine.rootObjects():
             sys.exit(-1)
+
+
+class QMachine(QObject):
+    machineInfoChanged = pyqtSignal()
+
+    def __init__(self):
+        QObject.__init__(self.parent)
+        self._machineInfo = ""
