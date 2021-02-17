@@ -16,7 +16,9 @@ https://blog.mktia.com/make-command-on-windows/
 
 ### 推奨
 環境構築前に以下のコマンドでプロジェクトの配下に仮想環境を作成できます  
-    export PIPENV_VENV_IN_PROJECT=true
+```
+export PIPENV_VENV_IN_PROJECT=true
+```
 
 ### 起動(デバッグ)
     make debug
