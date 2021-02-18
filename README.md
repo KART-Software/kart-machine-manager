@@ -14,6 +14,12 @@ https://blog.mktia.com/make-command-on-windows/
 ### pipenv環境構築
     pipenv install --dev
 
+### 推奨
+環境構築前に以下のコマンドでプロジェクトの配下に仮想環境を作成できます  
+```
+export PIPENV_VENV_IN_PROJECT=true
+```
+
 ### 起動(デバッグ)
     make debug
 

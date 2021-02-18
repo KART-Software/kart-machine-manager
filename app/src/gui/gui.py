@@ -1,17 +1,22 @@
-from PyQt5.QtWidgets import (
-    QDialog,
-)
-
-from abc import ABCMeta, abstractmethod
-
-
-class WindowListener(metaclass=ABCMeta):
-    @abstractmethod
-    def onInitClick(self) -> None:
-        pass
+import sys
+import os
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtProperty, QUrl, QTimer, QDateTime
+from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtQml import QQmlApplicationEngine
 
 
-class MainWindow(QDialog):
-    def __init__(self, listener: WindowListener):
-        super(MainWindow, self).__init__(None)
-        self.listener = listener
+class Gui:
+    def __init__(self):
+        self.app = QGuiApplication(sys.argv)
+        self.engine = QQmlApplicationEngine()
+        self.engine.load(os.path.join(os.path.dirname(__file__), "main.qml"))
+        if not self.engine.rootObjects():
+            sys.exit(-1)
+
+
+class QMachine(QObject):
+    machineInfoChanged = pyqtSignal()
+
+    def __init__(self):
+        QObject.__init__(self.parent)
+        self._machineInfo = ""
