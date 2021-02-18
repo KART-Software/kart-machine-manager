@@ -23,18 +23,18 @@ class Machine:
     isInitialised: bool
 
     def __init__(self) -> None:
-        #self.canMaster = CanMaster()
+        # self.canMaster = CanMaster()
         pass
-    
+
     def initialise(self) -> None:
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )
         self.canMasterThread.start()
         self.isInitialised = True"""
-    
-    def machineInfo(self):
-        #self.canMaster.receiveData()
 
-        #return self.canMaster.canInfo
+    def machineInfo(self):
+        # self.canMaster.receiveData()
+
+        # return self.canMaster.canInfo
         pass
