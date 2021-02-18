@@ -1,4 +1,5 @@
 import sys
+from threading import Thread
 
 from src.machine.machine import Machine
 from ..gui.gui import Gui

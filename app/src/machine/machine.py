@@ -4,6 +4,8 @@ from threading import Thread
 
 from src.machine.can_master import CanInfo, CanMaster
 
+import json
+
 
 class MachineException(BaseException):
     pass
@@ -33,8 +35,13 @@ class Machine:
         self.canMasterThread.start()
         self.isInitialised = True"""
 
-    def machineInfo(self):
+    def updateMachineInfo(self):
         # self.canMaster.receiveData()
 
         # return self.canMaster.canInfo
         pass
+
+    def machineInfo(self):
+        return {
+            vars(self.canMaster.canInfo),
+        }
