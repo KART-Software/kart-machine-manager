@@ -1,17 +1,49 @@
+import os
 import sys
+import threading
+from time import sleep
+from threading import Thread
+
+from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtWidgets import QApplication
-from app.src.gui import MainWindow, WindowListener
+
+from src.machine.machine import Machine, MachineInfo
+from ..gui.gui import MainWindow, WindowListener
 
 
 class Application(WindowListener):
+
+    machine: Machine
+
     def __init__(self):
         super().__init__()
+        self.machine = Machine()
+        print('init')
+        
 
     def initialize(self) -> None:
-        app = QApplication(sys.argv)
+        print('initialize')
+        self.app = QApplication(sys.argv)
         self.window = MainWindow(self)
-        self.window.showMaximized()
-        sys.exit(app.exec_())
+        self.window.showFullScreen()
+        sys.exit(self.app.exec_())
+        
+        
+    def start(self):
+        print('started')
+        while True:
+            self.machine.updateMachineInfo()
+            self.window.updateDashboard(self.machine.machineInfo)
+            print(self.machine.machineInfo.rpm)
+            sleep(0.1)
 
-    def onInitClick(self) -> None:
-        print("")
+    def onUpdate(self) -> None:
+        self.machine.updateMachineInfo()
+        self.window.updateDashboard(self.machine.machineInfo)
+        print(self.machine.machineInfo.rpm)
+        return super().onUpdate()
+            
+
+
+
