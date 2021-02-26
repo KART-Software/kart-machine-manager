@@ -11,16 +11,21 @@ class CanTimeoutException(Exception):
 
 class RpmStatus(IntEnum):
     LOW = 0
+    MIDDLE = 1
     HIGH = 2
 
 
 class Rpm(int):
-    THRESHOLD = 8000
+    LOW_THRESHOLD = 5000
+    HIGH_THRESHOLD = 12000
+    MAX = 15000
 
     @property
     def status(self) -> RpmStatus:
-        if self < self.THRESHOLD:
+        if self < self.LOW_THRESHOLD:
             return RpmStatus.LOW
+        elif self < self.HIGH_THRESHOLD:
+            return RpmStatus.MIDDLE
         else:
             return RpmStatus.HIGH
 
@@ -29,7 +34,7 @@ class CanInfo:
     rpm: Rpm
 
     def __init__(self) -> None:
-        self.rpm = 0
+        self.rpm = Rpm(0)
 
 
 class CanMaster:
@@ -56,4 +61,4 @@ class CanMaster:
             id, dlc, bdata = struct.unpack("IB3x8s", msg)
             # data = bdata.hex()
 
-        self.canInfo.rpm = 3333  # TODO fix
+        #self.canInfo.rpm = 3333  # TODO fix
