@@ -31,22 +31,9 @@ class MainWindow(QDialog):
         self.timer.timeout.connect(self.listener.onUpdate)
         self.timer.start(100)
 
-        self.setStyle(QStyleFactory.create("Fusion"))
-
-        palette = QPalette()
-        palette.setColor(QPalette.Window, QColor(53, 53, 53))
-        palette.setColor(QPalette.WindowText, QtCore.Qt.white)
-        palette.setColor(QPalette.Base, QColor(25, 25, 25))
-        palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-        palette.setColor(QPalette.ToolTipBase, QtCore.Qt.black)
-        palette.setColor(QPalette.ToolTipText, QtCore.Qt.white)
-        palette.setColor(QPalette.Text, QtCore.Qt.white)
-        palette.setColor(QPalette.Button, QColor(53, 53, 53))
-        palette.setColor(QPalette.ButtonText, QtCore.Qt.white)
-        palette.setColor(QPalette.BrightText, QtCore.Qt.red)
-        palette.setColor(QPalette.Link, QColor(42, 130, 218))
-        palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        palette.setColor(QPalette.HighlightedText, QtCore.Qt.black)
+        palette = QApplication.palette()
+        palette.setColor(self.backgroundRole(), QColor('#000'))
+        palette.setColor(self.foregroundRole(), QColor('#FFF'))
         self.setPalette(palette)
 
         self.dashboardTitleFont = QFont("Arial", 36)
@@ -81,8 +68,9 @@ class MainWindow(QDialog):
             """
             QProgressBar
                 {
+                    background-color: #000;
                     border-radius: 5px;
-                    height: 64px;
+                    height: 96px;
                     padding: 0px;
                 }
             QProgressBar::chunk
@@ -106,8 +94,9 @@ class MainWindow(QDialog):
             """
             QProgressBar
                 {
+                    background-color: #000;
                     border-radius: 5px;
-                    height: 64px;
+                    height: 96px;
                     padding: 0px;
                 }
             QProgressBar::chunk
@@ -131,16 +120,19 @@ class MainWindow(QDialog):
         self.rpmLabel.setText("3454")
         self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.rpmLabel.setFont(QFont("Arial", 72))
+        self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         gearLabel = QLabel(self)
         gearLabel.setText("2")
         gearLabel.setAlignment(QtCore.Qt.AlignCenter)
         gearLabel.setFont(QFont("Arial", 240))
+        gearLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         speedLabel = QLabel(self)
         speedLabel.setText("16")
         speedLabel.setAlignment(QtCore.Qt.AlignCenter)
         speedLabel.setFont(QFont("Arial", 72))
+        speedLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(self.rpmLabel, 0, 0)
         layout.addWidget(gearLabel, 1, 0)
@@ -166,11 +158,13 @@ class MainWindow(QDialog):
         waterTempTitleLabel.setText("Water Temp")
         waterTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         waterTempTitleLabel.setFont(self.dashboardTitleFont)
+        waterTempTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.waterTempLabel = QLabel(self)
         self.waterTempLabel.setText("114")
         self.waterTempLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.waterTempLabel.setFont(self.dashboardValueFont)
+        self.waterTempLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(waterTempTitleLabel, 0, 0)
         layout.addWidget(self.waterTempLabel, 1, 0)
@@ -194,11 +188,13 @@ class MainWindow(QDialog):
         oilTempTitleLabel.setText("Oil Temp")
         oilTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         oilTempTitleLabel.setFont(self.dashboardTitleFont)
+        oilTempTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.oilTempLabel = QLabel(self)
         self.oilTempLabel.setText("114")
         self.oilTempLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.oilTempLabel.setFont(self.dashboardValueFont)
+        self.oilTempLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(oilTempTitleLabel, 0, 0)
         layout.addWidget(self.oilTempLabel, 1, 0)
@@ -221,11 +217,13 @@ class MainWindow(QDialog):
         oilPressTitleLabel.setText("Oil Press")
         oilPressTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         oilPressTitleLabel.setFont(self.dashboardTitleFont)
+        oilPressTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.oilPressLabel = QLabel(self)
         self.oilPressLabel.setText("114")
         self.oilPressLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.oilPressLabel.setFont(self.dashboardValueFont)
+        self.oilPressLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(oilPressTitleLabel, 0, 0)
         layout.addWidget(self.oilPressLabel, 1, 0)
@@ -269,11 +267,13 @@ class MainWindow(QDialog):
         fuelRemainTitleLabel.setText("Fuel Remain")
         fuelRemainTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         fuelRemainTitleLabel.setFont(self.dashboardTitleFont)
+        fuelRemainTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.fuelRemainLabel = QLabel(self)
         self.fuelRemainLabel.setText("30")
         self.fuelRemainLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.fuelRemainLabel.setFont(self.dashboardValueFont)
+        self.fuelRemainLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(fuelRemainTitleLabel, 0, 0)
         layout.addWidget(self.fuelRemainLabel, 1, 0)
@@ -296,11 +296,13 @@ class MainWindow(QDialog):
         batteryTitleLabel.setText("Battery")
         batteryTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         batteryTitleLabel.setFont(self.dashboardTitleFont)
+        batteryTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.batteryLabel = QLabel(self)
         self.batteryLabel.setText("114")
         self.batteryLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.batteryLabel.setFont(self.dashboardValueFont)
+        self.batteryLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(batteryTitleLabel, 0, 0)
         layout.addWidget(self.batteryLabel, 1, 0)
@@ -323,11 +325,13 @@ class MainWindow(QDialog):
         lapTimeTitleLabel.setText("Oil Press")
         lapTimeTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         lapTimeTitleLabel.setFont(self.dashboardTitleFont)
+        lapTimeTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.lapTimeLabel = QLabel(self)
         self.lapTimeLabel.setText("114")
         self.lapTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.lapTimeLabel.setFont(self.dashboardValueFont)
+        self.lapTimeLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(lapTimeTitleLabel, 0, 0)
         layout.addWidget(self.lapTimeLabel, 1, 0)
