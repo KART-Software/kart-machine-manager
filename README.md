@@ -20,6 +20,9 @@ https://blog.mktia.com/make-command-on-windows/
 export PIPENV_VENV_IN_PROJECT=true
 ```
 
+### 起動（本番）
+    make prod
+
 ### 起動(デバッグ)
     make debug
 
