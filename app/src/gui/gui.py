@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor, QFont
@@ -23,7 +22,6 @@ class WindowListener(metaclass=ABCMeta):
 
 
 class MainWindow(QDialog):
-
     def __init__(self, listener: WindowListener):
         super(MainWindow, self).__init__(None)
 
@@ -34,11 +32,11 @@ class MainWindow(QDialog):
         self.timer.start(100)
 
         self.originalPalette = QApplication.palette()
-        self.originalPalette.setColor(self.backgroundRole(), QColor('#000'))
-        self.originalPalette.setColor(self.foregroundRole(), QColor('#FFF'))
+        self.originalPalette.setColor(self.backgroundRole(), QColor("#000"))
+        self.originalPalette.setColor(self.foregroundRole(), QColor("#FFF"))
 
-        self.dashboardTitleFont = QFont('Arial', 18)
-        self.dashboardValueFont = QFont('Arial', 36)
+        self.dashboardTitleFont = QFont("Arial", 18)
+        self.dashboardValueFont = QFont("Arial", 36)
 
         self.createRpmBar()
         self.createCenterGroupBox()
@@ -85,11 +83,11 @@ class MainWindow(QDialog):
     def setRpmBar(self, rpm: Rpm):
         self.rpmBar.setValue(int(rpm))
         if rpm.status == RpmStatus.LOW:
-            color = '#3F3'
+            color = "#3F3"
         elif rpm.status == RpmStatus.MIDDLE:
-            color = '#F33'
+            color = "#F33"
         elif rpm.status == RpmStatus.HIGH:
-            color = '#24F'
+            color = "#24F"
         self.rpmBar.setStyleSheet(
             """
             QProgressBar
@@ -104,7 +102,8 @@ class MainWindow(QDialog):
                     width: 7px;
                     margin: 1px;
                 }
-        """ % (color)
+        """
+            % (color)
         )
 
     def createCenterGroupBox(self):
@@ -115,19 +114,19 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         self.rpmLabel = QLabel(self)
-        self.rpmLabel.setText('3454')
+        self.rpmLabel.setText("3454")
         self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.rpmLabel.setFont(QFont('Arial', 36))
+        self.rpmLabel.setFont(QFont("Arial", 36))
 
         gearLabel = QLabel(self)
-        gearLabel.setText('2')
+        gearLabel.setText("2")
         gearLabel.setAlignment(QtCore.Qt.AlignCenter)
-        gearLabel.setFont(QFont('Arial', 120))
+        gearLabel.setFont(QFont("Arial", 120))
 
         speedLabel = QLabel(self)
-        speedLabel.setText('16')
+        speedLabel.setText("16")
         speedLabel.setAlignment(QtCore.Qt.AlignCenter)
-        speedLabel.setFont(QFont('Arial', 36))
+        speedLabel.setFont(QFont("Arial", 36))
 
         layout.addWidget(self.rpmLabel, 0, 0)
         layout.addWidget(gearLabel, 1, 0)
@@ -150,12 +149,12 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         waterTempTitleLabel = QLabel(self)
-        waterTempTitleLabel.setText('Water Temp')
+        waterTempTitleLabel.setText("Water Temp")
         waterTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         waterTempTitleLabel.setFont(self.dashboardTitleFont)
 
         self.waterTempLabel = QLabel(self)
-        self.waterTempLabel.setText('114')
+        self.waterTempLabel.setText("114")
         self.waterTempLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.waterTempLabel.setFont(self.dashboardValueFont)
 
@@ -178,12 +177,12 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         oilTempTitleLabel = QLabel(self)
-        oilTempTitleLabel.setText('Oil Temp')
+        oilTempTitleLabel.setText("Oil Temp")
         oilTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         oilTempTitleLabel.setFont(self.dashboardTitleFont)
 
         self.oilTempLabel = QLabel(self)
-        self.oilTempLabel.setText('114')
+        self.oilTempLabel.setText("114")
         self.oilTempLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.oilTempLabel.setFont(self.dashboardValueFont)
 
@@ -205,12 +204,12 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         oilPressTitleLabel = QLabel(self)
-        oilPressTitleLabel.setText('Oil Press')
+        oilPressTitleLabel.setText("Oil Press")
         oilPressTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         oilPressTitleLabel.setFont(self.dashboardTitleFont)
 
         self.oilPressLabel = QLabel(self)
-        self.oilPressLabel.setText('114')
+        self.oilPressLabel.setText("114")
         self.oilPressLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.oilPressLabel.setFont(self.dashboardValueFont)
 
@@ -253,12 +252,12 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         fuelRemainTitleLabel = QLabel(self)
-        fuelRemainTitleLabel.setText('Fuel Remain')
+        fuelRemainTitleLabel.setText("Fuel Remain")
         fuelRemainTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         fuelRemainTitleLabel.setFont(self.dashboardTitleFont)
 
         self.fuelRemainLabel = QLabel(self)
-        self.fuelRemainLabel.setText('30')
+        self.fuelRemainLabel.setText("30")
         self.fuelRemainLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.fuelRemainLabel.setFont(self.dashboardValueFont)
 
@@ -280,12 +279,12 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         batteryTitleLabel = QLabel(self)
-        batteryTitleLabel.setText('Battery')
+        batteryTitleLabel.setText("Battery")
         batteryTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         batteryTitleLabel.setFont(self.dashboardTitleFont)
 
         self.batteryLabel = QLabel(self)
-        self.batteryLabel.setText('114')
+        self.batteryLabel.setText("114")
         self.batteryLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.batteryLabel.setFont(self.dashboardValueFont)
 
@@ -307,12 +306,12 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         lapTimeTitleLabel = QLabel(self)
-        lapTimeTitleLabel.setText('Oil Press')
+        lapTimeTitleLabel.setText("Oil Press")
         lapTimeTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         lapTimeTitleLabel.setFont(self.dashboardTitleFont)
 
         self.lapTimeLabel = QLabel(self)
-        self.lapTimeLabel.setText('114')
+        self.lapTimeLabel.setText("114")
         self.lapTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.lapTimeLabel.setFont(self.dashboardValueFont)
 

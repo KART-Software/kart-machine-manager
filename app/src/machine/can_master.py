@@ -61,4 +61,4 @@ class CanMaster:
             id, dlc, bdata = struct.unpack("IB3x8s", msg)
             # data = bdata.hex()
 
-        #self.canInfo.rpm = 3333  # TODO fix
+        # self.canInfo.rpm = 3333  # TODO fix

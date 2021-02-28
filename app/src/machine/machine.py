@@ -1,21 +1,20 @@
 from enum import IntEnum
 
 from threading import Thread
-from time import sleep
 
-from src.machine.can_master import CanInfo, CanMaster, Rpm
-
-import json
+from src.machine.can_master import CanMaster, Rpm
 
 
 class MachineException(BaseException):
     pass
+
 
 class MachineInfo:
     rpm: Rpm
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
+
 
 class GearType(IntEnum):
     NEUTRAL = 0
@@ -24,14 +23,13 @@ class GearType(IntEnum):
     THIRD = 3
 
 
-class Machine():
+class Machine:
 
     canMaster: CanMaster
     machineInfo: MachineInfo
     _machineInfo: MachineInfo
     canMasterThread: Thread
     isInitialised: bool
-
 
     def __init__(self, parent=None) -> None:
         self.dummyRpm = 1
@@ -47,7 +45,6 @@ class Machine():
         self.canMasterThread.start()
         self.isInitialised = True"""
         pass
-    
 
     def updateMachineInfo(self):
         # self.canMaster.receiveData()
@@ -57,6 +54,4 @@ class Machine():
         elif self.machineInfo.rpm < 1:
             self.p = 1
 
-        
         self.machineInfo.rpm = Rpm(self.machineInfo.rpm + self.p * 100)
-        
