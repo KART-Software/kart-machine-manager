@@ -8,7 +8,3 @@ class Manager:
     def __init__(self) -> None:
         self.machine = Machine()
         pass
-
-    
-
-    
