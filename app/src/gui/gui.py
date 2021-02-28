@@ -1,14 +1,14 @@
 from abc import ABCMeta, abstractmethod
 from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
-from PyQt5.QtGui import QColor, QFont
+from PyQt5.QtGui import QColor, QFont, QPalette
 from PyQt5.QtWidgets import (
     QApplication,
     QDialog,
     QGridLayout,
     QGroupBox,
     QLabel,
-    QProgressBar,
+    QProgressBar, QStyleFactory,
 )
 from src.machine.can_master import Rpm, RpmStatus
 
@@ -31,12 +31,26 @@ class MainWindow(QDialog):
         self.timer.timeout.connect(self.listener.onUpdate)
         self.timer.start(100)
 
-        self.originalPalette = QApplication.palette()
-        self.originalPalette.setColor(self.backgroundRole(), QColor("#000"))
-        self.originalPalette.setColor(self.foregroundRole(), QColor("#FFF"))
+        self.setStyle(QStyleFactory.create("Fusion"))
 
-        self.dashboardTitleFont = QFont("Arial", 18)
-        self.dashboardValueFont = QFont("Arial", 36)
+        palette = QPalette()
+        palette.setColor(QPalette.Window, QColor(53, 53, 53))
+        palette.setColor(QPalette.WindowText, QtCore.Qt.white)
+        palette.setColor(QPalette.Base, QColor(25, 25, 25))
+        palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+        palette.setColor(QPalette.ToolTipBase, QtCore.Qt.black)
+        palette.setColor(QPalette.ToolTipText, QtCore.Qt.white)
+        palette.setColor(QPalette.Text, QtCore.Qt.white)
+        palette.setColor(QPalette.Button, QColor(53, 53, 53))
+        palette.setColor(QPalette.ButtonText, QtCore.Qt.white)
+        palette.setColor(QPalette.BrightText, QtCore.Qt.red)
+        palette.setColor(QPalette.Link, QColor(42, 130, 218))
+        palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+        palette.setColor(QPalette.HighlightedText, QtCore.Qt.black)
+        self.setPalette(palette)
+
+        self.dashboardTitleFont = QFont("Arial", 36)
+        self.dashboardValueFont = QFont("Arial", 72)
 
         self.createRpmBar()
         self.createCenterGroupBox()
@@ -68,14 +82,14 @@ class MainWindow(QDialog):
             QProgressBar
                 {
                     border-radius: 5px;
-                    height: 32px;
+                    height: 64px;
                     padding: 0px;
                 }
             QProgressBar::chunk
                 {
                     background-color: #0F0;
-                    width: 7px;
-                    margin: 1px;
+                    width: 16px;
+                    margin: 2px;
                 }
         """
         )
@@ -93,14 +107,14 @@ class MainWindow(QDialog):
             QProgressBar
                 {
                     border-radius: 5px;
-                    height: 32px;
+                    height: 64px;
                     padding: 0px;
                 }
             QProgressBar::chunk
                 {
                     background-color: %s;
-                    width: 7px;
-                    margin: 1px;
+                    width: 16px;
+                    margin: 2px;
                 }
         """
             % (color)
@@ -116,17 +130,17 @@ class MainWindow(QDialog):
         self.rpmLabel = QLabel(self)
         self.rpmLabel.setText("3454")
         self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.rpmLabel.setFont(QFont("Arial", 36))
+        self.rpmLabel.setFont(QFont("Arial", 72))
 
         gearLabel = QLabel(self)
         gearLabel.setText("2")
         gearLabel.setAlignment(QtCore.Qt.AlignCenter)
-        gearLabel.setFont(QFont("Arial", 120))
+        gearLabel.setFont(QFont("Arial", 240))
 
         speedLabel = QLabel(self)
         speedLabel.setText("16")
         speedLabel.setAlignment(QtCore.Qt.AlignCenter)
-        speedLabel.setFont(QFont("Arial", 36))
+        speedLabel.setFont(QFont("Arial", 72))
 
         layout.addWidget(self.rpmLabel, 0, 0)
         layout.addWidget(gearLabel, 1, 0)
