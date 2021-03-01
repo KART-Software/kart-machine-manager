@@ -85,11 +85,11 @@ class MainWindow(QDialog):
     def setRpmBar(self, rpm: Rpm):
         self.rpmBar.setValue(int(rpm))
         if rpm.status == RpmStatus.LOW:
-            color = "#3F3"
+            color = "#0F0"
         elif rpm.status == RpmStatus.MIDDLE:
-            color = "#F33"
+            color = "#F00"
         elif rpm.status == RpmStatus.HIGH:
-            color = "#24F"
+            color = "#00F"
         self.rpmBar.setStyleSheet(
             """
             QProgressBar
