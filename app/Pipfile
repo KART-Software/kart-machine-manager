@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 typing-extensions = "*"
 pyserial = "*"
-pyqt5 = "*"
 python-can = "*"
+pyqt5 = "*"
 
 [dev-packages]
 pytest = "*"
@@ -17,7 +17,7 @@ flake8 = "*"
 black = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
 
 [pipenv]
 allow_prereleases = true
