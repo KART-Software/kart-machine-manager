@@ -43,14 +43,70 @@ class WaterTemp(int):
         else:
             return WaterTempStatus.HIGH
 
+class OilTempStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+class OilTemp(int):
+    THRESHOLD = 120
+
+    @property
+    def status(self) -> OilTempStatus:
+        if self < self.THRESHOLD:
+            return OilTempStatus.LOW
+        else:
+            return OilTempStatus.HIGH
+
+class OilPressStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+class OilPress(float):
+    THRESHOLD = 3.0
+
+    @property
+    def status(self) -> OilPressStatus:
+        if self < self.THRESHOLD:
+            return OilPressStatus.LOW
+        else:
+            return OilPressStatus.HIGH
+
+class FuelRemainStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+class FuelRemain(float):
+    THRESHOLD = 1.0
+
+    @property
+    def status(self) -> FuelRemainStatus:
+        if self < self.THRESHOLD:
+            return FuelRemainStatus.LOW
+        else:
+            return FuelRemainStatus.HIGH
+
+class BatteryStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+class Battery(float):
+    THRESHOLD = 11.0
+
+    @property
+    def status(self) -> BatteryStatus:
+        if self < self.THRESHOLD:
+            return BatteryStatus.LOW
+        else:
+            return BatteryStatus.HIGH
+
+class LapTime(float):
+    pass
 
 class CanInfo:
     rpm: Rpm
-    waterTemp: WaterTemp
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
-        self.waterTemp = WaterTemp(0)
 
 
 class CanMaster:

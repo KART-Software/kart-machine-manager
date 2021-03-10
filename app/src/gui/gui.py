@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QProgressBar,
     QStyleFactory,
 )
-from src.machine.can_master import Rpm, RpmStatus, WaterTemp, WaterTempStatus
+from src.machine.can_master import Rpm, RpmStatus, WaterTemp, WaterTempStatus, LapTime
 
 from src.machine.machine import MachineInfo
 
@@ -60,6 +60,7 @@ class MainWindow(QDialog):
         self.setRpmBar(machineInfo.rpm)
         self.setRpmLabel(machineInfo.rpm)
         self.setWaterTempLabel(machineInfo.waterTemp)
+        self.setLapTimeLabel(machineInfo.lapTime)
 
     def createRpmBar(self):
         self.rpmBar = QProgressBar(self)
@@ -335,13 +336,13 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         lapTimeTitleLabel = QLabel(self)
-        lapTimeTitleLabel.setText("Oil Press")
+        lapTimeTitleLabel.setText("Lap Time")
         lapTimeTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         lapTimeTitleLabel.setFont(self.dashboardTitleFont)
         lapTimeTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.lapTimeLabel = QLabel(self)
-        self.lapTimeLabel.setText("114")
+        # self.lapTimeLabel.setText("114")
         self.lapTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.lapTimeLabel.setFont(self.dashboardValueFont)
         self.lapTimeLabel.setStyleSheet("QLabel { color : #FFF; }")
@@ -354,6 +355,12 @@ class MainWindow(QDialog):
         layout.setSpacing(1)
 
         self.lapTimeGroupBox.setLayout(layout)
+
+    def setLapTimeLabel(self, lapTime: LapTime):
+        minute = int(lapTime) // 60
+        second = int(lapTime) % 60
+        aftersecond = int(lapTime * 100.0) % 100 
+        self.lapTimeLabel.setText(str(minute) + "." + str(second) + "." + str(aftersecond))
 
     def createRightGroupBox(self):
 
