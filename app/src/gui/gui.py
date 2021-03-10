@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QProgressBar,
     QStyleFactory,
 )
-from src.machine.can_master import Rpm, RpmStatus
+from src.machine.can_master import Rpm, RpmStatus, WaterTemp, WaterTempStatus
 
 from src.machine.machine import MachineInfo
 
@@ -119,7 +119,7 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         self.rpmLabel = QLabel(self)
-        self.rpmLabel.setText("3454")
+        # self.rpmLabel.setText("3454")
         self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.rpmLabel.setFont(QFont("Arial", 72))
         self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
@@ -163,7 +163,7 @@ class MainWindow(QDialog):
         waterTempTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         self.waterTempLabel = QLabel(self)
-        self.waterTempLabel.setText("114")
+        # self.waterTempLabel.setText("114")
         self.waterTempLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.waterTempLabel.setFont(self.dashboardValueFont)
         self.waterTempLabel.setStyleSheet("QLabel { color : #FFF; }")
@@ -176,10 +176,18 @@ class MainWindow(QDialog):
         layout.setSpacing(1)
 
         self.waterTempGroupBox.setLayout(layout)
-        self.waterTempGroupBox.setStyleSheet("background-color: red;")
+        # self.waterTempGroupBox.setStyleSheet("background-color: red;")
     
-    def setWaterTempLabel(self, waterTemp: int):
+    def setWaterTempLabel(self, waterTemp: WaterTemp):
         self.waterTempLabel.setText(str(waterTemp))
+
+        if waterTemp.status == WaterTempStatus.LOW:
+            color = "#000"
+        elif waterTemp.status == WaterTempStatus.HIGH:
+            color = "red"
+
+        self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
+
 
     def createOilTempGroupBox(self):
 

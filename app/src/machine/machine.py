@@ -2,7 +2,7 @@ from enum import IntEnum
 
 from threading import Thread
 
-from src.machine.can_master import CanMaster, Rpm
+from src.machine.can_master import CanMaster, Rpm, WaterTemp
 
 
 class MachineException(BaseException):
@@ -11,11 +11,11 @@ class MachineException(BaseException):
 
 class MachineInfo:
     rpm: Rpm
-    waterTemp: int
+    waterTemp: WaterTemp
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
-        self.waterTemp = 0
+        self.waterTemp = WaterTemp(0)
 
 
 class GearType(IntEnum):
@@ -58,4 +58,4 @@ class Machine:
 
         self.machineInfo.rpm = Rpm(self.machineInfo.rpm + self.p * 100)
 
-        self.machineInfo.waterTemp = self.machineInfo.waterTemp + 1
+        self.machineInfo.waterTemp = WaterTemp(self.machineInfo.waterTemp + 1)

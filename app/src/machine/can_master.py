@@ -29,12 +29,28 @@ class Rpm(int):
         else:
             return RpmStatus.HIGH
 
+class WaterTempStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+class WaterTemp(int):
+    THRESHOLD = 100
+
+    @property
+    def status(self) -> WaterTempStatus:
+        if self < self.THRESHOLD:
+            return WaterTempStatus.LOW
+        else:
+            return WaterTempStatus.HIGH
+
 
 class CanInfo:
     rpm: Rpm
+    waterTemp: WaterTemp
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
+        self.waterTemp = WaterTemp(0)
 
 
 class CanMaster:
