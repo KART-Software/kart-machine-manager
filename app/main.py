@@ -1,5 +1,6 @@
 from src.application import Application
 import logging
+import logging.config
 
 
 if __name__ == "__main__":
