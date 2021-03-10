@@ -11,9 +11,11 @@ class MachineException(BaseException):
 
 class MachineInfo:
     rpm: Rpm
+    waterTemp: int
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
+        self.waterTemp = 0
 
 
 class GearType(IntEnum):
@@ -55,3 +57,5 @@ class Machine:
             self.p = 1
 
         self.machineInfo.rpm = Rpm(self.machineInfo.rpm + self.p * 100)
+
+        self.machineInfo.waterTemp = self.machineInfo.waterTemp + 1

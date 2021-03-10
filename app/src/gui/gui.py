@@ -58,6 +58,7 @@ class MainWindow(QDialog):
     def updateDashboard(self, machineInfo: MachineInfo):
         self.setRpmBar(machineInfo.rpm)
         self.setRpmLabel(machineInfo.rpm)
+        self.setWaterTempLabel(machineInfo.waterTemp)
 
     def createRpmBar(self):
         self.rpmBar = QProgressBar(self)
@@ -175,6 +176,9 @@ class MainWindow(QDialog):
 
         self.waterTempGroupBox.setLayout(layout)
         self.waterTempGroupBox.setStyleSheet("background-color: red;")
+    
+    def setWaterTempLabel(self, waterTemp: int):
+        self.waterTempLabel.setText(str(waterTemp))
 
     def createOilTempGroupBox(self):
 
