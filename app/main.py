@@ -1,9 +1,16 @@
+import os
+
 from src.application import Application
 import logging
 import logging.config
 
 
 if __name__ == "__main__":
+
+    file_path = os.path.dirname('log/app.log')
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
+
     logging.config.dictConfig({
         'version': 1,
         'formatters': {
@@ -12,6 +19,14 @@ if __name__ == "__main__":
             }
         },
         'handlers': {
+            'logFileHandler': {
+                'class': 'logging.FileHandler',
+                'level': 'DEBUG',
+                'formatter': 'common',
+                'filename': './log/app.log',
+                'mode': 'w',
+                'encoding': 'utf-8'
+            },
             'info': {
                 'class': 'logging.StreamHandler',
                 'level': 'DEBUG',
@@ -27,7 +42,7 @@ if __name__ == "__main__":
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['info', 'error']
+            'handlers': ['logFileHandler', 'info', 'error']
         },
         'disable_existing_loggers': False
     })

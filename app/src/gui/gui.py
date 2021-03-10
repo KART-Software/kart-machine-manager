@@ -8,7 +8,8 @@ from PyQt5.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QLabel,
-    QProgressBar, QStyleFactory,
+    QProgressBar,
+    QStyleFactory,
 )
 from src.machine.can_master import Rpm, RpmStatus
 
@@ -32,8 +33,8 @@ class MainWindow(QDialog):
         self.timer.start(100)
 
         palette = QApplication.palette()
-        palette.setColor(self.backgroundRole(), QColor('#000'))
-        palette.setColor(self.foregroundRole(), QColor('#FFF'))
+        palette.setColor(self.backgroundRole(), QColor("#000"))
+        palette.setColor(self.foregroundRole(), QColor("#FFF"))
         self.setPalette(palette)
 
         self.dashboardTitleFont = QFont("Arial", 36)
