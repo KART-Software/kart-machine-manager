@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QProgressBar,
     QStyleFactory,
 )
-from src.machine.can_master import Rpm, RpmStatus, WaterTemp, WaterTempStatus, LapTime
+from src.machine.can_master import Rpm, RpmStatus, WaterTemp, WaterTempStatus, OilTemp, OilTempStatus, OilPress, OilPressStatus, FuelRemain, FuelRemainStatus, Battery, BatteryStatus, LapTime
 
 from src.machine.machine import MachineInfo
 
@@ -60,6 +60,10 @@ class MainWindow(QDialog):
         self.setRpmBar(machineInfo.rpm)
         self.setRpmLabel(machineInfo.rpm)
         self.setWaterTempLabel(machineInfo.waterTemp)
+        self.setOilTempLabel(machineInfo.oilTemp)
+        self.setOilPressLabel(machineInfo.oilPress)
+        self.setFuelRemainLabel(machineInfo.fuelRemain)
+        self.setBatteryLabel(machineInfo.battery)
         self.setLapTimeLabel(machineInfo.lapTime)
 
     def createRpmBar(self):
@@ -219,6 +223,16 @@ class MainWindow(QDialog):
 
         self.oilTempGroupBox.setLayout(layout)
 
+    def setOilTempLabel(self, oilTemp: OilTemp):
+        self.oilTempLabel.setText(str(oilTemp))
+
+        if oilTemp.status == OilTempStatus.LOW:
+            color = "#000"
+        elif oilTemp.status == OilTempStatus.HIGH:
+            color = "red"
+
+        self.oilTempGroupBox.setStyleSheet("background-color: " + color + ";")
+
     def createOilPressGroupBox(self):
 
         self.oilPressGroupBox = QGroupBox()
@@ -247,6 +261,16 @@ class MainWindow(QDialog):
         layout.setSpacing(1)
 
         self.oilPressGroupBox.setLayout(layout)
+
+    def setOilPressLabel(self, oilPress: OilPress):
+        self.oilPressLabel.setText(str(round(oilPress,2)))
+
+        if oilPress.status == OilPressStatus.LOW:
+            color = "red"
+        elif oilPress.status == OilPressStatus.HIGH:
+            color = "#000"
+
+        self.oilPressGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createLeftGroupBox(self):
 
@@ -298,6 +322,16 @@ class MainWindow(QDialog):
 
         self.fuelRemainGroupBox.setLayout(layout)
 
+    def setFuelRemainLabel(self, fuelRemain: FuelRemain):
+        self.fuelRemainLabel.setText(str(round(fuelRemain,2)))
+
+        if fuelRemain.status == FuelRemainStatus.LOW:
+            color = "red"
+        elif fuelRemain.status == FuelRemainStatus.HIGH:
+            color = "#000"
+
+        self.fuelRemainGroupBox.setStyleSheet("background-color: " + color + ";")
+
     def createBatteryGroupBox(self):
 
         self.batteryGroupBox = QGroupBox()
@@ -326,6 +360,16 @@ class MainWindow(QDialog):
         layout.setSpacing(1)
 
         self.batteryGroupBox.setLayout(layout)
+    
+    def setBatteryLabel(self, battery: Battery):
+        self.batteryLabel.setText(str(round(battery,2)))
+
+        if battery.status == BatteryStatus.LOW:
+            color = "red"
+        elif battery.status == BatteryStatus.HIGH:
+            color = "#000"
+
+        self.batteryGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createLapTimeGroupBox(self):
 

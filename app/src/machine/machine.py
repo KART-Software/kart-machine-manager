@@ -2,7 +2,7 @@ from enum import IntEnum
 
 from threading import Thread
 
-from src.machine.can_master import CanMaster, Rpm, WaterTemp, LapTime
+from src.machine.can_master import CanMaster, Rpm, WaterTemp, OilTemp, OilPress, FuelRemain, Battery, LapTime
 
 import datetime
 
@@ -15,11 +15,19 @@ class MachineInfo:
     rpm: Rpm
     waterTemp: WaterTemp
     lapTime: LapTime
+    oilTemp: OilTemp
+    oilPress: OilPress
+    fuelRemain: FuelRemain
+    battery: Battery
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
         self.waterTemp = WaterTemp(0)
         self.lapTime = LapTime(microseconds=0)
+        self.oilTemp = OilTemp(0.0)
+        self.oilPress = OilPress(0.0)
+        self.fuelRemain = FuelRemain(0.0)
+        self.battery = Battery(0.0)
 
 
 class GearType(IntEnum):
@@ -64,4 +72,11 @@ class Machine:
 
         self.machineInfo.waterTemp = WaterTemp(self.machineInfo.waterTemp + 1)
 
+        self.machineInfo.oilTemp = OilTemp(self.machineInfo.oilTemp + 1)
+        self.machineInfo.oilPress = OilPress(self.machineInfo.oilPress + 0.1)
+        self.machineInfo.fuelRemain = FuelRemain(self.machineInfo.fuelRemain + 0.1)
+        self.machineInfo.battery = Battery(self.machineInfo.battery + 0.1)
+
         self.machineInfo.lapTime = self.machineInfo.lapTime + LapTime(microseconds = 20000)
+
+        
