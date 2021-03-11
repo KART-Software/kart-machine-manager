@@ -3,6 +3,7 @@ from typing import Any
 import can
 import struct
 from time import sleep
+import datetime
 
 
 class CanTimeoutException(Exception):
@@ -99,7 +100,7 @@ class Battery(float):
         else:
             return BatteryStatus.HIGH
 
-class LapTime(float):
+class LapTime(datetime.timedelta):
     pass
 
 class CanInfo:

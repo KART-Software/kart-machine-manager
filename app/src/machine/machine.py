@@ -4,6 +4,8 @@ from threading import Thread
 
 from src.machine.can_master import CanMaster, Rpm, WaterTemp, LapTime
 
+import datetime
+
 
 class MachineException(BaseException):
     pass
@@ -17,7 +19,7 @@ class MachineInfo:
     def __init__(self) -> None:
         self.rpm = Rpm(0)
         self.waterTemp = WaterTemp(0)
-        self.lapTime = LapTime(0)
+        self.lapTime = LapTime(microseconds=0)
 
 
 class GearType(IntEnum):
@@ -62,4 +64,4 @@ class Machine:
 
         self.machineInfo.waterTemp = WaterTemp(self.machineInfo.waterTemp + 1)
 
-        self.machineInfo.lapTime = LapTime(self.machineInfo.lapTime + 0.03)
+        self.machineInfo.lapTime = self.machineInfo.lapTime + LapTime(microseconds = 20000)

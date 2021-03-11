@@ -357,9 +357,9 @@ class MainWindow(QDialog):
         self.lapTimeGroupBox.setLayout(layout)
 
     def setLapTimeLabel(self, lapTime: LapTime):
-        minute = int(lapTime) // 60
-        second = int(lapTime) % 60
-        aftersecond = int(lapTime * 100.0) % 100 
+        minute = lapTime.seconds // 60
+        second = lapTime.seconds % 60
+        aftersecond = lapTime.microseconds // 10000
         self.lapTimeLabel.setText(str(minute) + "." + str(second) + "." + str(aftersecond))
 
     def createRightGroupBox(self):
