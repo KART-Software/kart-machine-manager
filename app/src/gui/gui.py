@@ -187,9 +187,11 @@ class MainWindow(QDialog):
         self.waterTempLabel.setText(str(waterTemp))
 
         if waterTemp.status == WaterTempStatus.LOW:
+            color = "#00F"
+        elif waterTemp.status == WaterTempStatus.MIDDLE:
             color = "#000"
         elif waterTemp.status == WaterTempStatus.HIGH:
-            color = "red"
+            color = "#F00"
 
         self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
 
@@ -227,9 +229,11 @@ class MainWindow(QDialog):
         self.oilTempLabel.setText(str(oilTemp))
 
         if oilTemp.status == OilTempStatus.LOW:
+            color = "#00F"
+        elif oilTemp.status == OilTempStatus.MIDDLE:
             color = "#000"
         elif oilTemp.status == OilTempStatus.HIGH:
-            color = "red"
+            color = "#F00"
 
         self.oilTempGroupBox.setStyleSheet("background-color: " + color + ";")
 

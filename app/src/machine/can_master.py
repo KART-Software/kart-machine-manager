@@ -32,29 +32,37 @@ class Rpm(int):
 
 class WaterTempStatus(IntEnum):
     LOW = 0
-    HIGH = 1
+    MIDDLE = 1
+    HIGH = 2
 
 class WaterTemp(int):
-    THRESHOLD = 100
+    LOW_THRESHOLD = 50
+    HIGH_THRESHOLD = 100
 
     @property
     def status(self) -> WaterTempStatus:
-        if self < self.THRESHOLD:
+        if self < self.LOW_THRESHOLD:
             return WaterTempStatus.LOW
+        elif self < self.HIGH_THRESHOLD:
+            return WaterTempStatus.MIDDLE
         else:
             return WaterTempStatus.HIGH
 
 class OilTempStatus(IntEnum):
     LOW = 0
-    HIGH = 1
+    MIDDLE = 1
+    HIGH = 2
 
 class OilTemp(int):
-    THRESHOLD = 120
+    LOW_THRESHOLD = 50
+    HIGH_THRESHOLD = 120
 
     @property
     def status(self) -> OilTempStatus:
-        if self < self.THRESHOLD:
+        if self < self.LOW_THRESHOLD:
             return OilTempStatus.LOW
+        elif self < self.HIGH_THRESHOLD:
+            return OilTempStatus.MIDDLE
         else:
             return OilTempStatus.HIGH
 
