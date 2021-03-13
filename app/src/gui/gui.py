@@ -11,7 +11,21 @@ from PyQt5.QtWidgets import (
     QProgressBar,
     QStyleFactory,
 )
-from src.machine.can_master import Rpm, RpmStatus, WaterTemp, WaterTempStatus, OilTemp, OilTempStatus, OilPress, OilPressStatus, FuelRemain, FuelRemainStatus, Battery, BatteryStatus, LapTime
+from src.machine.can_master import (
+    Rpm,
+    RpmStatus,
+    WaterTemp,
+    WaterTempStatus,
+    OilTemp,
+    OilTempStatus,
+    OilPress,
+    OilPressStatus,
+    FuelRemain,
+    FuelRemainStatus,
+    Battery,
+    BatteryStatus,
+    LapTime,
+)
 
 from src.machine.machine import MachineInfo
 
@@ -182,7 +196,7 @@ class MainWindow(QDialog):
 
         self.waterTempGroupBox.setLayout(layout)
         # self.waterTempGroupBox.setStyleSheet("background-color: red;")
-    
+
     def setWaterTempLabel(self, waterTemp: WaterTemp):
         self.waterTempLabel.setText(str(waterTemp))
 
@@ -194,7 +208,6 @@ class MainWindow(QDialog):
             color = "#F00"
 
         self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
-
 
     def createOilTempGroupBox(self):
 
@@ -267,7 +280,7 @@ class MainWindow(QDialog):
         self.oilPressGroupBox.setLayout(layout)
 
     def setOilPressLabel(self, oilPress: OilPress):
-        self.oilPressLabel.setText(str(round(oilPress,2)))
+        self.oilPressLabel.setText(str(round(oilPress, 2)))
 
         if oilPress.status == OilPressStatus.LOW:
             color = "red"
@@ -327,7 +340,7 @@ class MainWindow(QDialog):
         self.fuelRemainGroupBox.setLayout(layout)
 
     def setFuelRemainLabel(self, fuelRemain: FuelRemain):
-        self.fuelRemainLabel.setText(str(round(fuelRemain,2)))
+        self.fuelRemainLabel.setText(str(round(fuelRemain, 2)))
 
         if fuelRemain.status == FuelRemainStatus.LOW:
             color = "red"
@@ -364,9 +377,9 @@ class MainWindow(QDialog):
         layout.setSpacing(1)
 
         self.batteryGroupBox.setLayout(layout)
-    
+
     def setBatteryLabel(self, battery: Battery):
-        self.batteryLabel.setText(str(round(battery,2)))
+        self.batteryLabel.setText(str(round(battery, 2)))
 
         if battery.status == BatteryStatus.LOW:
             color = "red"
@@ -408,7 +421,9 @@ class MainWindow(QDialog):
         minute = lapTime.seconds // 60
         second = lapTime.seconds % 60
         aftersecond = lapTime.microseconds // 10000
-        self.lapTimeLabel.setText(str(minute) + "." + str(second) + "." + str(aftersecond))
+        self.lapTimeLabel.setText(
+            str(minute) + "." + str(second) + "." + str(aftersecond)
+        )
 
     def createRightGroupBox(self):
 

@@ -14,7 +14,7 @@ pytest = "*"
 pytest-asyncio = "*"
 mypy = "*"
 flake8 = "*"
-black = "*"
+yapf = "*"
 
 [requires]
 python_version = "3.7"
@@ -26,5 +26,5 @@ allow_prereleases = true
 start = "python3 main.py"
 test =  "python3 -m pytest"
 type-check = "mypy -p src"
-format = "black ./src"
+format = "yapf ./src"
 lint = "flake8 ."

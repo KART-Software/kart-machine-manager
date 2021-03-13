@@ -2,7 +2,16 @@ from enum import IntEnum
 
 from threading import Thread
 
-from src.machine.can_master import CanMaster, Rpm, WaterTemp, OilTemp, OilPress, FuelRemain, Battery, LapTime
+from src.machine.can_master import (
+    CanMaster,
+    Rpm,
+    WaterTemp,
+    OilTemp,
+    OilPress,
+    FuelRemain,
+    Battery,
+    LapTime,
+)
 
 import datetime
 
@@ -77,6 +86,6 @@ class Machine:
         self.machineInfo.fuelRemain = FuelRemain(self.machineInfo.fuelRemain + 0.1)
         self.machineInfo.battery = Battery(self.machineInfo.battery + 0.1)
 
-        self.machineInfo.lapTime = self.machineInfo.lapTime + LapTime(microseconds = 20000)
-
-        
+        self.machineInfo.lapTime = self.machineInfo.lapTime + LapTime(
+            microseconds=20000
+        )

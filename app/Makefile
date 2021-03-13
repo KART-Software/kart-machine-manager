@@ -6,7 +6,7 @@ debug:
 	pipenv run python3 main.py
 
 format:
-	pipenv run black ./src
+	pipenv run yapf --recursive ./src
 
 type-check:
 	pipenv run mypy -p src

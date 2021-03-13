@@ -30,10 +30,12 @@ class Rpm(int):
         else:
             return RpmStatus.HIGH
 
+
 class WaterTempStatus(IntEnum):
     LOW = 0
     MIDDLE = 1
     HIGH = 2
+
 
 class WaterTemp(int):
     LOW_THRESHOLD = 50
@@ -48,10 +50,12 @@ class WaterTemp(int):
         else:
             return WaterTempStatus.HIGH
 
+
 class OilTempStatus(IntEnum):
     LOW = 0
     MIDDLE = 1
     HIGH = 2
+
 
 class OilTemp(int):
     LOW_THRESHOLD = 50
@@ -66,9 +70,11 @@ class OilTemp(int):
         else:
             return OilTempStatus.HIGH
 
+
 class OilPressStatus(IntEnum):
     LOW = 0
     HIGH = 1
+
 
 class OilPress(float):
     THRESHOLD = 3.0
@@ -80,9 +86,11 @@ class OilPress(float):
         else:
             return OilPressStatus.HIGH
 
+
 class FuelRemainStatus(IntEnum):
     LOW = 0
     HIGH = 1
+
 
 class FuelRemain(float):
     THRESHOLD = 1.0
@@ -94,9 +102,11 @@ class FuelRemain(float):
         else:
             return FuelRemainStatus.HIGH
 
+
 class BatteryStatus(IntEnum):
     LOW = 0
     HIGH = 1
+
 
 class Battery(float):
     THRESHOLD = 11.0
@@ -108,8 +118,10 @@ class Battery(float):
         else:
             return BatteryStatus.HIGH
 
+
 class LapTime(datetime.timedelta):
     pass
+
 
 class CanInfo:
     rpm: Rpm
