@@ -136,7 +136,8 @@ class CanMaster:
 
     def __init__(self) -> None:
         self.canInfo = CanInfo()
-        self.bus = can.interface.Bus(channel="can0", bustype="socketcan_native")
+        self.bus = can.interface.Bus(channel="can0",
+                                     bustype="socketcan_native")
         self.listener = can.BufferedReader()
         self.notifier = can.Notifier(self.bus, [self.listener])
 

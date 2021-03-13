@@ -28,7 +28,6 @@ class Application(WindowListener):
         while True:
             self.machine.updateMachineInfo()
             self.window.updateDashboard(self.machine.machineInfo)
-            print(self.machine.machineInfo.rpm)
             # sleep(0.1)
 
     def onUpdate(self) -> None:

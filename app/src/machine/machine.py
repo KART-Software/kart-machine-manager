@@ -83,9 +83,9 @@ class Machine:
 
         self.machineInfo.oilTemp = OilTemp(self.machineInfo.oilTemp + 1)
         self.machineInfo.oilPress = OilPress(self.machineInfo.oilPress + 0.1)
-        self.machineInfo.fuelRemain = FuelRemain(self.machineInfo.fuelRemain + 0.1)
+        self.machineInfo.fuelRemain = FuelRemain(self.machineInfo.fuelRemain +
+                                                 0.1)
         self.machineInfo.battery = Battery(self.machineInfo.battery + 0.1)
-
+        # TO DO CHECK TYPE OF LAPTIME OBJECT
         self.machineInfo.lapTime = self.machineInfo.lapTime + LapTime(
-            microseconds=20000
-        )
+            microseconds=20000)
