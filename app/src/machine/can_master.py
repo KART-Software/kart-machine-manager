@@ -173,15 +173,16 @@ class CanMaster:
                     break
 
         Data = {
-            "rpm": values[0] * 256 + values[1],
-            "oilTemp": round(values[20] * 2.56 + values[21] * 0.1, 2),
-            "oilPress": values[22] * 256 + values[23],
-            "battery": round(values[26] * 2.56 + values[27] * 0.01, 3)
+            "rpm": Rpm(values[0] * 256 + values[1]),
+            "oilTemp": OilTemp(round(values[20] * 2.56 + values[21] * 0.1, 2)),
+            "oilPress": OilPress(values[22] * 256 + values[23]),
+            "battery": Battery(round(values[26] * 2.56 + values[27] * 0.01, 3))
         }
+        return Data
 
     def updateCanInfo(self):
         Data = self.receiveData()
-        canInfo.rpm = Rpm(Data["rpm"])
-        canInfo.oilTemp = OilTemp(Data["oilTemp"])
-        canInfo.oilPress = OilPress(Data["oilPress"])
-        canInfo.battery = Battery(Data["battery"])
+        self.canInfo.rpm = Data["rpm"]
+        self.canInfo.oilTemp = Data["oilTemp"]
+        self.canInfo.oilPress = Data["oilPress"]
+        self.canInfo.battery = Data["battery"]
