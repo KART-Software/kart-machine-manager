@@ -20,6 +20,7 @@ class Application(WindowListener):
 
     def initialize(self) -> None:
         print("initialize")
+        self.machine.initialise()
         self.app = QApplication(sys.argv)
         self.window = MainWindow(self)
         self.window.showFullScreen()
@@ -27,7 +28,6 @@ class Application(WindowListener):
 
     def start(self):
         print("started")
-        self.machine.initialise()
         while True:
             self.machine.updateMachineInfo()
             self.window.updateDashboard(self.machine.machineInfo)

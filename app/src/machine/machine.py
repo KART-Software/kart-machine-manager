@@ -69,7 +69,6 @@ class Machine:
         )
         self.canMasterThread.start()
         self.isInitialised = True"""
-        pass
 
     # def updateMachineInfo(self):
     #     # self.canMaster.receiveData()
