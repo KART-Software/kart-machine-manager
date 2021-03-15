@@ -27,8 +27,8 @@ class Application(WindowListener):
 
     def start(self):
         print("started")
+        self.machine.initialise()
         while True:
-            self.canMaster.updateCanInfo()
             self.machine.updateMachineInfo()
             self.window.updateDashboard(self.machine.machineInfo)
             # sleep(0.1)

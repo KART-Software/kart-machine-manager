@@ -93,6 +93,7 @@ class Machine:
     #         microseconds=20000)
 
     def updateMachineInfo(self):
+        self.canMaster.updateCanInfo()
         self.machineInfo.rpm = self.canMaster.canInfo.rpm
         self.machineInfo.oilTemp = self.canMaster.canInfo.oilTemp
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
