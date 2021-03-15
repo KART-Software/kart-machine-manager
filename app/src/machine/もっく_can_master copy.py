@@ -125,15 +125,9 @@ class LapTime(datetime.timedelta):
 
 class CanInfo:
     rpm: Rpm
-    oilTemp: OilTemp
-    oilPress: OilPress
-    battery: Battery
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
-        self.oilTemp = OilTemp(0.0)
-        self.oilPress = OilPress(0)
-        self.battery = Battery(0.0)
 
 
 class CanMaster:
@@ -152,36 +146,13 @@ class CanMaster:
         sleep(0.2)
         self.bus.shutdown()
 
-    # def receiveData(self) -> dict:
-    #     msg = self.listener.get_message()
-    #     msg.data
-    #     if msg is None:
-    #         raise CanTimeoutException
-    #     else:
-    #         id, dlc, bdata = struct.unpack("IB3x8s", msg)
-    #         # data = bdata.hex()
+    def receiveData(self) -> Any:
+        msg = self.listener.get_message()
+        msg.data
+        if msg is None:
+            raise CanTimeoutException
+        else:
+            id, dlc, bdata = struct.unpack("IB3x8s", msg)
+            # data = bdata.hex()
 
-    #     # self.canInfo.rpm = 3333  # TODO fix
-
-    def receiveData(self) -> dict:
-        values = bytearray(b'')
-        for i in range(4):
-            while 1:
-                msg = self.bus.recv(1.0)
-                if msg.arbitration_id == 1520 + i:
-                    values = values + msg.data
-                    break
-
-        Data = {
-            "rpm": values[0] * 256 + values[1],
-            "oilTemp": round(values[20] * 2.56 + values[21] * 0.1, 2),
-            "oilPress": values[22] * 256 + values[23],
-            "battery": round(values[26] * 2.56 + values[27] * 0.01, 3)
-        }
-
-    def updateCanInfo(self):
-        Data = self.receiveData()
-        caninfo.rpm = Data["rpm"]
-        caninfo.oilTemp = Data["oilTemp"]
-        caninfo.oilPress = Data["oilPress"]
-        caninfo.battery = Data["battery"]
+        # self.canInfo.rpm = 3333  # TODO fix

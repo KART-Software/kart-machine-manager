@@ -4,12 +4,14 @@ from time import sleep
 from PyQt5.QtWidgets import QApplication
 
 from src.machine.machine import Machine
+from src.machine.can_master import CanMaster
 from ..gui.gui import MainWindow, WindowListener
 
 
 class Application(WindowListener):
 
     machine: Machine
+    canMaster: CanMaster
 
     def __init__(self):
         super().__init__()
@@ -26,6 +28,7 @@ class Application(WindowListener):
     def start(self):
         print("started")
         while True:
+            self.canMaster.updateCanInfo()
             self.machine.updateMachineInfo()
             self.window.updateDashboard(self.machine.machineInfo)
             # sleep(0.1)
