@@ -63,6 +63,7 @@ class Machine:
         # self.canMaster = CanMaster()
 
     def initialise(self) -> None:
+        self.canMaster = CanMaster()
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )
@@ -92,7 +93,7 @@ class Machine:
     #         microseconds=20000)
 
     def updateMachineInfo(self):
-        self.machineInfo.rpm = CanInfo.rpm
-        self.machineInfo.oilTemp = CanInfo.oilTemp
-        self.machineInfo.oilPress = CanInfo.oilPress
-        self.machineInfo.battery = CanInfo.battery
+        self.machineInfo.rpm = self.canMaster.canInfo.rpm
+        self.machineInfo.oilTemp = self.canMaster.canInfo.oilTemp
+        self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
+        self.machineInfo.battery = self.canMaster.canInfo.battery
