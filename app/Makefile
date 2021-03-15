@@ -1,5 +1,5 @@
 prod:
-	export DISPLAY=:0
+	DISPLAY=":0" \
 	pipenv run python3 main.py
 
 debug:

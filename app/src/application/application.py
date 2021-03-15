@@ -36,5 +36,4 @@ class Application(WindowListener):
     def onUpdate(self) -> None:
         self.machine.updateMachineInfo()
         self.window.updateDashboard(self.machine.machineInfo)
-        print(self.machine.machineInfo.rpm)
         return super().onUpdate()
