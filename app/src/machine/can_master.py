@@ -181,7 +181,7 @@ class CanMaster:
 
     def updateCanInfo(self):
         Data = self.receiveData()
-        caninfo.rpm = Data["rpm"]
-        caninfo.oilTemp = Data["oilTemp"]
-        caninfo.oilPress = Data["oilPress"]
-        caninfo.battery = Data["battery"]
+        canInfo.rpm = Data["rpm"]
+        canInfo.oilTemp = Data["oilTemp"]
+        canInfo.oilPress = Data["oilPress"]
+        canInfo.battery = Data["battery"]
