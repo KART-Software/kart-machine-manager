@@ -140,6 +140,8 @@ class CanMaster:
 
     canInfo: CanInfo
 
+    ARBITRATION_IDS = [1520, 1521, 1522, 1523]
+
     DBS_RPM = [0, 1]
     DBS_OIL_TEMP = [20, 21]
     DBS_OIL_PRESS = [22, 23]
@@ -171,13 +173,14 @@ class CanMaster:
     def receiveData(self) -> bytearray:
         values = bytearray(b'')
 
-        retryLimit = 60
-        for i in range(4):
-            while 1:
-                msg = self.bus.recv(1.0)
-                if msg.arbitration_id == 1520 + i:
+        retryLimit = 12
+        for ai in CanMaster.ARBITRATION_IDS:
+            for _ in range(retryLimit):
+                msg = self.bus.recv(0.1)    #TODO 確認
+                if msg.arbitration_id == ai:
                     values = values + msg.data
                     break
+
         return values
 
     def updateCanInfo(self):
