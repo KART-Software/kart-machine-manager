@@ -85,8 +85,7 @@ class MainWindow(QDialog):
         self.rpmBar.setMaximum(Rpm.MAX)
         self.rpmBar.setValue(0)
         self.rpmBar.setTextVisible(False)
-        self.rpmBar.setStyleSheet(
-            """
+        self.rpmBar.setStyleSheet("""
             QProgressBar
                 {
                     background-color: #000;
@@ -100,8 +99,7 @@ class MainWindow(QDialog):
                     width: 16px;
                     margin: 2px;
                 }
-        """
-        )
+        """)
 
     def setRpmBar(self, rpm: Rpm):
         self.rpmBar.setValue(int(rpm))
@@ -111,8 +109,7 @@ class MainWindow(QDialog):
             color = "#F00"
         elif rpm.status == RpmStatus.HIGH:
             color = "#00F"
-        self.rpmBar.setStyleSheet(
-            """
+        self.rpmBar.setStyleSheet("""
             QProgressBar
                 {
                     background-color: #000;
@@ -126,9 +123,7 @@ class MainWindow(QDialog):
                     width: 16px;
                     margin: 2px;
                 }
-        """
-            % (color)
-        )
+        """ % (color))
 
     def createCenterGroupBox(self):
         self.centerGroupBox = QGroupBox()
@@ -207,7 +202,8 @@ class MainWindow(QDialog):
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
 
-        self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
+        self.waterTempGroupBox.setStyleSheet("background-color: " + color +
+                                             ";")
 
     def createOilTempGroupBox(self):
 
@@ -347,7 +343,8 @@ class MainWindow(QDialog):
         elif fuelRemain.status == FuelRemainStatus.HIGH:
             color = "#000"
 
-        self.fuelRemainGroupBox.setStyleSheet("background-color: " + color + ";")
+        self.fuelRemainGroupBox.setStyleSheet("background-color: " + color +
+                                              ";")
 
     def createBatteryGroupBox(self):
 
@@ -422,8 +419,7 @@ class MainWindow(QDialog):
         second = lapTime.seconds % 60
         aftersecond = lapTime.microseconds // 10000
         self.lapTimeLabel.setText(
-            str(minute) + "." + str(second) + "." + str(aftersecond)
-        )
+            str(minute) + "." + str(second) + "." + str(aftersecond))
 
     def createRightGroupBox(self):
 

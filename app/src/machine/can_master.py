@@ -176,7 +176,7 @@ class CanMaster:
         retryLimit = 12
         for ai in CanMaster.ARBITRATION_IDS:
             for _ in range(retryLimit):
-                msg = self.bus.recv(0.1)    #TODO 確認
+                msg = self.bus.recv(0.1)  #TODO 確認
                 if msg.arbitration_id == ai:
                     values = values + msg.data
                     break
@@ -185,7 +185,16 @@ class CanMaster:
 
     def updateCanInfo(self):
         data = self.receiveData()
-        self.canInfo.rpm = Rpm(data[CanMaster.DBS_RPM[0]] * 256 + data[CanMaster.DBS_RPM[1]])
-        self.canInfo.oilTemp = OilTemp(round(data[CanMaster.DBS_OIL_TEMP[0]] * 2.56 + data[CanMaster.DBS_OIL_TEMP[1]] * 0.1, 2))
-        self.canInfo.oilPress = OilPress(data[CanMaster.DBS_OIL_PRESS[0]] * 256 + data[CanMaster.DBS_OIL_PRESS[1]])
-        self.canInfo.battery = Battery(round(data[CanMaster.DBS_BATTERY[0]] * 2.56 + data[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
+        self.canInfo.rpm = Rpm(data[CanMaster.DBS_RPM[0]] * 256 +
+                               data[CanMaster.DBS_RPM[1]])
+        self.canInfo.oilTemp = OilTemp(
+            round(
+                data[CanMaster.DBS_OIL_TEMP[0]] * 2.56 +
+                data[CanMaster.DBS_OIL_TEMP[1]] * 0.1, 2))
+        self.canInfo.oilPress = OilPress(data[CanMaster.DBS_OIL_PRESS[0]] *
+                                         256 +
+                                         data[CanMaster.DBS_OIL_PRESS[1]])
+        self.canInfo.battery = Battery(
+            round(
+                data[CanMaster.DBS_BATTERY[0]] * 2.56 +
+                data[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
