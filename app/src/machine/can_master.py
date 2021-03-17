@@ -17,9 +17,9 @@ class RpmStatus(IntEnum):
 
 
 class Rpm(int):
-    LOW_THRESHOLD = 5000
-    HIGH_THRESHOLD = 12000
-    MAX = 15000
+    LOW_THRESHOLD = 3200
+    HIGH_THRESHOLD = 6400
+    MAX = 9600
 
     @property
     def status(self) -> RpmStatus:
