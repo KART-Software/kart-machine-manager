@@ -163,26 +163,21 @@ class CanMaster:
 
     #     # self.canInfo.rpm = 3333  # TODO fix
 
-    def receiveData(self) -> dict:
+    def receiveData(self) -> bytearray:
         values = bytearray(b'')
+
+        retryLimit = 60
         for i in range(4):
             while 1:
                 msg = self.bus.recv(1.0)
                 if msg.arbitration_id == 1520 + i:
                     values = values + msg.data
                     break
-
-        Data = {
-            "rpm": Rpm(values[0] * 256 + values[1]),
-            "oilTemp": OilTemp(round(values[20] * 2.56 + values[21] * 0.1, 2)),
-            "oilPress": OilPress(values[22] * 256 + values[23]),
-            "battery": Battery(round(values[26] * 2.56 + values[27] * 0.01, 3))
-        }
-        return Data
+        return values
 
     def updateCanInfo(self):
-        Data = self.receiveData()
-        self.canInfo.rpm = Data["rpm"]
-        self.canInfo.oilTemp = Data["oilTemp"]
-        self.canInfo.oilPress = Data["oilPress"]
-        self.canInfo.battery = Data["battery"]
+        data = self.receiveData()
+        self.canInfo.rpm = Rpm(data[0] * 256 + data[1])
+        self.canInfo.oilTemp = OilTemp(round(data[20] * 2.56 + data[21] * 0.1, 2))
+        self.canInfo.oilPress = OilPress(data[22] * 256 + data[23])
+        self.canInfo.battery = Battery(round(data[26] * 2.56 + data[27] * 0.01, 3))
