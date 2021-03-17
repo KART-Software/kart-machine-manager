@@ -140,6 +140,11 @@ class CanMaster:
 
     canInfo: CanInfo
 
+    DBS_RPM = [0, 1]
+    DBS_OIL_TEMP = [20, 21]
+    DBS_OIL_PRESS = [22, 23]
+    DBS_BATTERY = [26, 27]
+
     def __init__(self) -> None:
         self.canInfo = CanInfo()
         self.bus = can.interface.Bus(channel="can0",
@@ -177,7 +182,7 @@ class CanMaster:
 
     def updateCanInfo(self):
         data = self.receiveData()
-        self.canInfo.rpm = Rpm(data[0] * 256 + data[1])
-        self.canInfo.oilTemp = OilTemp(round(data[20] * 2.56 + data[21] * 0.1, 2))
-        self.canInfo.oilPress = OilPress(data[22] * 256 + data[23])
-        self.canInfo.battery = Battery(round(data[26] * 2.56 + data[27] * 0.01, 3))
+        self.canInfo.rpm = Rpm(data[CanMaster.DBS_RPM[0]] * 256 + data[CanMaster.DBS_RPM[1]])
+        self.canInfo.oilTemp = OilTemp(round(data[CanMaster.DBS_OIL_TEMP[0]] * 2.56 + data[CanMaster.DBS_OIL_TEMP[1]] * 0.1, 2))
+        self.canInfo.oilPress = OilPress(data[CanMaster.DBS_OIL_PRESS[0]] * 256 + data[CanMaster.DBS_OIL_PRESS[1]])
+        self.canInfo.battery = Battery(round(data[CanMaster.DBS_BATTERY[0]] * 2.56 + data[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
