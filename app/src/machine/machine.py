@@ -1,10 +1,10 @@
+import os
 from enum import IntEnum
-
 from threading import Thread
+import datetime
 
-from src.machine.can_master import (
-    CanInfo,
-    CanMaster,
+from src.machine.can_master_base import (
+    CanMasterBase,
     Rpm,
     WaterTemp,
     OilTemp,
@@ -13,8 +13,8 @@ from src.machine.can_master import (
     Battery,
     LapTime,
 )
-
-import datetime
+from src.machine.can_master_mock import CanMasterMock
+from src.machine.can_master import CanMaster
 
 
 class MachineException(BaseException):
@@ -49,9 +49,8 @@ class GearType(IntEnum):
 
 class Machine:
 
-    canMaster: CanMaster
+    canMaster: CanMaster or CanMasterMock
     machineInfo: MachineInfo
-    _machineInfo: MachineInfo
     canMasterThread: Thread
     isInitialised: bool
 
@@ -63,7 +62,11 @@ class Machine:
         # self.canMaster = CanMaster()
 
     def initialise(self) -> None:
-        self.canMaster = CanMaster()
+        if os.getenv('DEBUG', 'False').lower() == 'true':
+            self.canMaster = CanMasterMock()
+        else:
+            print(os.getenv('DEBUG', 'TRUE').lower())
+            self.canMaster = CanMaster()
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )

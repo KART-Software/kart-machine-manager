@@ -3,6 +3,7 @@ prod:
 	pipenv run python3 main.py
 
 debug:
+	DEBUG=TRUE \
 	pipenv run python3 main.py
 
 format:

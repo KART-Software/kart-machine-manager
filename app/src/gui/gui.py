@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
-from PyQt5.QtGui import QColor, QFont, QPalette
+from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import (
     QApplication,
     QDialog,
@@ -9,9 +9,8 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QLabel,
     QProgressBar,
-    QStyleFactory,
 )
-from src.machine.can_master import (
+from src.machine.can_master_base import (
     Rpm,
     RpmStatus,
     WaterTemp,
