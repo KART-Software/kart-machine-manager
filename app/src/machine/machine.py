@@ -65,7 +65,6 @@ class Machine:
         if os.getenv('DEBUG', 'False').lower() == 'true':
             self.canMaster = CanMasterMock()
         else:
-            print(os.getenv('DEBUG', 'TRUE').lower())
             self.canMaster = CanMaster()
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
