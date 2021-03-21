@@ -97,6 +97,10 @@ class Machine:
     def updateMachineInfo(self):
         self.canMaster.updateCanInfo()
         self.machineInfo.rpm = self.canMaster.canInfo.rpm
+        self.machineInfo.waterTemp = self.canMaster.canInfo.waterTemp
         self.machineInfo.oilTemp = self.canMaster.canInfo.oilTemp
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
         self.machineInfo.battery = self.canMaster.canInfo.battery
+
+    def logMachineInfo(self):
+        pass

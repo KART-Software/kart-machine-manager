@@ -122,14 +122,16 @@ class LapTime(datetime.timedelta):
 
 class CanInfo:
     rpm: Rpm
+    waterTemp: WaterTemp
     oilTemp: OilTemp
     oilPress: OilPress
     battery: Battery
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
-        self.oilTemp = OilTemp(0.0)
-        self.oilPress = OilPress(0)
+        self.waterTemp = WaterTemp(0)
+        self.oilTemp = OilTemp(0)
+        self.oilPress = OilPress(0.0)
         self.battery = Battery(0.0)
 
 
