@@ -62,6 +62,7 @@ class Machine:
         self.dummyRpm = 1
         self.p = 1
         self.machineInfo = MachineInfo()
+        self.log_Frequency = 20
         now = datetime.datetime.now()
         self.logFilePath = 'log/data-{}.csv'.format(
             now.strftime('%Y%m%d_%H%M%S'))
@@ -78,7 +79,8 @@ class Machine:
         self.logger_init()
         signal.signal(signal.SIGALRM, self.logMachineInfo)
         now = time.time()
-        signal.setitimer(signal.ITIMER_REAL, int(now) + 1 - now, 1.0 / 10)
+        signal.setitimer(signal.ITIMER_REAL,
+                         int(now) + 1 - now, 1.0 / self.log_Frequency)
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )
@@ -129,7 +131,7 @@ class Machine:
             self.machineInfo.waterTemp, self.machineInfo.oilTemp,
             self.machineInfo.oilPress, self.machineInfo.battery
         ])
-        if len(self.log_rows) == 10:
+        if len(self.log_rows) == self.log_Frequency:
             with open(self.logFilePath, 'a') as f:
                 writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
                 writer.writerows(self.log_rows)
