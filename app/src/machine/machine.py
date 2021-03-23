@@ -2,6 +2,7 @@ import os
 from enum import IntEnum
 from threading import Thread
 import datetime
+import time
 import signal
 import csv
 
@@ -73,8 +74,11 @@ class Machine:
         else:
             self.canMaster = CanMaster()
 
+        self.updateMachineInfo()
+        self.logger_init()
         signal.signal(signal.SIGALRM, self.logMachineInfo)
-        signal.setitimer(signal.ITIMER_REAL, 1, 1)
+        now = time.time()
+        signal.setitimer(signal.ITIMER_REAL, int(now) + 1 - now, 1.0 / 10)
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )
@@ -110,18 +114,23 @@ class Machine:
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
         self.machineInfo.battery = self.canMaster.canInfo.battery
 
-    def logMachineInfo(self, signum, frame):
+    def logger_init(self):
+        self.log_rows = []
         with open(self.logFilePath, 'a') as f:
             writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-
             writer.writerow([
-                str(datetime.datetime.now()), self.machineInfo.rpm,
-                self.machineInfo.waterTemp, self.machineInfo.oilTemp,
-                self.machineInfo.oilPress, self.machineInfo.battery
+                "Date Time", "RPM", "Water Temp", "Oil Temp", "Oil Press",
+                "Battery"
             ])
 
-
-"""             writer.writerow([
-                str(datetime.datetime.now()), "RPM", "Water Temp", "Oil Temp",
-                "Oil Press", "Battery"
-            ]) """
+    def logMachineInfo(self, signum, frame):
+        self.log_rows.append([
+            str(datetime.datetime.now()), self.machineInfo.rpm,
+            self.machineInfo.waterTemp, self.machineInfo.oilTemp,
+            self.machineInfo.oilPress, self.machineInfo.battery
+        ])
+        if len(self.log_rows) == 10:
+            with open(self.logFilePath, 'a') as f:
+                writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+                writer.writerows(self.log_rows)
+            self.log_rows = []

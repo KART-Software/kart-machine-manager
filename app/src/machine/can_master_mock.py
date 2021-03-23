@@ -44,12 +44,12 @@ class CanMasterMock(CanMasterBase):
             self.p_OilPress = -1
         elif self.canInfo.oilPress < 1.0:
             self.p_OilPress = 1
-        self.canInfo.oilPress = OilPress(self.canInfo.oilPress +
-                                         self.p_OilPress * 0.3)
+        self.canInfo.oilPress = OilPress(
+            round(self.canInfo.oilPress + self.p_OilPress * 0.3, 2))
 
         if self.canInfo.battery >= 14.0:
             self.p_Battery = -1
         elif self.canInfo.battery < 6.0:
             self.p_Battery = 1
-        self.canInfo.battery = Battery(self.canInfo.battery +
-                                       self.p_Battery * 0.6)
+        self.canInfo.battery = Battery(
+            round(self.canInfo.battery + self.p_Battery * 0.6, 2))
