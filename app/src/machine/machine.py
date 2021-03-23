@@ -2,6 +2,8 @@ import os
 from enum import IntEnum
 from threading import Thread
 import datetime
+import signal
+import csv
 
 from src.machine.can_master_base import (
     CanMasterBase,
@@ -53,11 +55,15 @@ class Machine:
     machineInfo: MachineInfo
     canMasterThread: Thread
     isInitialised: bool
+    logFileName: str
 
     def __init__(self, parent=None) -> None:
         self.dummyRpm = 1
         self.p = 1
         self.machineInfo = MachineInfo()
+        now = datetime.datetime.now()
+        self.logFilePath = 'log/data-{}.csv'.format(
+            now.strftime('%Y%m%d_%H%M%S'))
 
         # self.canMaster = CanMaster()
 
@@ -66,6 +72,9 @@ class Machine:
             self.canMaster = CanMasterMock()
         else:
             self.canMaster = CanMaster()
+
+        signal.signal(signal.SIGALRM, self.logMachineInfo)
+        signal.setitimer(signal.ITIMER_REAL, 1, 1)
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )
@@ -101,5 +110,18 @@ class Machine:
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
         self.machineInfo.battery = self.canMaster.canInfo.battery
 
-    def logMachineInfo(self):
-        pass
+    def logMachineInfo(self, signum, frame):
+        with open(self.logFilePath, 'a') as f:
+            writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+
+            writer.writerow([
+                str(datetime.datetime.now()), self.machineInfo.rpm,
+                self.machineInfo.waterTemp, self.machineInfo.oilTemp,
+                self.machineInfo.oilPress, self.machineInfo.battery
+            ])
+
+
+"""             writer.writerow([
+                str(datetime.datetime.now()), "RPM", "Water Temp", "Oil Temp",
+                "Oil Press", "Battery"
+            ]) """
