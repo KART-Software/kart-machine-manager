@@ -3,7 +3,7 @@ from enum import IntEnum
 from threading import Thread
 import datetime
 import time
-import signal
+# import signal
 import csv
 
 from src.machine.can_master_base import (
@@ -62,7 +62,8 @@ class Machine:
         self.dummyRpm = 1
         self.p = 1
         self.machineInfo = MachineInfo()
-        self.log_Frequency = 20
+        self.log_Frequency = 40
+        self.log_Interval = 1.0 / self.log_Frequency
         now = datetime.datetime.now()
         self.logFilePath = 'log/data-{}.csv'.format(
             now.strftime('%Y%m%d_%H%M%S'))
@@ -77,10 +78,12 @@ class Machine:
 
         self.updateMachineInfo()
         self.logger_init()
-        signal.signal(signal.SIGALRM, self.logMachineInfo)
-        now = time.time()
-        signal.setitimer(signal.ITIMER_REAL,
-                         int(now) + 1 - now, 1.0 / self.log_Frequency)
+        t = Thread(target=self.log_start)
+        t.setDaemon(True)
+        t.start()
+        # signal.signal(signal.SIGALRM, self.logMachineInfo)
+        # now = time.time()
+        # signal.setitimer(signal.ITIMER_REAL, int(now) + 1 - now, 0.05)
         """self.canMasterThread = Thread(
             target=self.canMaster, name = "canMaster"
         )
@@ -125,14 +128,34 @@ class Machine:
                 "Battery"
             ])
 
-    def logMachineInfo(self, signum, frame):
+        self.base_time = int(time.time()) + 1.0
+        time.sleep(-1 * time.time() % 1.0)
+
+    # def logMachineInfo(self, signum, frame):
+    #     self.log_rows.append([
+    #         str(datetime.datetime.now()), self.machineInfo.rpm,
+    #         self.machineInfo.waterTemp, self.machineInfo.oilTemp,
+    #         self.machineInfo.oilPress, self.machineInfo.battery
+    #     ])
+    #     if len(self.log_rows) == self.log_Frequency:
+    #         with open(self.logFilePath, 'a') as f:
+    #             writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+    #             writer.writerows(self.log_rows)
+    #         self.log_rows = []
+
+    def _logMachineInfo(self):
         self.log_rows.append([
             str(datetime.datetime.now()), self.machineInfo.rpm,
             self.machineInfo.waterTemp, self.machineInfo.oilTemp,
             self.machineInfo.oilPress, self.machineInfo.battery
         ])
-        if len(self.log_rows) == self.log_Frequency:
+        if len(self.log_rows) == 10:
             with open(self.logFilePath, 'a') as f:
                 writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
                 writer.writerows(self.log_rows)
             self.log_rows = []
+
+    def log_start(self):
+        while True:
+            self._logMachineInfo()
+            time.sleep((self.base_time - time.time()) % self.log_Interval)
