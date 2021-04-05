@@ -3,6 +3,7 @@ from typing import Any
 import can
 from time import sleep
 import datetime
+import logging
 
 from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, OilPress, OilTemp, Rpm
 
@@ -44,17 +45,19 @@ class CanMaster(CanMasterBase):
     def _receiveData(self) -> bytearray:
         values = bytearray(b'')
 
-        retryLimit = 12
+        retryLimit = 100
         for ai in CanMaster.ARBITRATION_IDS:
             for _ in range(retryLimit):
                 msg = self.bus.recv(0.1)  #TODO 確認
-                if msg != None or msg.arbitration_id == ai:
+                if msg != None and msg.arbitration_id == ai:
                     values = values + msg.data
                     break
+        logging.info(values)
         return values
 
     def updateCanInfo(self):
         data = self._receiveData()
+
         self.canInfo.rpm = Rpm(data[CanMaster.DBS_RPM[0]] * 256 +
                                data[CanMaster.DBS_RPM[1]])
         self.canInfo.oilTemp = OilTemp(
