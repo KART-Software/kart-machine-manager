@@ -48,10 +48,9 @@ class CanMaster(CanMasterBase):
         for ai in CanMaster.ARBITRATION_IDS:
             for _ in range(retryLimit):
                 msg = self.bus.recv(0.1)  #TODO 確認
-                if msg.arbitration_id == ai:
+                if msg != None or msg.arbitration_id == ai:
                     values = values + msg.data
                     break
-
         return values
 
     def updateCanInfo(self):
