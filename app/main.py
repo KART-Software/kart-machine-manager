@@ -3,11 +3,12 @@ import os
 from src.application import Application
 import logging
 import logging.config
-
+import datetime
 
 if __name__ == "__main__":
-
-    file_path = os.path.dirname('log/app.log')
+    log_file_path = 'log/app-{}.log'.format(
+        datetime.datetime.now().strftime('%Y%m%d_%H%M%S'))
+    file_path = os.path.dirname(log_file_path)
     if not os.path.exists(file_path):
         os.makedirs(file_path)
 
@@ -15,7 +16,8 @@ if __name__ == "__main__":
         'version': 1,
         'formatters': {
             'common': {
-                'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+                'format':
+                '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
             }
         },
         'handlers': {
@@ -23,7 +25,7 @@ if __name__ == "__main__":
                 'class': 'logging.FileHandler',
                 'level': 'DEBUG',
                 'formatter': 'common',
-                'filename': './log/app.log',
+                'filename': log_file_path,
                 'mode': 'w',
                 'encoding': 'utf-8'
             },
