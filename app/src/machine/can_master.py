@@ -13,6 +13,7 @@ class CanMaster(CanMasterBase):
     canInfo: CanInfo
 
     ARBITRATION_IDS = [1520, 1521, 1522, 1523]
+    DBS_FROM = [0, 8, 16, 24]
 
     DBS_RPM = [0, 1]
     DBS_OIL_TEMP = [20, 21]
@@ -23,8 +24,14 @@ class CanMaster(CanMasterBase):
         self.canInfo = CanInfo()
         self.bus = can.interface.Bus(channel="can0",
                                      bustype="socketcan_native")
+        self.bus.set_filters([{
+            "can_id": 1520,
+            "can_mask": 2040,
+            "extended": False
+        }])
         self.listener = can.BufferedReader()
         self.notifier = can.Notifier(self.bus, [self.listener])
+        self.receiveValues = bytearray(range(28))
 
     def __del__(self) -> None:
         self.notifier.stop()
@@ -43,17 +50,16 @@ class CanMaster(CanMasterBase):
     #     # self.canInfo.rpm = 3333  # TODO fix
 
     def _receiveData(self) -> bytearray:
-        values = bytearray(b'')
-
-        retryLimit = 100
-        for ai in CanMaster.ARBITRATION_IDS:
+        retryLimit = 12
+        for (ai, df) in zip(CanMaster.ARBITRATION_IDS, CanMaster.DBS_FROM):
             for _ in range(retryLimit):
-                msg = self.bus.recv(0.1)  #TODO 確認
+                msg = self.listener.get_message()  #TODO 確認
                 if msg != None and msg.arbitration_id == ai:
-                    values = values + msg.data
+                    for i, value in enumerate(msg.data):
+                        self.values[df + i] = value
                     break
-        logging.info(values)
-        return values
+        # logging.info(values)
+        return self.values
 
     def updateCanInfo(self):
         data = self._receiveData()
@@ -62,7 +68,7 @@ class CanMaster(CanMasterBase):
                                data[CanMaster.DBS_RPM[1]])
         self.canInfo.oilTemp = OilTemp(
             round(
-                data[CanMaster.DBS_OIL_TEMP[0]] * 2.56 +
+                data[CanMaster.DBS_OIL_TEMP[0]] * 25.6 +
                 data[CanMaster.DBS_OIL_TEMP[1]] * 0.1, 2))
         self.canInfo.oilPress = OilPress(data[CanMaster.DBS_OIL_PRESS[0]] *
                                          256 +
