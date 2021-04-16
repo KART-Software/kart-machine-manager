@@ -5,7 +5,7 @@ from time import sleep
 import datetime
 import logging
 
-from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, WaterTemp ,OilPress, OilTemp, Rpm
+from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, WaterTemp, OilPress, OilTemp, Rpm
 
 
 class CanMaster(CanMasterBase):
@@ -15,7 +15,7 @@ class CanMaster(CanMasterBase):
     ARBITRATION_IDS = [1520, 1521, 1522, 1523]
     DBS_FROM = [0, 8, 16, 24]
 
-    DBS_RPM = [2,3]
+    DBS_RPM = [2, 3]
     DBS_WATER_TEMP = [8, 9]
     DBS_OIL_TEMP = [20, 21]
     DBS_OIL_PRESS = [22, 23]
@@ -48,7 +48,11 @@ class CanMaster(CanMasterBase):
     def _receiveData(self) -> bytearray:
         retryLimit = 12
         for (ai, df) in zip(CanMaster.ARBITRATION_IDS, CanMaster.DBS_FROM):
-            self.bus.set_filters([{"can_id": ai, "can_mask": 2047, "extended": False}])
+            self.bus.set_filters([{
+                "can_id": ai,
+                "can_mask": 2047,
+                "extended": False
+            }])
             for _ in range(retryLimit):
                 msg = self.bus.recv(0.2)  #TODO 確認
                 print(msg)
@@ -56,7 +60,6 @@ class CanMaster(CanMasterBase):
                     for i, value in enumerate(msg.data):
                         self.receiveValues[df + i] = value
                     break
-                # print(self.receiveValues)
         return self.receiveValues
 
     def updateCanInfo(self):
@@ -64,7 +67,10 @@ class CanMaster(CanMasterBase):
 
         self.canInfo.rpm = Rpm(data[CanMaster.DBS_RPM[0]] * 256 +
                                data[CanMaster.DBS_RPM[1]])
-        self.canInfo.waterTemp = WaterTemp(round(data[CanMaster.DBS_WATER_TEMP[0]] * 25.6 + data[CanMaster.DBS_WATER_TEMP[1]] * 0.1, 2))
+        self.canInfo.waterTemp = WaterTemp(
+            round(
+                data[CanMaster.DBS_WATER_TEMP[0]] * 25.6 +
+                data[CanMaster.DBS_WATER_TEMP[1]] * 0.1, 2))
         self.canInfo.oilTemp = OilTemp(
             round(
                 data[CanMaster.DBS_OIL_TEMP[0]] * 25.6 +
@@ -76,4 +82,3 @@ class CanMaster(CanMasterBase):
             round(
                 data[CanMaster.DBS_BATTERY[0]] * 2.56 +
                 data[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
-        
