@@ -15,7 +15,7 @@ class CanMaster(CanMasterBase):
     ARBITRATION_IDS = [1520, 1521, 1522, 1523]
     DBS_FROM = [0, 8, 16, 24]
 
-    DBS_RPM = [0, 1]
+    DBS_RPM = [2, 3]
     DBS_OIL_TEMP = [20, 21]
     DBS_OIL_PRESS = [22, 23]
     DBS_BATTERY = [26, 27]
@@ -24,17 +24,12 @@ class CanMaster(CanMasterBase):
         self.canInfo = CanInfo()
         self.bus = can.interface.Bus(channel="can0",
                                      bustype="socketcan_native")
-        self.bus.set_filters([{
-            "can_id": 1520,
-            "can_mask": 2040,
-            "extended": False
-        }])
-        self.listener = can.BufferedReader()
-        self.notifier = can.Notifier(self.bus, [self.listener])
+        # self.listener = can.BufferedReader()
+        # self.notifier = can.Notifier(self.bus, [self.listener])
         self.receiveValues = bytearray(range(28))
 
     def __del__(self) -> None:
-        self.notifier.stop()
+        # self.notifier.stop()
         sleep(0.2)
         self.bus.shutdown()
 
@@ -52,14 +47,16 @@ class CanMaster(CanMasterBase):
     def _receiveData(self) -> bytearray:
         retryLimit = 12
         for (ai, df) in zip(CanMaster.ARBITRATION_IDS, CanMaster.DBS_FROM):
+            self.bus.set_filters([{"can_id": ai, "can_mask": 2047, "extended": False}])
             for _ in range(retryLimit):
-                msg = self.listener.get_message()  #TODO 確認
+                msg = self.bus.recv(0.2)  #TODO 確認
+                print(msg)
                 if msg != None and msg.arbitration_id == ai:
                     for i, value in enumerate(msg.data):
-                        self.values[df + i] = value
+                        self.receiveValues[df + i] = value
                     break
-        # logging.info(values)
-        return self.values
+                # print(self.receiveValues)
+        return self.receiveValues
 
     def updateCanInfo(self):
         data = self._receiveData()
