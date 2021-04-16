@@ -5,7 +5,7 @@ from time import sleep
 import datetime
 import logging
 
-from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, OilPress, OilTemp, Rpm
+from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, WaterTemp ,OilPress, OilTemp, Rpm
 
 
 class CanMaster(CanMasterBase):
@@ -15,7 +15,8 @@ class CanMaster(CanMasterBase):
     ARBITRATION_IDS = [1520, 1521, 1522, 1523]
     DBS_FROM = [0, 8, 16, 24]
 
-    DBS_RPM = [2, 3]
+    DBS_RPM = [2,3]
+    DBS_WATER_TEMP = [8, 9]
     DBS_OIL_TEMP = [20, 21]
     DBS_OIL_PRESS = [22, 23]
     DBS_BATTERY = [26, 27]
@@ -63,6 +64,7 @@ class CanMaster(CanMasterBase):
 
         self.canInfo.rpm = Rpm(data[CanMaster.DBS_RPM[0]] * 256 +
                                data[CanMaster.DBS_RPM[1]])
+        self.canInfo.waterTemp = WaterTemp(round(data[CanMaster.DBS_WATER_TEMP[0]] * 25.6 + data[CanMaster.DBS_WATER_TEMP[1]] * 0.1, 2))
         self.canInfo.oilTemp = OilTemp(
             round(
                 data[CanMaster.DBS_OIL_TEMP[0]] * 25.6 +
@@ -74,3 +76,4 @@ class CanMaster(CanMasterBase):
             round(
                 data[CanMaster.DBS_BATTERY[0]] * 2.56 +
                 data[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
+        
