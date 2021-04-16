@@ -4,6 +4,7 @@ import can
 from time import sleep
 import datetime
 import logging
+import os
 
 from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, WaterTemp ,OilPress, OilTemp, Rpm
 
@@ -23,6 +24,9 @@ class CanMaster(CanMasterBase):
 
     def __init__(self) -> None:
         self.canInfo = CanInfo()
+        os.system('sudo ip link set can0 down')
+        os.system('sudo ip link set can0 type can bitrate 500000')
+        os.system('sudo ip link set can0 up')
         self.bus = can.interface.Bus(channel="can0",
                                      bustype="socketcan_native")
         # self.listener = can.BufferedReader()
