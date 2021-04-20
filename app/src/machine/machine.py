@@ -63,7 +63,7 @@ class Machine:
         self.log_Frequency = 40
         self.log_Interval = 1.0 / self.log_Frequency
         now = datetime.datetime.now()
-        self.logFilePath = 'log/data-{}.csv'.format(
+        self.logFilePath = 'log/data_{}.csv'.format(
             now.strftime('%Y%m%d_%H%M%S'))
 
     def initialise(self) -> None:

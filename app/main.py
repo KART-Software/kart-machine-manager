@@ -6,7 +6,7 @@ import logging.config
 import datetime
 
 if __name__ == "__main__":
-    log_file_path = 'log/app-{}.log'.format(
+    log_file_path = 'log/app_{}.log'.format(
         datetime.datetime.now().strftime('%Y%m%d_%H%M%S'))
     file_path = os.path.dirname(log_file_path)
     if not os.path.exists(file_path):
