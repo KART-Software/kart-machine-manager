@@ -37,3 +37,10 @@ export PIPENV_VENV_IN_PROJECT=true
 
 ### 静的解析
     make lint
+
+### 速度評価(cProfile)
+    make prod-cProfile
+or
+```
+make debug-cProfile
+```
