@@ -1,9 +1,6 @@
-from enum import IntEnum
 from typing import Any
 import can
 from time import sleep
-import datetime
-import logging
 import os
 
 from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, WaterTemp, OilPress, OilTemp, Rpm

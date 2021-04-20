@@ -1,4 +1,5 @@
-from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, OilPress, OilTemp, Rpm, WaterTemp
+from src.machine.can_master_base import (Battery, CanInfo, CanMasterBase,
+                                         OilPress, OilTemp, Rpm, WaterTemp)
 
 
 class CanMasterMock(CanMasterBase):
@@ -15,11 +16,6 @@ class CanMasterMock(CanMasterBase):
         self.p_Battery = 1
 
     def updateCanInfo(self):
-        # self.canInfo.rpm = Rpm(15)
-        # self.canInfo.oilTemp = OilTemp(80.0)
-        # self.canInfo.oilPress = OilPress(13)
-        # self.canInfo.battery = Battery(10.6)
-
         if self.canInfo.rpm >= Rpm.MAX:
             self.p_Rpm = -1
         elif self.canInfo.rpm < 1:
