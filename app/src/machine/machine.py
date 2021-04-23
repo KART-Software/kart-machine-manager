@@ -4,7 +4,6 @@ from threading import Thread
 import datetime
 import time
 import csv
-import matplotlib
 
 from src.machine.can_master_base import (
     Rpm,
