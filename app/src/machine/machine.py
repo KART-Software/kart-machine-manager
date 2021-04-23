@@ -78,27 +78,6 @@ class Machine:
         t.setDaemon(True)
         t.start()
 
-    # def updateMachineInfo(self):
-    #     # self.canMaster.receiveData()
-    #     # return self.canMaster.canInfo
-    #     if self.machineInfo.rpm >= Rpm.MAX:
-    #         self.p = -1
-    #     elif self.machineInfo.rpm < 1:
-    #         self.p = 1
-
-    #     self.machineInfo.rpm = Rpm(self.machineInfo.rpm + self.p * 100)
-
-    #     self.machineInfo.waterTemp = WaterTemp(self.machineInfo.waterTemp + 1)
-
-    #     self.machineInfo.oilTemp = OilTemp(self.machineInfo.oilTemp + 1)
-    #     self.machineInfo.oilPress = OilPress(self.machineInfo.oilPress + 0.1)
-    #     self.machineInfo.fuelRemain = FuelRemain(self.machineInfo.fuelRemain +
-    #                                              0.1)
-    #     self.machineInfo.battery = Battery(self.machineInfo.battery + 0.1)
-    #     # TO DO CHECK TYPE OF LAPTIME OBJECT
-    #     self.machineInfo.lapTime = self.machineInfo.lapTime + LapTime(
-    #         microseconds=20000)
-
     def updateMachineInfo(self):
         self.canMaster.updateCanInfo()
         self.machineInfo.rpm = self.canMaster.canInfo.rpm
