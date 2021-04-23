@@ -1,5 +1,4 @@
 import sys
-from time import sleep
 
 from PyQt5.QtWidgets import QApplication
 
@@ -28,7 +27,6 @@ class Application(WindowListener):
         while True:
             self.machine.updateMachineInfo()
             self.window.updateDashboard(self.machine.machineInfo)
-            # sleep(0.1)
 
     def onUpdate(self) -> None:
         self.machine.updateMachineInfo()

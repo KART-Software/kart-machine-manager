@@ -1,9 +1,9 @@
-from typing import Any
 import can
 from time import sleep
 import os
 
-from src.machine.can_master_base import Battery, CanInfo, CanMasterBase, WaterTemp, OilPress, OilTemp, Rpm
+from src.machine.can_master_base import (Battery, CanInfo, CanMasterBase,
+                                         WaterTemp, OilPress, OilTemp, Rpm)
 
 
 class CanMaster(CanMasterBase):
@@ -55,9 +55,9 @@ class CanMaster(CanMasterBase):
                 "extended": False
             }])
             for _ in range(retryLimit):
-                msg = self.bus.recv(0.2)  #TODO 確認
+                msg = self.bus.recv(0.2)
                 print(msg)
-                if msg != None and msg.arbitration_id == ai:
+                if msg is not None and msg.arbitration_id == ai:
                     for i, value in enumerate(msg.data):
                         self.receiveValues[df + i] = value
                     break

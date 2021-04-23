@@ -1,6 +1,6 @@
 import os
 
-from src.application import Application
+from src.application.application import Application
 import logging
 import logging.config
 import datetime
