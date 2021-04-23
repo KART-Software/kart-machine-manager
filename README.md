@@ -44,3 +44,6 @@ or
 ```
 make debug-cProfile
 ```
+
+### requirements.txt作成
+    pipenv lock -r > requirements.txt
