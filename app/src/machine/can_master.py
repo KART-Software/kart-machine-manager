@@ -13,7 +13,7 @@ class CanMaster(CanMasterBase):
     ARBITRATION_IDS = [1520, 1521, 1522, 1523]
     DBS_FROM = [0, 8, 16, 24]
 
-    DBS_RPM = [2, 3]
+    DBS_RPM = [0, 1]
     DBS_WATER_TEMP = [8, 9]
     DBS_OIL_TEMP = [20, 21]
     DBS_OIL_PRESS = [22, 23]
@@ -56,7 +56,7 @@ class CanMaster(CanMasterBase):
             }])
             for _ in range(retryLimit):
                 msg = self.bus.recv(0.2)
-                print(msg)
+                # print(msg)
                 if msg is not None and msg.arbitration_id == ai:
                     for i, value in enumerate(msg.data):
                         self.receiveValues[df + i] = value
