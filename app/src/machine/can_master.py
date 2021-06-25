@@ -5,9 +5,8 @@ import os
 from can.interface import Bus
 
 from src.machine.can_master_base import (Battery, CanInfo, CanMasterBase,
-                                         WaterTemp, OilPress, OilTemp, Rpm, FrontArduinoData)
-
-
+                                         WaterTemp, OilPress, OilTemp, Rpm,
+                                         FrontArduinoData)
 
 
 class CanMaster(CanMasterBase):
