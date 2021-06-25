@@ -64,7 +64,7 @@ class Machine:
         self.dummyRpm = 1
         self.p = 1
         self.machineInfo = MachineInfo()
-        self.log_Frequency = 40
+        self.log_Frequency = 20
         self.log_Interval = 1.0 / self.log_Frequency
         now = datetime.datetime.now()
         self.logFilePath = 'log/data_{}.csv'.format(
