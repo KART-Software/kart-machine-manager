@@ -5,7 +5,9 @@ import os
 from can.interface import Bus
 
 from src.machine.can_master_base import (Battery, CanInfo, CanMasterBase,
-                                         WaterTemp, OilPress, OilTemp, Rpm)
+                                         WaterTemp, OilPress, OilTemp, Rpm, FrontArduinoData)
+
+
 
 
 class CanMaster(CanMasterBase):
@@ -156,7 +158,7 @@ class CanMaster(CanMasterBase):
                 dataFromMotec[CanMaster.DBS_BATTERY[0]] * 2.56 +
                 dataFromMotec[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
 
-        self.canInfo.frontArduinoData = [
-            dataFromFrontArduino[i] * 256 + dataFromFrontArduino[i + 1]
-            for i in CanMaster.FRONT_ARDUINO_INFO["converted length"]
-        ]
+        self.canInfo.frontArduinoData = FrontArduinoData([
+            dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
+            for i in range(CanMaster.FRONT_ARDUINO_INFO["converted length"])
+        ])
