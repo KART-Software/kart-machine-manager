@@ -120,6 +120,10 @@ class LapTime(datetime.timedelta):
     pass
 
 
+class FrontArduinoData(list):
+    pass
+
+
 class CanInfo:
     rpm: Rpm
     waterTemp: WaterTemp
@@ -127,12 +131,15 @@ class CanInfo:
     oilPress: OilPress
     battery: Battery
 
+    frontArduinoData: FrontArduinoData
+
     def __init__(self) -> None:
         self.rpm = Rpm(0)
         self.waterTemp = WaterTemp(0)
         self.oilTemp = OilTemp(0)
         self.oilPress = OilPress(0.0)
         self.battery = Battery(0.0)
+        self.frontArduinoData = FrontArduinoData(range(2))
 
 
 class CanMasterBase(metaclass=ABCMeta):

@@ -6,6 +6,7 @@ import time
 import csv
 
 from src.machine.can_master_base import (
+    FrontArduinoData,
     Rpm,
     WaterTemp,
     OilTemp,
@@ -30,6 +31,7 @@ class MachineInfo:
     oilPress: OilPress
     fuelRemain: FuelRemain
     battery: Battery
+    FrontArduinoData: FrontArduinoData
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
@@ -39,6 +41,8 @@ class MachineInfo:
         self.oilPress = OilPress(0.0)
         self.fuelRemain = FuelRemain(0.0)
         self.battery = Battery(0.0)
+        self.frontArduinoData = FrontArduinoData(
+            range(CanMaster.FRONT_ARDUINO_INFO["converted length"]))
 
 
 class GearType(IntEnum):
@@ -85,6 +89,7 @@ class Machine:
         self.machineInfo.oilTemp = self.canMaster.canInfo.oilTemp
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
         self.machineInfo.battery = self.canMaster.canInfo.battery
+        self.machineInfo.frontArduinoData = self.canMaster.canInfo.frontArduinoData
 
     def loggerInit(self):
         self.log_rows = []
@@ -103,7 +108,7 @@ class Machine:
             str(datetime.datetime.now()), self.machineInfo.rpm,
             self.machineInfo.waterTemp, self.machineInfo.oilTemp,
             self.machineInfo.oilPress, self.machineInfo.battery
-        ])
+        ] + self.machineInfo.frontArduinoData)
         if len(self.log_rows) == 10:
             with open(self.logFilePath, 'a') as f:
                 writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
