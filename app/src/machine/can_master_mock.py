@@ -36,7 +36,7 @@ class CanMasterMock(CanMasterBase):
         self.canInfo.oilTemp = OilTemp(self.canInfo.oilTemp +
                                        self.p_OilTemp * 2)
 
-        if self.canInfo.oilPress >= 5.0:
+        if self.canInfo.oilPress >= 200.0:
             self.p_OilPress = -1
         elif self.canInfo.oilPress < 1.0:
             self.p_OilPress = 1

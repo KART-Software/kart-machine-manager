@@ -74,7 +74,7 @@ class MainWindow(QDialog):
         self.setRpmLabel(machineInfo.rpm)
         self.setWaterTempLabel(machineInfo.waterTemp)
         self.setOilTempLabel(machineInfo.oilTemp)
-        self.setOilPressLabel(machineInfo.oilPress)
+        self.setOilPressLabel(machineInfo.oilPress, machineInfo.rpm)
         self.setFuelRemainLabel(machineInfo.fuelRemain)
         self.setBatteryLabel(machineInfo.battery)
         self.setLapTimeLabel(machineInfo.lapTime)
@@ -274,12 +274,12 @@ class MainWindow(QDialog):
 
         self.oilPressGroupBox.setLayout(layout)
 
-    def setOilPressLabel(self, oilPress: OilPress):
+    def setOilPressLabel(self, oilPress: OilPress, rpm: Rpm):
         self.oilPressLabel.setText(str(round(oilPress, 2)))
 
-        if oilPress.status == OilPressStatus.LOW:
+        if oilPress.status(rpm) == OilPressStatus.LOW:
             color = "red"
-        elif oilPress.status == OilPressStatus.HIGH:
+        elif oilPress.status(rpm) == OilPressStatus.HIGH:
             color = "#000"
 
         self.oilPressGroupBox.setStyleSheet("background-color: " + color + ";")

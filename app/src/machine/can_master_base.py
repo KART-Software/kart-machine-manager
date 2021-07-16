@@ -74,11 +74,11 @@ class OilPressStatus(IntEnum):
 
 
 class OilPress(float):
-    THRESHOLD = 3.0
+    def threshold(self, rpm: Rpm) -> float:
+        return 0.00000241088030949 * rpm * rpm
 
-    @property
-    def status(self) -> OilPressStatus:
-        if self < self.THRESHOLD:
+    def status(self, rpm: Rpm) -> OilPressStatus:
+        if self < self.threshold(rpm):
             return OilPressStatus.LOW
         else:
             return OilPressStatus.HIGH
