@@ -5,8 +5,8 @@ import os
 from can.interface import Bus
 
 from src.machine.can_master_base import (Battery, CanInfo, CanMasterBase,
-                                         WaterTemp, OilPress, OilTemp, Rpm,
-                                         FrontArduinoData)
+                                         RearArduuinoData, WaterTemp, OilPress,
+                                         OilTemp, Rpm, FrontArduinoData)
 
 
 class CanMaster(CanMasterBase):
@@ -38,6 +38,13 @@ class CanMaster(CanMasterBase):
         "length": 4,
         "dbs head": [0],
         "converted length": 2
+    }
+
+    REAR_ARDUINO_INFO = {
+        "arbitration id": [1792],
+        "length": 6,
+        "dbs head": [0],
+        "converted length": 3
     }
 
     # motec
@@ -138,6 +145,7 @@ class CanMaster(CanMasterBase):
     def updateCanInfo(self):
         dataFromMotec = self._receiveData(CanMaster.MOTEC_INFO)
         dataFromFrontArduino = self._receiveData(CanMaster.FRONT_ARDUINO_INFO)
+        dataFromRearArduino = self._receiveData(CanMaster.REAR_ARDUINO_INFO)
 
         self.canInfo.rpm = Rpm(dataFromMotec[CanMaster.DBS_RPM[0]] * 256 +
                                dataFromMotec[CanMaster.DBS_RPM[1]])
@@ -160,4 +168,9 @@ class CanMaster(CanMasterBase):
         self.canInfo.frontArduinoData = FrontArduinoData([
             dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
             for i in range(CanMaster.FRONT_ARDUINO_INFO["converted length"])
+        ])
+
+        self.canInfo.rearArduinoData = RearArduuinoData([
+            dataFromRearArduino[2 * i] * 256 + dataFromRearArduino[2 * i + 1]
+            for i in range(CanMaster.REAR_ARDUINO_INFO["converted length"])
         ])

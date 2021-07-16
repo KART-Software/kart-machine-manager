@@ -124,6 +124,10 @@ class FrontArduinoData(list):
     pass
 
 
+class RearArduuinoData(list):
+    pass
+
+
 class CanInfo:
     rpm: Rpm
     waterTemp: WaterTemp
@@ -132,6 +136,7 @@ class CanInfo:
     battery: Battery
 
     frontArduinoData: FrontArduinoData
+    rearArduinoData: RearArduuinoData
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
@@ -140,6 +145,7 @@ class CanInfo:
         self.oilPress = OilPress(0.0)
         self.battery = Battery(0.0)
         self.frontArduinoData = FrontArduinoData(range(2))
+        self.rearArduinoData = RearArduuinoData(range(3))
 
 
 class CanMasterBase(metaclass=ABCMeta):
