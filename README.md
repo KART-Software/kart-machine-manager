@@ -2,23 +2,24 @@
 
 ## 開発環境
 
-pipenvでパッケージ管理しています  
+poetryでパッケージ管理しています  
 ビルドツールはmakeを使用してください
 
 参考  
-https://qiita.com/y-tsutsu/items/54c10e0b2c6b565c887a  
-https://blog.mktia.com/make-command-on-windows/
+https://org-technology.com/posts/python-poetry.html <br>
+https://cocoatomo.github.io/poetry-ja/ <br>
+https://kk6.hateblo.jp/entry/2018/12/20/124151
 
-以下のコマンドはappディレクトリで行ってください
-
-### pipenv環境構築
-    pipenv install --dev
+## 使用方法
 
 ### 推奨
-環境構築前に以下のコマンドでプロジェクトの配下に仮想環境を作成できます  
+環境構築前に以下のコマンドでプロジェクトの配下に仮想環境を作成できます。
+```bash
+poetry config virtualenvs.in-project true
 ```
-export PIPENV_VENV_IN_PROJECT=true
-```
+
+### poetry環境構築
+    poetry install
 
 ### 起動（本番）
     make prod
@@ -44,6 +45,3 @@ or
 ```
 make debug-cProfile
 ```
-
-### requirements.txt作成
-    pipenv lock -r > requirements.txt
