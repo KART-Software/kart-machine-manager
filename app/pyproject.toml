@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["ORyomei <o.ryomei1020@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+typing-extensions = "*"
+python-can = "*"
+pyqt5 = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-asyncio = "*"
+mypy = "*"
+flake8 = "*"
+yapf = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
