@@ -88,6 +88,7 @@ class Machine:
         self.machineInfo.waterTemp = self.canMaster.canInfo.waterTemp
         self.machineInfo.oilTemp = self.canMaster.canInfo.oilTemp
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
+        self.machineInfo.oilPress.setRequiredOilPress(self.machineInfo.rpm)
         self.machineInfo.battery = self.canMaster.canInfo.battery
         self.machineInfo.frontArduinoData = self.canMaster.canInfo.frontArduinoData
 
