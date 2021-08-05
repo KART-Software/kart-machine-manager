@@ -144,7 +144,7 @@ class CanMaster(CanMasterBase):
 
     def updateCanInfo(self):
         dataFromMotec = self._receiveData(CanMaster.MOTEC_INFO)
-        dataFromFrontArduino = self._receiveData(CanMaster.FRONT_ARDUINO_INFO)
+        # dataFromFrontArduino = self._receiveData(CanMaster.FRONT_ARDUINO_INFO)
         dataFromRearArduino = self._receiveData(CanMaster.REAR_ARDUINO_INFO)
 
         self.canInfo.rpm = Rpm(dataFromMotec[CanMaster.DBS_RPM[0]] * 256 +
@@ -165,10 +165,10 @@ class CanMaster(CanMasterBase):
                 dataFromMotec[CanMaster.DBS_BATTERY[0]] * 2.56 +
                 dataFromMotec[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
 
-        self.canInfo.frontArduinoData = FrontArduinoData([
-            dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
-            for i in range(CanMaster.FRONT_ARDUINO_INFO["converted length"])
-        ])
+        # self.canInfo.frontArduinoData = FrontArduinoData([
+        #     dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
+        #     for i in range(CanMaster.FRONT_ARDUINO_INFO["converted length"])
+        # ])
 
         self.canInfo.rearArduinoData = RearArduuinoData([
             dataFromRearArduino[2 * i] * 256 + dataFromRearArduino[2 * i + 1]
