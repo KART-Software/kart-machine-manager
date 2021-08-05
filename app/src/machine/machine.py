@@ -7,7 +7,7 @@ import csv
 
 from src.machine.can_master_base import (
     FrontArduinoData,
-    RearArduuinoData,
+    RearArduinoData,
     Rpm,
     WaterTemp,
     OilTemp,
@@ -33,7 +33,7 @@ class MachineInfo:
     fuelRemain: FuelRemain
     battery: Battery
     FrontArduinoData: FrontArduinoData
-    rearArduinoData: RearArduuinoData
+    rearArduinoData: RearArduinoData
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
@@ -45,7 +45,7 @@ class MachineInfo:
         self.battery = Battery(0.0)
         self.frontArduinoData = FrontArduinoData(
             range(CanMaster.FRONT_ARDUINO_INFO["converted length"]))
-        self.rearArduinoData = RearArduuinoData(
+        self.rearArduinoData = RearArduinoData(
             range(CanMaster.REAR_ARDUINO_INFO["converted length"]))
 
 

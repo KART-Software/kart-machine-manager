@@ -129,7 +129,7 @@ class FrontArduinoData(list):
     pass
 
 
-class RearArduuinoData(list):
+class RearArduinoData(list):
     pass
 
 
@@ -141,7 +141,7 @@ class CanInfo:
     battery: Battery
 
     frontArduinoData: FrontArduinoData
-    rearArduinoData: RearArduuinoData
+    rearArduinoData: RearArduinoData
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
@@ -150,7 +150,7 @@ class CanInfo:
         self.oilPress = OilPress(0.0)
         self.battery = Battery(0.0)
         self.frontArduinoData = FrontArduinoData(range(2))
-        self.rearArduinoData = RearArduuinoData(range(3))
+        self.rearArduinoData = RearArduinoData(range(3))
 
 
 class CanMasterBase(metaclass=ABCMeta):
