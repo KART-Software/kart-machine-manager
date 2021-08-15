@@ -44,9 +44,9 @@ class MachineInfo:
         self.fuelRemain = FuelRemain(0.0)
         self.battery = Battery(0.0)
         self.frontArduinoData = FrontArduinoData(
-            range(CanMaster.FRONT_ARDUINO_INFO["converted length"]))
+            range(FrontArduinoData.INFO["converted length"]))
         self.rearArduinoData = RearArduinoData(
-            range(CanMaster.REAR_ARDUINO_INFO["converted length"]))
+            range(RearArduinoData.INFO["converted length"]))
 
 
 class GearType(IntEnum):
@@ -94,6 +94,7 @@ class Machine:
         self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
         self.machineInfo.oilPress.setRequiredOilPress(self.machineInfo.rpm)
         self.machineInfo.battery = self.canMaster.canInfo.battery
+        self.machineInfo.frontArduinoData = self.canMaster.canInfo.frontArduinoData
         self.machineInfo.rearArduinoData = self.canMaster.canInfo.rearArduinoData
 
     def loggerInit(self):
@@ -113,7 +114,8 @@ class Machine:
             str(datetime.datetime.now()), self.machineInfo.rpm,
             self.machineInfo.waterTemp, self.machineInfo.oilTemp,
             self.machineInfo.oilPress, self.machineInfo.battery
-        ] + self.machineInfo.rearArduinoData)
+        ] + self.machineInfo.frontArduinoData +
+                             self.machineInfo.rearArduinoData)
         if len(self.log_rows) == 10:
             with open(self.logFilePath, 'a') as f:
                 writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)

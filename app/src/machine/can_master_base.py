@@ -126,11 +126,21 @@ class LapTime(datetime.timedelta):
 
 
 class FrontArduinoData(list):
-    pass
+    INFO = {
+        "arbitration id": [1776],
+        "length": 8,
+        "dbs head": [0],
+        "converted length": 4
+    }
 
 
 class RearArduinoData(list):
-    pass
+    INFO = {
+        "arbitration id": [1792],
+        "length": 8,
+        "dbs head": [0],
+        "converted length": 4
+    }
 
 
 class CanInfo:
@@ -149,8 +159,10 @@ class CanInfo:
         self.oilTemp = OilTemp(0)
         self.oilPress = OilPress(0.0)
         self.battery = Battery(0.0)
-        self.frontArduinoData = FrontArduinoData(range(2))
-        self.rearArduinoData = RearArduinoData(range(3))
+        self.frontArduinoData = FrontArduinoData(
+            range(FrontArduinoData.INFO["converted length"]))
+        self.rearArduinoData = RearArduinoData(
+            range(RearArduinoData.INFO["converted length"]))
 
 
 class CanMasterBase(metaclass=ABCMeta):
