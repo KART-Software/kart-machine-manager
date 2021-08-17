@@ -23,10 +23,10 @@ class Application(WindowListener):
         self.window.showFullScreen()
         sys.exit(self.app.exec_())
 
-    def start(self):
-        while True:
-            self.machine.updateMachineInfo()
-            self.window.updateDashboard(self.machine.machineInfo)
+    # def start(self):
+    #     while True:
+    #         self.machine.updateMachineInfo()
+    #         self.window.updateDashboard(self.machine.machineInfo)
 
     def onUpdate(self) -> None:
         self.machine.updateMachineInfo()

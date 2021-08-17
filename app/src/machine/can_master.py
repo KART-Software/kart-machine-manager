@@ -40,10 +40,6 @@ class CanMaster(CanMasterBase):
     DBS_OIL_PRESS = [22, 23]
     DBS_BATTERY = [26, 27]
 
-    # front arduino
-    DBS_STROKE_RIGHT = [0, 1]
-    DBS_STROKE_LEFT = [2, 3]
-
     def __init__(self) -> None:
         self.canInfo = CanInfo()
         os.system('sudo ip link set can0 down')
@@ -64,17 +60,6 @@ class CanMaster(CanMasterBase):
         sleep(0.2)
         self.bus.shutdown()
 
-    # def receiveData(self) -> dict:
-    #     msg = self.listener.get_message()
-    #     msg.data
-    #     if msg is None:
-    #         raise CanTimeoutException
-    #     else:
-    #         id, dlc, bdata = struct.unpack("IB3x8s", msg)
-    #         # data = bdata.hex()
-
-    #     # self.canInfo.rpm = 3333  # TODO fix
-
     def _receiveData(self, info: dict) -> bytearray:
         receiveValues = bytearray(range(info["length"]))
         retryLimit = 12
@@ -92,46 +77,10 @@ class CanMaster(CanMasterBase):
                     break
         return receiveValues
 
-    # def _receiveDataFromMotec(self) -> bytearray:
-    #     retryLimit = 12
-    #     for (ai, dh) in zip(CanMaster.ARBITRATION_IDS_MOTEC,
-    #                         CanMaster.DBS_HEAD_MOTEC):
-    #         self.bus.set_filters([{
-    #             "can_id": ai,
-    #             "can_mask": 2047,
-    #             "extended": False
-    #         }])
-    #         for _ in range(retryLimit):
-    #             msg = self.bus.recv(0.2)
-    #             # print(msg)
-    #             if msg is not None and msg.arbitration_id == ai:
-    #                 for i, value in enumerate(msg.data):
-    #                     self.receiveValuesFromMotec[dh + i] = value
-    #                 break
-    #     return self.receiveValuesFromMotec
-
-    # def _receiveDataFromFrontArduino(self) -> bytearray:
-    #     retryLimit = 12
-    #     for (ai, dh) in zip(CanMaster.ARBITRATION_IDS_FRONT_ARDUINO,
-    #                         CanMaster.DBS_HEAD_FRONT_ARDUINO):
-    #         self.bus.set_filters([{
-    #             "can_id": ai,
-    #             "can_mask": 2047,
-    #             "extended": False
-    #         }])
-    #         for _ in range(retryLimit):
-    #             msg = self.bus.recv(0.2)
-    #             # print(msg)
-    #             if msg is not None and msg.arbitration_id == ai:
-    #                 for i, value in enumerate(msg.data):
-    #                     self.receiveValuesFromFrontArduino[dh + i] = value
-    #                 break
-    #     return self.receiveValuesFromFrontArduino
-
     def updateCanInfo(self):
         dataFromMotec = self._receiveData(CanMaster.MOTEC_INFO)
-        dataFromFrontArduino = self._receiveData(FrontArduinoData.INFO)
-        dataFromRearArduino = self._receiveData(RearArduinoData.INFO)
+        # dataFromFrontArduino = self._receiveData(FrontArduinoData.INFO)
+        # dataFromRearArduino = self._receiveData(RearArduinoData.INFO)
 
         self.canInfo.rpm = Rpm(dataFromMotec[CanMaster.DBS_RPM[0]] * 256 +
                                dataFromMotec[CanMaster.DBS_RPM[1]])
@@ -151,12 +100,12 @@ class CanMaster(CanMasterBase):
                 dataFromMotec[CanMaster.DBS_BATTERY[0]] * 2.56 +
                 dataFromMotec[CanMaster.DBS_BATTERY[1]] * 0.01, 3))
 
-        self.canInfo.frontArduinoData = FrontArduinoData([
-            dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
-            for i in range(FrontArduinoData.INFO["converted length"])
-        ])
+        # self.canInfo.frontArduinoData = FrontArduinoData([
+        #     dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
+        #     for i in range(FrontArduinoData.INFO["converted length"])
+        # ])
 
-        self.canInfo.rearArduinoData = RearArduinoData([
-            dataFromRearArduino[2 * i] * 256 + dataFromRearArduino[2 * i + 1]
-            for i in range(RearArduinoData.INFO["converted length"])
-        ])
+        # self.canInfo.rearArduinoData = RearArduinoData([
+        #     dataFromRearArduino[2 * i] * 256 + dataFromRearArduino[2 * i + 1]
+        #     for i in range(RearArduinoData.INFO["converted length"])
+        # ])
