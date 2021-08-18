@@ -43,10 +43,8 @@ class MachineInfo:
         self.oilPress = OilPress(0.0)
         self.fuelRemain = FuelRemain(0.0)
         self.battery = Battery(0.0)
-        self.frontArduinoData = FrontArduinoData(
-            range(FrontArduinoData.INFO["converted length"]))
-        self.rearArduinoData = RearArduinoData(
-            range(RearArduinoData.INFO["converted length"]))
+        self.frontArduinoData = FrontArduinoData()
+        self.rearArduinoData = RearArduinoData()
 
 
 class GearType(IntEnum):
@@ -88,12 +86,12 @@ class Machine:
 
     def updateMachineInfo(self):
         self.canMaster.updateCanInfo()
-        self.machineInfo.rpm = self.canMaster.canInfo.rpm
-        self.machineInfo.waterTemp = self.canMaster.canInfo.waterTemp
-        self.machineInfo.oilTemp = self.canMaster.canInfo.oilTemp
-        self.machineInfo.oilPress = self.canMaster.canInfo.oilPress
+        self.machineInfo.rpm = self.canMaster.canInfo.motecInfo.rpm
+        self.machineInfo.waterTemp = self.canMaster.canInfo.motecInfo.waterTemp
+        self.machineInfo.oilTemp = self.canMaster.canInfo.motecInfo.oilTemp
+        self.machineInfo.oilPress = self.canMaster.canInfo.motecInfo.oilPress
         self.machineInfo.oilPress.setRequiredOilPress(self.machineInfo.rpm)
-        self.machineInfo.battery = self.canMaster.canInfo.battery
+        self.machineInfo.battery = self.canMaster.canInfo.motecInfo.battery
         self.machineInfo.frontArduinoData = self.canMaster.canInfo.frontArduinoData
         self.machineInfo.rearArduinoData = self.canMaster.canInfo.rearArduinoData
 
