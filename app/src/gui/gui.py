@@ -50,8 +50,8 @@ class MainWindow(QDialog):
         palette.setColor(self.foregroundRole(), QColor("#FFF"))
         self.setPalette(palette)
 
-        self.dashboardTitleFont = QFont("Arial", 36)
-        self.dashboardValueFont = QFont("Arial", 72)
+        self.dashboardTitleFont = QFont("Arial", 20)
+        self.dashboardValueFont = QFont("Arial", 50)
 
         self.createRpmBar()
         self.createCenterGroupBox()
@@ -61,7 +61,7 @@ class MainWindow(QDialog):
         mainLayout = QGridLayout()
 
         mainLayout.setContentsMargins(1, 1, 1, 1)
-        mainLayout.setSpacing(4)
+        mainLayout.setSpacing(2)
 
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.rpmBar, 0, 0, 1, 3)
@@ -89,14 +89,14 @@ class MainWindow(QDialog):
                 {
                     background-color: #000;
                     border-radius: 5px;
-                    height: 96px;
+                    height: 30px;
                     padding: 0px;
                 }
             QProgressBar::chunk
                 {
                     background-color: #0F0;
-                    width: 16px;
-                    margin: 2px;
+                    width: 8px;
+                    margin: 1px;
                 }
         """)
 
@@ -113,14 +113,14 @@ class MainWindow(QDialog):
                 {
                     background-color: #000;
                     border-radius: 5px;
-                    height: 96px;
+                    height: 30px;
                     padding: 0px;
                 }
             QProgressBar::chunk
                 {
                     background-color: %s;
-                    width: 16px;
-                    margin: 2px;
+                    width: 8px;
+                    margin: 1px;
                 }
         """ % (color))
 
@@ -134,19 +134,19 @@ class MainWindow(QDialog):
         self.rpmLabel = QLabel(self)
         # self.rpmLabel.setText("3454")
         self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.rpmLabel.setFont(QFont("Arial", 72))
+        self.rpmLabel.setFont(QFont("Arial", 50))
         self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         gearLabel = QLabel(self)
         gearLabel.setText("2")
         gearLabel.setAlignment(QtCore.Qt.AlignCenter)
-        gearLabel.setFont(QFont("Arial", 240))
+        gearLabel.setFont(QFont("Arial", 150))
         gearLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         speedLabel = QLabel(self)
         speedLabel.setText("16")
         speedLabel.setAlignment(QtCore.Qt.AlignCenter)
-        speedLabel.setFont(QFont("Arial", 72))
+        speedLabel.setFont(QFont("Arial", 50))
         speedLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(self.rpmLabel, 0, 0)
@@ -301,7 +301,7 @@ class MainWindow(QDialog):
         layout.addWidget(self.oilPressGroupBox, 2, 0)
 
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(4)
+        layout.setSpacing(2)
 
         self.leftGroupBox.setLayout(layout)
 
@@ -437,6 +437,6 @@ class MainWindow(QDialog):
         layout.addWidget(self.lapTimeGroupBox, 2, 0)
 
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(4)
+        layout.setSpacing(2)
 
         self.rightGroupBox.setLayout(layout)
