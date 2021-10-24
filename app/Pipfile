@@ -8,6 +8,7 @@ typing-extensions = "*"
 pyserial = "*"
 python-can = "*"
 pyqt5 = "*"
+sip = "*"
 
 [dev-packages]
 pytest = "*"
