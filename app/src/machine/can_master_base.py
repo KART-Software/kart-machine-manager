@@ -126,6 +126,24 @@ class LapTime(datetime.timedelta):
     pass
 
 
+class GearType(IntEnum):
+    NEUTRAL = 0
+    FIRST = 1
+    SECOND = 2
+    THIRD = 3
+    TOP = 4
+    FIFTH = 5
+    SIXTH = 6
+
+
+def getGearType(voltage: float) -> GearType:
+    EACH_VOLTAGES = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
+
+    deviations = [abs(voltage - eachVoltage) for eachVoltage in EACH_VOLTAGES]
+    gearNum = deviations.index(min(deviations))
+    return GearType(gearNum)
+
+
 class Can_Properties:
     FRONT_ARDUINO = {
         "arbitration id": [1776],
@@ -175,11 +193,13 @@ class MotecInfo:
     oilTemp: OilTemp
     oilPress: OilPress
     battery: Battery
+    gearType: GearType
 
     PROPERTY = Can_Properties.MOTEC
 
     DBS_RPM = [0, 1]
     DBS_WATER_TEMP = [8, 9]
+    DBS_GEAR_SENSOR_VOLTAGE = [16, 17]
     DBS_OIL_TEMP = [20, 21]
     DBS_OIL_PRESS = [22, 23]
     DBS_BATTERY = [26, 27]
@@ -190,6 +210,7 @@ class MotecInfo:
         self.oilTemp = OilTemp(0)
         self.oilPress = OilPress(0.0)
         self.battery = Battery(0.0)
+        self.gearType = GearType(0)
 
     def update(self, rawData: bytearray):
         if len(rawData) != MotecInfo.PROPERTY["length"]:
@@ -213,20 +234,20 @@ class MotecInfo:
                 round(
                     rawData[MotecInfo.DBS_BATTERY[0]] * 2.56 +
                     rawData[MotecInfo.DBS_BATTERY[1]] * 0.01, 3))
+            gearSensorVoltage = rawData[
+                MotecInfo.DBS_GEAR_SENSOR_VOLTAGE[0]] * 2.56 + rawData[
+                    MotecInfo.DBS_GEAR_SENSOR_VOLTAGE[1]] * 0.01
+            self.gearType = getGearType(gearSensorVoltage)
 
-    def updateByConvetedValues(
-        self,
-        rpm: Rpm,
-        waterTemp: WaterTemp,
-        oilTemp: OilTemp,
-        oilPress: OilPress,
-        battery: Battery,
-    ):
+    def updateByConvetedValues(self, rpm: Rpm, waterTemp: WaterTemp,
+                               oilTemp: OilTemp, oilPress: OilPress,
+                               battery: Battery, gearType: GearType):
         self.rpm = rpm
         self.waterTemp = waterTemp
         self.oilTemp = oilTemp
         self.oilPress = oilPress
         self.battery = battery
+        self.gearType = gearType
 
 
 class CanInfo:

@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
     QProgressBar,
 )
 from src.machine.can_master_base import (
+    GearType,
     Rpm,
     RpmStatus,
     WaterTemp,
@@ -78,6 +79,7 @@ class MainWindow(QDialog):
         self.setFuelRemainLabel(machineInfo.fuelRemain)
         self.setBatteryLabel(machineInfo.battery)
         self.setLapTimeLabel(machineInfo.lapTime)
+        self.setGearLabel(machineInfo.gearType)
 
     def createRpmBar(self):
         self.rpmBar = QProgressBar(self)
@@ -137,11 +139,11 @@ class MainWindow(QDialog):
         self.rpmLabel.setFont(QFont("Arial", 50))
         self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        gearLabel = QLabel(self)
-        gearLabel.setText("2")
-        gearLabel.setAlignment(QtCore.Qt.AlignCenter)
-        gearLabel.setFont(QFont("Arial", 150))
-        gearLabel.setStyleSheet("QLabel { color : #FFF; }")
+        self.gearLabel = QLabel(self)
+        # gearLabel.setText("2")
+        self.gearLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.gearLabel.setFont(QFont("Arial", 150))
+        self.gearLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         speedLabel = QLabel(self)
         speedLabel.setText("16")
@@ -150,7 +152,7 @@ class MainWindow(QDialog):
         speedLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         layout.addWidget(self.rpmLabel, 0, 0)
-        layout.addWidget(gearLabel, 1, 0)
+        layout.addWidget(self.gearLabel, 1, 0)
         layout.addWidget(speedLabel, 2, 0)
         layout.setRowStretch(1, 2)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -160,6 +162,9 @@ class MainWindow(QDialog):
 
     def setRpmLabel(self, rpm: Rpm):
         self.rpmLabel.setText(str(rpm))
+
+    def setGearLabel(self, gearType: GearType):
+        self.gearLabel.setText(str(int(gearType)))
 
     def createWaterTempGroupBox(self):
 

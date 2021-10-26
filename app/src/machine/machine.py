@@ -7,6 +7,7 @@ import csv
 
 from src.machine.can_master_base import (
     FrontArduinoData,
+    GearType,
     RearArduinoData,
     Rpm,
     WaterTemp,
@@ -32,6 +33,7 @@ class MachineInfo:
     oilPress: OilPress
     fuelRemain: FuelRemain
     battery: Battery
+    gearType: GearType
     FrontArduinoData: FrontArduinoData
     rearArduinoData: RearArduinoData
 
@@ -43,15 +45,9 @@ class MachineInfo:
         self.oilPress = OilPress(0.0)
         self.fuelRemain = FuelRemain(0.0)
         self.battery = Battery(0.0)
+        self.gearType = GearType(0)
         self.frontArduinoData = FrontArduinoData()
         self.rearArduinoData = RearArduinoData()
-
-
-class GearType(IntEnum):
-    NEUTRAL = 0
-    FIRST = 1
-    SECOND = 2
-    THIRD = 3
 
 
 class Machine:
@@ -92,6 +88,7 @@ class Machine:
         self.machineInfo.oilPress = self.canMaster.canInfo.motecInfo.oilPress
         self.machineInfo.oilPress.setRequiredOilPress(self.machineInfo.rpm)
         self.machineInfo.battery = self.canMaster.canInfo.motecInfo.battery
+        self.machineInfo.gearType = self.canMaster.canInfo.motecInfo.gearType
         self.machineInfo.frontArduinoData = self.canMaster.canInfo.frontArduinoData
         self.machineInfo.rearArduinoData = self.canMaster.canInfo.rearArduinoData
 
