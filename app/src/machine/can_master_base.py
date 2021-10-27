@@ -163,10 +163,12 @@ class Can_Properties:
         "arbitration id": [1520, 1521, 1522, 1523],
         "length": 28,
         "dbs head": [0, 8, 16, 24],
+        "converted length": 14
     }
 
 
 class CanData(List[int]):
+    rawData: bytearray
     PROPERTY: Dict[str, Any]
 
     def __init__(self):
@@ -174,6 +176,10 @@ class CanData(List[int]):
             [0 for _ in range(type(self).PROPERTY["converted length"])])
 
     def update(self, rawData: bytearray):
+        self.rawData = rawData
+        self.umbinarize(rawData)
+
+    def umbinarize(self, rawData: bytearray):
         for i in range(type(self).PROPERTY["converted length"]):
             self[i] = rawData[2 * i] * 256 + rawData[2 * i + 1]
 
@@ -186,68 +192,46 @@ class RearArduinoData(CanData):
     PROPERTY = Can_Properties.REAR_ARDUINO
 
 
-class MotecInfo:
-    rawData: bytearray
-    rpm: Rpm
-    waterTemp: WaterTemp
-    oilTemp: OilTemp
-    oilPress: OilPress
-    battery: Battery
-    gearType: GearType
+class MotecInfo(CanData):
 
     PROPERTY = Can_Properties.MOTEC
 
-    DBS_RPM = [0, 1]
-    DBS_WATER_TEMP = [8, 9]
-    DBS_GEAR_SENSOR_VOLTAGE = [16, 17]
-    DBS_OIL_TEMP = [20, 21]
-    DBS_OIL_PRESS = [22, 23]
-    DBS_BATTERY = [26, 27]
+    INDEX_RPM = 0
+    INDEX_WATER_TEMP = 4
+    INDEX_GEAR_SENSOR_VOLTAGE = 8
+    INDEX_OIL_TEMP = 10
+    INDEX_OIL_PRESS = 11
+    INDEX_BATTERY = 13
 
     def __init__(self):
-        self.rpm = Rpm(0)
-        self.waterTemp = WaterTemp(0)
-        self.oilTemp = OilTemp(0)
-        self.oilPress = OilPress(0.0)
-        self.battery = Battery(0.0)
-        self.gearType = GearType(0)
+        super().__init__()
+        self.rawData = bytearray(
+            [0 for _ in range(MotecInfo.PROPERTY["length"])])
 
-    def update(self, rawData: bytearray):
-        if len(rawData) != MotecInfo.PROPERTY["length"]:
-            pass
-            # TODO エラー処理
-        else:
-            self.rawData = rawData
-            self.rpm = Rpm(rawData[MotecInfo.DBS_RPM[0]] * 256 +
-                           rawData[MotecInfo.DBS_RPM[1]])
-            self.waterTemp = WaterTemp(
-                round(
-                    rawData[MotecInfo.DBS_WATER_TEMP[0]] * 25.6 +
-                    rawData[MotecInfo.DBS_WATER_TEMP[1]] * 0.1, 2))
-            self.oilTemp = OilTemp(
-                round(
-                    rawData[MotecInfo.DBS_OIL_TEMP[0]] * 25.6 +
-                    rawData[MotecInfo.DBS_OIL_TEMP[1]] * 0.1, 2))
-            self.oilPress = OilPress(rawData[MotecInfo.DBS_OIL_PRESS[0]] *
-                                     256 + rawData[MotecInfo.DBS_OIL_PRESS[1]])
-            self.battery = Battery(
-                round(
-                    rawData[MotecInfo.DBS_BATTERY[0]] * 2.56 +
-                    rawData[MotecInfo.DBS_BATTERY[1]] * 0.01, 3))
-            gearSensorVoltage = rawData[
-                MotecInfo.DBS_GEAR_SENSOR_VOLTAGE[0]] * 2.56 + rawData[
-                    MotecInfo.DBS_GEAR_SENSOR_VOLTAGE[1]] * 0.01
-            self.gearType = getGearType(gearSensorVoltage)
+    @property
+    def rpm(self) -> Rpm:
+        return Rpm(self[MotecInfo.INDEX_RPM])
 
-    def updateByConvetedValues(self, rpm: Rpm, waterTemp: WaterTemp,
-                               oilTemp: OilTemp, oilPress: OilPress,
-                               battery: Battery, gearType: GearType):
-        self.rpm = rpm
-        self.waterTemp = waterTemp
-        self.oilTemp = oilTemp
-        self.oilPress = oilPress
-        self.battery = battery
-        self.gearType = gearType
+    @property
+    def waterTemp(self) -> WaterTemp:
+        return WaterTemp(round(self[MotecInfo.INDEX_WATER_TEMP] / 10.0, 2))
+
+    @property
+    def oilTemp(self) -> OilTemp:
+        return OilTemp(round(self[MotecInfo.INDEX_OIL_TEMP] / 10.0, 2))
+
+    @property
+    def oilPress(self) -> OilPress:
+        return OilPress(self[MotecInfo.INDEX_OIL_PRESS])
+
+    @property
+    def battery(self) -> Battery:
+        return Battery(round(self[MotecInfo.INDEX_BATTERY] / 100.0, 3))
+
+    @property
+    def gearType(self) -> GearType:
+        gearSensorVoltage = self[MotecInfo.INDEX_GEAR_SENSOR_VOLTAGE] / 100.0
+        return getGearType(gearSensorVoltage)
 
 
 class CanInfo:
