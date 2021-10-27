@@ -8,6 +8,7 @@ import csv
 from src.machine.can_master_base import (
     FrontArduinoData,
     GearType,
+    MotecInfo,
     RearArduinoData,
     Rpm,
     WaterTemp,
@@ -96,10 +97,20 @@ class Machine:
         self.log_rows = []
         with open(self.logFilePath, 'a') as f:
             writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-            writer.writerow([
+            firstLine = [
                 "Date Time", "RPM", "Water Temp", "Oil Temp", "Oil Press",
                 "Battery"
-            ])
+            ] + [
+                "MoTeC {}".format(i)
+                for i in range(MotecInfo.PROPERTY["converted length"])
+            ] + [
+                "Front Arduino {}".format(i)
+                for i in range(FrontArduinoData.PROPERTY["converted length"])
+            ] + [
+                "Rear Arduino {}".format(i)
+                for i in range(RearArduinoData.PROPERTY["converted length"])
+            ]
+            writer.writerow(firstLine)
 
         self.base_time = int(time.time()) + 1.0
         time.sleep(-1 * time.time() % 1.0)
@@ -109,7 +120,8 @@ class Machine:
             str(datetime.datetime.now()), self.machineInfo.rpm,
             self.machineInfo.waterTemp, self.machineInfo.oilTemp,
             self.machineInfo.oilPress, self.machineInfo.battery
-        ] + self.machineInfo.frontArduinoData +
+        ] + self.canMaster.canInfo.motecInfo +
+                             self.machineInfo.frontArduinoData +
                              self.machineInfo.rearArduinoData)
         if len(self.log_rows) == 10:
             with open(self.logFilePath, 'a') as f:
