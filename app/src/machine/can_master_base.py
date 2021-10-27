@@ -160,10 +160,10 @@ class Can_Properties:
     }
 
     MOTEC = {
-        "arbitration id": [1520, 1521, 1522, 1523],
-        "length": 28,
-        "dbs head": [0, 8, 16, 24],
-        "converted length": 14
+        "arbitration id": [1520, 1521, 1522, 1523, 1524],
+        "length": 34,
+        "dbs head": [0, 8, 16, 24, 32],
+        "converted length": 17
     }
 
 
