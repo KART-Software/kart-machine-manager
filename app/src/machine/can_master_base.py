@@ -137,7 +137,7 @@ class GearType(IntEnum):
 
 
 def getGearType(voltage: float) -> GearType:
-    EACH_VOLTAGES = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
+    EACH_VOLTAGES = [3.86, 4.20, 3.52, 2.84, 2.16, 1.50, 0.81]
 
     deviations = [abs(voltage - eachVoltage) for eachVoltage in EACH_VOLTAGES]
     gearNum = deviations.index(min(deviations))
