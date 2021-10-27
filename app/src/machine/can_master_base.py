@@ -230,7 +230,7 @@ class MotecInfo(CanData):
 
     @property
     def gearType(self) -> GearType:
-        gearSensorVoltage = self[MotecInfo.INDEX_GEAR_SENSOR_VOLTAGE] / 100.0
+        gearSensorVoltage = self[MotecInfo.INDEX_GEAR_SENSOR_VOLTAGE] / 1000.0
         return getGearType(gearSensorVoltage)
 
 
