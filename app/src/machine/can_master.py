@@ -1,19 +1,16 @@
+from socket import *
+from typing import Any
 import can
 from time import sleep
 import os
 
 from can.interface import Bus
+from can.message import Message
 
-from src.machine.can_master_base import (
-    CanInfo,
-    CanMasterBase,
-    MotecInfo,
-    RearArduinoData,
-    FrontArduinoData,
-)
+from src.machine.can_master_base import CanInfo
+from src.models.models import DashMachineInfo, UDPMachineInfo
 
-
-class CanMaster(CanMasterBase):
+class CanMaster:
 
     canInfo: CanInfo
     bus: Bus
@@ -33,39 +30,26 @@ class CanMaster(CanMasterBase):
         sleep(0.2)
         self.bus.shutdown()
 
-    def _receiveData(self, info: dict) -> bytearray:
-        receiveValues = bytearray(0 for _ in range(info["length"]))
-        retryLimit = 12
-        for (ai, dh) in zip(info["arbitration id"], info["dbs head"]):
-            self.bus.set_filters([{
-                "can_id": ai,
-                "can_mask": 2047,
-                "extended": False
-            }])
-            for _ in range(retryLimit):
-                msg = self.bus.recv(0.2)
-                if msg is not None and msg.arbitration_id == ai:
-                    for i, value in enumerate(msg.data):
-                        receiveValues[dh + i] = value
-                    break
-        return receiveValues
+class DashInfoListener(can.Listener):
+    dashMachineInfo: DashMachineInfo
 
-    def updateCanInfo(self):
-        dataFromMotec = self._receiveData(MotecInfo.PROPERTY)
-        # dataFromFrontArduino = self._receiveData(FrontArduinoData.PROPERTY)
-        # dataFromRearArduino = self._receiveData(RearArduinoData.PROPERTY)
+    def __init__(self) -> None:
+        super().__init__()
+        self.dashMachineInfo = DashMachineInfo()
 
-        self.canInfo.motecInfo.update(dataFromMotec)
+    def on_message_received(self, msg: Message) -> None:
+        if msg.arbitration_id == 0x5F0:
+            self.dashMachineInfo.rpm =  msg.data[0:1]
+            self.dashMachineInfo.waterTemp = msg.data[2:3]
+            self.dashMachineInfo.oilTemp = msg.data[4:5]
+            self.dashMachineInfo.oilPress = msg.data[6:7]
+        elif msg.arbitration_id == 0x5F1:
+            self.dashMachineInfo.gearVoltage = msg.data[0:1]
+        # ここの数字は後で変更
 
-        # self.canInfo.frontArduinoData.update(dataFromFrontArduino)
-        # self.canInfo.rearArduinoData.update(dataFromRearArduino)
+class UdpLister(can.Listener):
+    udpInfo: UDPMachineInfo
 
-        # # self.canInfo.frontArduinoData = FrontArduinoData([
-        # #     dataFromFrontArduino[2 * i] * 256 + dataFromFrontArduino[2 * i + 1]
-        # #     for i in range(FrontArduinoData.INFO["converted length"])
-        # # ])
-
-        # # self.canInfo.rearArduinoData = RearArduinoData([
-        # #     dataFromRearArduino[2 * i] * 256 + dataFromRearArduino[2 * i + 1]
-        # #     for i in range(RearArduinoData.INFO["converted length"])
-        # # ])
+    def __init__(self) -> None:
+        super().__init__()
+        self.udpInfo = UDPMachineInfo()

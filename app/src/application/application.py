@@ -10,7 +10,6 @@ from ..gui.gui import MainWindow, WindowListener
 class Application(WindowListener):
 
     machine: Machine
-    canMaster: CanMaster
 
     def __init__(self):
         super().__init__()
@@ -23,11 +22,6 @@ class Application(WindowListener):
         self.window.showFullScreen()
         # self.window.show()
         sys.exit(self.app.exec_())
-
-    # def start(self):
-    #     while True:
-    #         self.machine.updateMachineInfo()
-    #         self.window.updateDashboard(self.machine.machineInfo)
 
     def onUpdate(self) -> None:
         self.machine.updateMachineInfo()

@@ -30,6 +30,7 @@ from src.machine.can_master_base import (
 )
 
 from src.machine.machine import MachineInfo
+from src.models.models import DashMachineInfo
 
 
 class WindowListener(metaclass=ABCMeta):
@@ -74,16 +75,16 @@ class MainWindow(QDialog):
         mainLayout.addWidget(self.leftGroupBox, 1, 0)
         mainLayout.addWidget(self.rightGroupBox, 1, 2)
 
-    def updateDashboard(self, machineInfo: MachineInfo):
-        self.setRpmBar(machineInfo.rpm)
-        self.setRpmLabel(machineInfo.rpm)
-        self.setWaterTempLabel(machineInfo.waterTemp)
-        self.setOilTempLabel(machineInfo.oilTemp)
-        self.setOilPressLabel(machineInfo.oilPress)
+    def updateDashboard(self, dashMachineInfo: DashMachineInfo):
+        self.setRpmBar(dashMachineInfo.rpm)
+        self.setRpmLabel(dashMachineInfo.rpm)
+        self.setWaterTempLabel(dashMachineInfo.waterTemp)
+        self.setOilTempLabel(dashMachineInfo.oilTemp)
+        self.setOilPressLabel(dashMachineInfo.oilPress)
         # self.setFuelRemainLabel(machineInfo.fuelRemain)
-        self.setBatteryLabel(machineInfo.battery)
+        self.setBatteryLabel(dashMachineInfo.battery)
         # self.setLapTimeLabel(machineInfo.lapTime)
-        self.setGearLabel(machineInfo.gearType)
+        self.setGearLabel(dashMachineInfo.gearType)
 
     def createRpmBar(self):
         self.rpmBar = QProgressBar(self)
