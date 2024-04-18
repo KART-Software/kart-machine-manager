@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QProgressBar,
     QWidget,
 )
-from src.machine.can_master_base import (
+from src.models.models import (
     GearType,
     Rpm,
     RpmStatus,
@@ -22,14 +22,9 @@ from src.machine.can_master_base import (
     OilTempStatus,
     OilPress,
     OilPressStatus,
-    FuelRemain,
-    FuelRemainStatus,
-    Battery,
-    BatteryStatus,
     LapTime,
 )
 
-from src.machine.machine import MachineInfo
 from src.models.models import DashMachineInfo
 
 
@@ -43,7 +38,7 @@ class MainWindow(QDialog):
     def __init__(self, listener: WindowListener):
         super(MainWindow, self).__init__(None)
 
-        self.resize(800,480)
+        self.resize(800, 480)
 
         self.listener = listener
 
@@ -68,7 +63,7 @@ class MainWindow(QDialog):
 
         mainLayout.setContentsMargins(1, 1, 1, 1)
         mainLayout.setSpacing(2)
-        
+
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.rpmBar, 0, 0, 1, 3)
         mainLayout.addWidget(self.centerGroupBox, 1, 1)
@@ -82,16 +77,17 @@ class MainWindow(QDialog):
         self.setOilTempLabel(dashMachineInfo.oilTemp)
         self.setOilPressLabel(dashMachineInfo.oilPress)
         # self.setFuelRemainLabel(machineInfo.fuelRemain)
-        self.setBatteryLabel(dashMachineInfo.battery)
+        # self.setBatteryLabel(dashMachineInfo.battery)
         # self.setLapTimeLabel(machineInfo.lapTime)
-        self.setGearLabel(dashMachineInfo.gearType)
+        self.setGearLabel(dashMachineInfo.gearVoltage.gearType)
 
     def createRpmBar(self):
         self.rpmBar = QProgressBar(self)
         self.rpmBar.setMaximum(Rpm.MAX)
         self.rpmBar.setValue(0)
         self.rpmBar.setTextVisible(False)
-        self.rpmBar.setStyleSheet("""
+        self.rpmBar.setStyleSheet(
+            """
             QProgressBar
                 {
                     background-color: #000;
@@ -105,7 +101,8 @@ class MainWindow(QDialog):
                     width: 8px;
                     margin: 1px;
                 }
-        """)
+        """
+        )
         self.rpmBar.setFixedHeight(80)
 
     def setRpmBar(self, rpm: Rpm):
@@ -116,7 +113,8 @@ class MainWindow(QDialog):
             color = "#F00"
         elif rpm.status == RpmStatus.HIGH:
             color = "#00F"
-        self.rpmBar.setStyleSheet("""
+        self.rpmBar.setStyleSheet(
+            """
             QProgressBar
                 {
                     background-color: #000;
@@ -130,13 +128,15 @@ class MainWindow(QDialog):
                     width: 8px;
                     margin: 1px;
                 }
-        """ % (color))
+        """
+            % (color)
+        )
 
     def createCenterGroupBox(self):
         self.centerGroupBox = QGroupBox()
         self.centerGroupBox.setFlat(True)
         self.centerGroupBox.setStyleSheet("border:0;")
-        self.centerGroupBox.setGeometry(301,81,200,400)
+        self.centerGroupBox.setGeometry(301, 81, 200, 400)
 
         layout = QGridLayout()
 
@@ -145,7 +145,7 @@ class MainWindow(QDialog):
         # self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
         # self.rpmLabel.setFont(QFont("Arial", 50))
         # self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
-        #rpm表示なし#
+        # rpm表示なし#
 
         self.gearLabel = QLabel(self)
         # gearLabel.setText("2")
@@ -158,7 +158,7 @@ class MainWindow(QDialog):
         # speedLabel.setAlignment(QtCore.Qt.AlignCenter)
         # speedLabel.setFont(QFont("Arial", 50))
         # speedLabel.setStyleSheet("QLabel { color : #FFF; }")
-        #速度表示なし#
+        # 速度表示なし#
 
         layout.addWidget(self.rpmLabel, 0, 0)
         layout.addWidget(self.gearLabel, 1, 0)
@@ -180,7 +180,7 @@ class MainWindow(QDialog):
         self.waterTempGroupBox = QGroupBox()
         self.waterTempGroupBox.setFlat(True)
         self.waterTempGroupBox.setStyleSheet("border:0;")
-        self.waterTempGroupBox.setFixedSize(300,100)
+        self.waterTempGroupBox.setFixedSize(300, 100)
         layout = QGridLayout()
 
         waterTempTitleLabel = QLabel(self)
@@ -215,15 +215,14 @@ class MainWindow(QDialog):
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
 
-        self.waterTempGroupBox.setStyleSheet("background-color: " + color +
-                                              ";")
+        self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createOilTempGroupBox(self):
 
         self.oilTempGroupBox = QGroupBox()
         self.oilTempGroupBox.setFlat(True)
         self.oilTempGroupBox.setStyleSheet("border:0;")
-        self.oilTempGroupBox.setFixedSize(300,100)
+        self.oilTempGroupBox.setFixedSize(300, 100)
 
         layout = QGridLayout()
 
@@ -265,7 +264,7 @@ class MainWindow(QDialog):
         self.oilPressGroupBox = QGroupBox()
         self.oilPressGroupBox.setFlat(True)
         self.oilPressGroupBox.setStyleSheet("border:0;")
-        self.oilPressGroupBox.setFixedSize(300,100)
+        self.oilPressGroupBox.setFixedSize(300, 100)
 
         layout = QGridLayout()
 
@@ -300,13 +299,12 @@ class MainWindow(QDialog):
 
         self.oilPressGroupBox.setStyleSheet("background-color: " + color + ";")
 
-
     def createBatteryGroupBox(self):
 
         self.batteryGroupBox = QGroupBox()
         self.batteryGroupBox.setFlat(True)
         self.batteryGroupBox.setStyleSheet("border:0;")
-        self.batteryGroupBox.setFixedSize(300,100)
+        self.batteryGroupBox.setFixedSize(300, 100)
 
         layout = QGridLayout()
 
@@ -331,22 +329,12 @@ class MainWindow(QDialog):
 
         self.batteryGroupBox.setLayout(layout)
 
-    def setBatteryLabel(self, battery: Battery):
-        self.batteryLabel.setText(str(round(battery, 2)))
-
-        if battery.status == BatteryStatus.LOW:
-            color = "red"
-        elif battery.status == BatteryStatus.HIGH:
-            color = "#000"
-
-        self.batteryGroupBox.setStyleSheet("background-color: " + color + ";")
-
     def createLeftGroupBox(self):
 
         self.leftGroupBox = QGroupBox()
         self.leftGroupBox.setFlat(True)
         self.leftGroupBox.setStyleSheet("border:0;")
-        self.leftGroupBox.setGeometry(1,81,300,400)
+        self.leftGroupBox.setGeometry(1, 81, 300, 400)
 
         layout = QVBoxLayout()
 
@@ -358,7 +346,7 @@ class MainWindow(QDialog):
         layout.addWidget(self.waterTempGroupBox, 0)
         layout.addWidget(self.oilTempGroupBox, 1)
         layout.addWidget(self.oilPressGroupBox, 2)
-        layout.addWidget(self.batteryGroupBox,3)
+        layout.addWidget(self.batteryGroupBox, 3)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)

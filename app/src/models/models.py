@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import timedelta
 from enum import IntEnum
 
 
@@ -69,7 +69,7 @@ class OilPressStatus(IntEnum):
 
 
 class OilPress(float):
-    requiredOilPress: float
+    requiredOilPress: float = 0.0
 
     COEFFICIENT = 0.00000241088030949
 
@@ -83,7 +83,8 @@ class OilPress(float):
         else:
             return OilPressStatus.HIGH
 
-class LapTime(datetime.timedelta):
+
+class LapTime(timedelta):
     pass
 
 
@@ -96,12 +97,15 @@ class GearType(IntEnum):
     FIFTH = 5
     SIXTH = 6
 
+
 class GearVoltage(float):
     EACH_VOLTAGES = [3.86, 4.20, 3.52, 2.84, 2.16, 1.50, 0.81]
 
     @property
     def gearType(self) -> GearType:
-        deviations = [abs(self - eachVoltage) for eachVoltage in GearVoltage.EACH_VOLTAGES]
+        deviations = [
+            abs(self - eachVoltage) for eachVoltage in GearVoltage.EACH_VOLTAGES
+        ]
         gearNum = deviations.index(min(deviations))
         return GearType(gearNum)
 
@@ -114,13 +118,13 @@ class GearVoltage(float):
             return str(g)
 
 
-
 def getGearType(voltage: float) -> GearType:
     EACH_VOLTAGES = [3.86, 4.20, 3.52, 2.84, 2.16, 1.50, 0.81]
 
     deviations = [abs(voltage - eachVoltage) for eachVoltage in EACH_VOLTAGES]
     gearNum = deviations.index(min(deviations))
     return GearType(gearNum)
+
 
 class DashMachineInfo:
     rpm: Rpm
@@ -137,4 +141,3 @@ class DashMachineInfo:
         self.oilTemp = OilTemp(0)
         self.oilPress = OilPress(0)
         self.gearVoltage = GearVoltage(GearVoltage.EACH_VOLTAGES[GearType.NEUTRAL])
-    

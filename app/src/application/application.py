@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from src.machine.machine import Machine
-from src.machine.can_master import CanMaster
+from src.can.can_master import CanMaster
 from ..gui.gui import MainWindow, WindowListener
 
 
@@ -19,11 +19,10 @@ class Application(WindowListener):
         self.machine.initialise()
         self.app = QApplication(sys.argv)
         self.window = MainWindow(self)
-        self.window.showFullScreen()
-        # self.window.show()
+        # self.window.showFullScreen()
+        self.window.show()
         sys.exit(self.app.exec_())
 
     def onUpdate(self) -> None:
-        self.machine.updateMachineInfo()
-        self.window.updateDashboard(self.machine.machineInfo)
+        self.window.updateDashboard(self.machine.canMaster.dashMachineInfo)
         return super().onUpdate()
