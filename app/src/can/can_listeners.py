@@ -1,17 +1,18 @@
-from dataclasses import dataclass
 import time
-import can
-import cantools.database
+from dataclasses import dataclass
 from typing import List
 
+import cantools.database
 from src.models.models import (
     DashMachineInfo,
+    GearVoltage,
+    OilPress,
+    OilTemp,
     Rpm,
     WaterTemp,
-    OilTemp,
-    OilPress,
-    GearVoltage,
 )
+
+import can
 
 
 @dataclass
@@ -68,9 +69,9 @@ class UdpPayloadListener(can.Listener):
             self.MOTEC_CAN_ID_LENGTHS + dl1CanIdLengths, key=lambda il: il.id
         )
 
+        # 最初は何も入っていない
         self.receivedMessages = {}
 
-        # 最初は何も入っていない
         super().__init__()
 
     def on_message_received(self, msg: can.Message) -> None:

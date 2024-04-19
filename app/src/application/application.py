@@ -1,9 +1,9 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
-
-from src.machine.machine import Machine
 from src.can.can_master import CanMaster
+from src.machine.machine import Machine
+
 from ..gui.gui import MainWindow, WindowListener
 
 

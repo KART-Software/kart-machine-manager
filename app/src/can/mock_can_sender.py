@@ -1,9 +1,10 @@
 import threading
-import can
 import time
 from typing import List
 
 import cantools.database
+
+import can
 
 
 class MockMachine:
