@@ -19,8 +19,8 @@ class Application(WindowListener):
         self.machine.initialise()
         self.app = QApplication(sys.argv)
         self.window = MainWindow(self)
-        # self.window.showFullScreen()
-        self.window.show()
+        self.window.showFullScreen()
+        # self.window.show()
         sys.exit(self.app.exec_())
 
     def onUpdate(self) -> None:
