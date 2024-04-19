@@ -30,20 +30,20 @@ class DashInfoListener(can.Listener):
 
     def on_message_received(self, msg: can.Message) -> None:
         if msg.arbitration_id == 0x5F0:
-            self.dashMachineInfo.rpm = Rpm.from_bytes(msg.data[0:2], "little")
+            self.dashMachineInfo.rpm = Rpm.from_bytes(msg.data[0:2], "big")
             self.dashMachineInfo.oilPress.setRequiredOilPress(self.dashMachineInfo.rpm)
             self.dashMachineInfo.waterTemp = WaterTemp(
-                int.from_bytes(msg.data[4:6], "little") // 10
+                int.from_bytes(msg.data[4:6], "big") // 10
             )
             self.dashMachineInfo.oilTemp = OilTemp(
-                int.from_bytes(msg.data[6:8], "little") // 10
+                int.from_bytes(msg.data[6:8], "big") // 10
             )
         elif msg.arbitration_id == 0x5F1:
             self.dashMachineInfo.oilPress = OilPress(
-                int.from_bytes(msg.data[0:2], "little") / 10
+                int.from_bytes(msg.data[0:2], "big") / 10
             )
             self.dashMachineInfo.gearVoltage = GearVoltage(
-                int.from_bytes(msg.data[2:4], "little") / 1000
+                int.from_bytes(msg.data[2:4], "big") / 1000
             )
         # ここの数字は後で変更
 
