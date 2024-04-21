@@ -1,5 +1,5 @@
 # kart-machine-manager
-
+全日本学生フォーミュラ大会 インパネ
 ## 開発環境
 
 pipenvでパッケージ管理しています  
