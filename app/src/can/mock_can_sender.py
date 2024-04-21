@@ -2,13 +2,11 @@ import threading
 import time
 from typing import List
 
-import cantools.database
-
 import can
+import cantools.database
 
 
 class MockMachine:
-
     rpm: int
     throttlePosition: float
     engineTemperature: float

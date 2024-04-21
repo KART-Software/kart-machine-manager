@@ -3,9 +3,9 @@ import logging
 import socket
 import threading
 import time
-from urllib import request
 
 import requests
+
 from src.can.can_listeners import UdpPayloadListener
 from src.util import config
 
@@ -37,7 +37,7 @@ class UdpTransmitter:
                 self.machineId, self.runId, 0
             )
             self.udpSocket.sendto(payload, self.udpAddress)
-        except:
+        except BaseException:
             logging.error("UDP send failed!")
 
     def sendEvery(self):
@@ -80,6 +80,6 @@ def getRunId(machineId: int, dt: datetime.datetime) -> int:  # dt は UTCを渡�
                 logging.info(f"Run ID: {runId}")
                 return runId
             else:
-                raise request.HTTPError
-        except:
+                raise BaseException
+        except BaseException:
             time.sleep(1)

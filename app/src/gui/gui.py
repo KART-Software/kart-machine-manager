@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+
 from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor, QFont
@@ -6,26 +7,24 @@ from PyQt5.QtWidgets import (
     QApplication,
     QDialog,
     QGridLayout,
-    QVBoxLayout,
     QGroupBox,
     QLabel,
     QProgressBar,
-    QWidget,
+    QVBoxLayout,
 )
+
 from src.models.models import (
+    DashMachineInfo,
     GearType,
+    OilPress,
+    OilPressStatus,
+    OilTemp,
+    OilTempStatus,
     Rpm,
     RpmStatus,
     WaterTemp,
     WaterTempStatus,
-    OilTemp,
-    OilTempStatus,
-    OilPress,
-    OilPressStatus,
-    LapTime,
 )
-
-from src.models.models import DashMachineInfo
 
 
 class WindowListener(metaclass=ABCMeta):
@@ -176,7 +175,6 @@ class MainWindow(QDialog):
         self.gearLabel.setText(str(int(gearType)))
 
     def createWaterTempGroupBox(self):
-
         self.waterTempGroupBox = QGroupBox()
         self.waterTempGroupBox.setFlat(True)
         self.waterTempGroupBox.setStyleSheet("border:0;")
@@ -218,7 +216,6 @@ class MainWindow(QDialog):
         self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createOilTempGroupBox(self):
-
         self.oilTempGroupBox = QGroupBox()
         self.oilTempGroupBox.setFlat(True)
         self.oilTempGroupBox.setStyleSheet("border:0;")
@@ -260,7 +257,6 @@ class MainWindow(QDialog):
         self.oilTempGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createOilPressGroupBox(self):
-
         self.oilPressGroupBox = QGroupBox()
         self.oilPressGroupBox.setFlat(True)
         self.oilPressGroupBox.setStyleSheet("border:0;")
@@ -300,7 +296,6 @@ class MainWindow(QDialog):
         self.oilPressGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createBatteryGroupBox(self):
-
         self.batteryGroupBox = QGroupBox()
         self.batteryGroupBox.setFlat(True)
         self.batteryGroupBox.setStyleSheet("border:0;")
@@ -330,7 +325,6 @@ class MainWindow(QDialog):
         self.batteryGroupBox.setLayout(layout)
 
     def createLeftGroupBox(self):
-
         self.leftGroupBox = QGroupBox()
         self.leftGroupBox.setFlat(True)
         self.leftGroupBox.setStyleSheet("border:0;")
@@ -470,7 +464,6 @@ class MainWindow(QDialog):
     #         str(minute) + "." + str(second) + "." + str(aftersecond))
 
     def createRightGroupBox(self):
-
         self.rightGroupBox = QGroupBox()
         self.rightGroupBox.setFlat(True)
         self.rightGroupBox.setStyleSheet("border:0;")
