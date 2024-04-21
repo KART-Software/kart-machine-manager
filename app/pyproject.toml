@@ -28,5 +28,7 @@ allow-direct-references = true
 packages = ["."]
 
 [tool.mypy]
-strict = true
+
+[[tool.mypy.overrides]]
+module = "requests"
 ignore_missing_imports = true

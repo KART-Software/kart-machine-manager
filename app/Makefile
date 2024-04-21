@@ -1,27 +1,23 @@
 prod:
+	DEBUG=FALSE
 	DISPLAY=":0" \
-	pipenv run python3 main.py
-
-prod-cProfile:
-	DISPLAY=":0" \
-	pipenv run python3 -m cProfile -s tottime main.py > log/cProfile_`date +%Y%m%d_%H%M%S`.log
+	rye run python main.py
 
 debug:
 	DEBUG=TRUE \
-	pipenv run python3 main.py
-
-debug-cProfile:
-	DEBUG=TRUE \
-	pipenv run python3 -m cProfile -s tottime main.py > log/cProfile_`date +%Y%m%d_%H%M%S`.log
+	rye run python main.py
 
 format:
-	pipenv run yapf -i --recursive ./src
-
-type-check:
-	pipenv run mypy -p src
-
-test:
-	pipenv run python -m pytest
+	rye run ruff format
 
 lint:
-	pipenv run flake8 ./src
+	rye run ruff check
+
+lint-fix:
+	rye run ruff check --fix
+
+type-check:
+	rye run mypy .
+
+test:
+	rye test
