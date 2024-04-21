@@ -1,7 +1,7 @@
 name: Ruff
 on:
   push:
-    branches: [master, develop, feature/rye]
+    branches: [master, develop]
   pull_request:
     branches: [master, develop]
 jobs:
@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: chartboost/ruff-action@v1
+      - name: Lint
+        uses: chartboost/ruff-action@v1
         with:
           src: "./app"
           args: --config ./app/ruff.toml
