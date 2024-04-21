@@ -1,16 +1,15 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
-
+from src.can.can_master import CanMaster
 from src.machine.machine import Machine
-from src.machine.can_master import CanMaster
+
 from ..gui.gui import MainWindow, WindowListener
 
 
 class Application(WindowListener):
 
     machine: Machine
-    canMaster: CanMaster
 
     def __init__(self):
         super().__init__()
@@ -21,14 +20,9 @@ class Application(WindowListener):
         self.app = QApplication(sys.argv)
         self.window = MainWindow(self)
         self.window.showFullScreen()
+        # self.window.show()
         sys.exit(self.app.exec_())
 
-    # def start(self):
-    #     while True:
-    #         self.machine.updateMachineInfo()
-    #         self.window.updateDashboard(self.machine.machineInfo)
-
     def onUpdate(self) -> None:
-        self.machine.updateMachineInfo()
-        self.window.updateDashboard(self.machine.machineInfo)
+        self.window.updateDashboard(self.machine.canMaster.dashMachineInfo)
         return super().onUpdate()

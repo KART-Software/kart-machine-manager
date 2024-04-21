@@ -1,0 +1,193 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: RT__XXX RT__XX
+VAL_TABLE_ Trigger_Combining_Rule 2 "OR" 1 "AND" 0 "N/A (no additional condition)" ;
+VAL_TABLE_ Trigger_Polarity 1 "Rising" 0 "Falling" ;
+VAL_TABLE_ Trigger_Condition 8 "Distance" 7 "Command Message" 6 "Trigger Input" 5 "Analog Input" 4 "Lateral Acceleration" 3 "Longitudinal Acceleration" 2 "Halt" 1 "Speed" 0 "NULL" ;
+VAL_TABLE_ Accel_Units 1 "m/s/s" 0 "g" ;
+VAL_TABLE_ Distance_Units 1 "ft" 0 "m" ;
+VAL_TABLE_ Speed_Units 3 "knots" 2 "mph" 1 "kph" 0 "m/s" ;
+VAL_TABLE_ MFDD_threshold_type 1 "Fixed speed" 0 "Percentage of start speed" ;
+VAL_TABLE_ Last_Test_Status 7 "Aborted: Speed re-armed" 6 "Aborted: INS not converged" 5 "Aborted: Poor GPS" 4 "Aborted: Config" 3 "Aborted: Reason unknown" 2 "Ended correctly" 1 "In progress" 0 "N/A" ;
+VAL_TABLE_ Test_Status 4 "Active" 2 "Armed" 1 "Ready" 0 "Not ready" ;
+VAL_TABLE_ Valid_Invalid 1 "Valid" 0 "Invalid" ;
+VAL_TABLE_ Low_High 1 "High" 0 "Low" ;
+VAL_TABLE_ On_Off 1 "On" 0 "Off" ;
+VAL_TABLE_ Active_Inactive 1 "Active" 0 "Inactive" ;
+VAL_TABLE_ Trigger_Type 1 "Rising edge" 0 "Falling edge" ;
+
+
+BO_ 1536 RT_DL1MK3_Accel: 8 RT__XXX
+ SG_ Accel_Vertical : 48|16@1- (0.001,0) [-32|32] "g"  RT__XXX
+ SG_ Accel_Lateral : 32|16@1- (0.001,0) [-32|32] "g"  RT__XXX
+ SG_ Accel_Longitudinal : 16|16@1- (0.001,0) [-32|32] "g"  RT__XXX
+ SG_ Accuracy_Accel : 8|8@1+ (1,0) [0|255] ""  RT__XXX
+ SG_ Validity_Accel_Longitudinal : 0|1@1+ (1,0) [0|0] ""  RT__XXX
+ SG_ Validity_Accel_Lateral : 1|1@1+ (1,0) [0|0] ""  RT__XXX
+ SG_ Validity_Accel_Vertical : 2|1@1+ (1,0) [0|0] ""  RT__XXX
+
+BO_ 1537 RT_DL1MK3_Speed: 8 RT__XXX
+ SG_ Speed : 16|32@1- (0.00001,0) [-20000|20000] "m/s"  RT__XXX
+ SG_ Accuracy_Speed : 8|8@1+ (1,0) [0|255] "m/s"  RT__XXX
+ SG_ Validity_Speed : 0|1@1+ (1,0) [0|0] ""  RT__XXX
+
+BO_ 1538 RT_DL1MK3_GPS_Time: 8 RT__XXX
+ SG_ GPS_time : 16|32@1+ (0.001,0) [0|604800] "s"  RT__XXX
+ SG_ GPS_Week : 48|16@1+ (1,0) [0|65535] ""  RT__XXX
+ SG_ Accuracy_GPS_Time : 8|8@1+ (1,0) [0|255] ""  RT__XXX
+ SG_ Validity_GPS_Week : 1|1@1+ (1,0) [0|1] ""  RT__XXX
+ SG_ Validity_GPS_Time : 0|1@1+ (1,0) [0|1] ""  RT__XXX
+
+BO_ 1539 RT_DL1MK3_GPS_Pos_LLH_1: 8 RT__XXX
+ SG_ GPS_lat : 32|32@1- (0.0000001,0) [-90|90] "degrees"  RT__XXX
+ SG_ GPS_alt_acc : 24|8@1+ (0.1,0) [0|0] "m"  RT__XXX
+ SG_ Accuracy_GPS_Pos_LLH_Longitude : 16|8@1+ (0.1,0) [0|0] "m"  RT__XXX
+ SG_ Accuracy_GPS_Pos_LLH_Latitude : 8|8@1+ (0.1,0) [0|0] "m"  RT__XX
+ SG_ Validity_GPS_Pos_LLH_Altitude : 2|1@1+ (1,0) [0|1] ""  RT__XXX
+ SG_ Validity_GPS_Pos_LLH_Longitude : 1|1@1+ (1,0) [0|1] ""  RT__XXX
+ SG_ Validity_GPS_Pos_LLH_Latitude : 0|1@1+ (1,0) [0|1] ""  RT__XXX
+
+BO_ 1540 RT_DL1MK3_GPS_Pos_LLH_2: 8 RT__XXX
+ SG_ GPS_altitude : 32|32@1- (0.001,0) [-1000|100000] "m"  RT__XXX
+ SG_ GPS_long : 0|32@1- (0.0000001,0) [-180|180] "degrees"  RT__XXX
+
+BO_ 1541 RT_DL1MK3_GPS_Speed: 8 RT__XXX
+ SG_ GPS_Speed_3D : 40|24@1+ (0.0001,0) [0|1675] "m/s"  RT__XXX
+ SG_ GPS_Speed_2D : 16|24@1+ (0.0001,0) [0|1675] "m/s"  RT__XXX
+ SG_ Accuracy_GPS_Speed : 8|8@1+ (0.1,0) [0|0] "m/s"  RT__XXX
+ SG_ Validity_GPS_Speed_3D : 1|1@1+ (1,0) [0|1] ""  RT__XXX
+ SG_ Validity_GPS_Speed_2D : 0|1@1+ (1,0) [0|1] ""  RT__XXX
+
+BO_ 1542 RT_DL1MK3_Freq_1: 2 RT__XXX
+ SG_ freq_input_1 : 0|16@1+ (0.1,0) [0|0] "Hz"  RT__XXX
+
+BO_ 1543 RT_DL1MK3_Freq_2: 2 RT__XXX
+ SG_ freq_input_2 : 0|16@1+ (0.1,0) [0|0] "Hz"  RT__XXX
+
+BO_ 1544 RT_DL1MK3_Freq_3: 2 RT__XXX
+ SG_ freq_input_3 : 0|16@1+ (0.1,0) [0|0] "Hz"  RT__XXX
+
+BO_ 1545 RT_DL1MK3_Freq_4: 2 RT__XXX
+ SG_ freq_input_4 : 0|16@1+ (0.1,0) [0|0] "Hz"  RT__XXX
+
+BO_ 1546 RT_DL1MK3_HighRes_Analog_1: 4 RT__XXX
+ SG_ analog_1 : 0|32@1- (0.000001,0) [-2147.483648|2147.483647] "V"  RT__XXX
+
+BO_ 1547 RT_DL1MK3_HighRes_Analog_2: 4 RT__XXX
+ SG_ analog_2 : 0|32@1- (0.000001,0) [-2147.483648|2147.483647] "V"  RT__XXX
+
+BO_ 1548 RT_DL1MK3_HighRes_Analog_3: 4 RT__XXX
+ SG_ analog_3 : 0|32@1- (0.000001,0) [-2147.483648|2147.483647] "V"  RT__XXX
+
+BO_ 1549 RT_DL1MK3_HighRes_Analog_4: 4 RT__XXX
+ SG_ analog_4 : 0|32@1- (0.000001,0) [-2147.483648|2147.483647] "V"  RT__XXX
+
+BO_ 1550 RT_DL1MK3_HighRes_Analog_5: 4 RT__XXX
+ SG_ analog_5 : 0|32@1- (0.000001,0) [-2147.483648|2147.483647] "V"  RT__XXX
+
+BO_ 1551 RT_DL1MK3_Gyro_Rates: 8 RT__XXX
+ SG_ Gyro_Rate_Roll : 48|16@1- (0.01,0) [-327|327] "degrees/s"  RT__XXX
+ SG_ Gyro_Rate_Pitch : 32|16@1- (0.01,0) [-327|327] "degrees/s"  RT__XXX
+ SG_ yaw_rate : 16|16@1- (0.01,0) [-327|327] "degrees/s"  RT__XXX
+ SG_ Accuracy_Gyro_Rates : 8|8@1+ (1,0) [0|0] ""  RT__XXX
+ SG_ Validity_Gyro_Rate_Yaw : 0|1@1+ (1,0) [0|1] ""  RT__XXX
+ SG_ Validity_Gyro_Rate_Pitch : 1|1@1+ (1,0) [0|1] ""  RT__XXX
+ SG_ Validity_Gyro_Rate_Roll : 2|1@1+ (1,0) [0|1] ""  RT__XXX
+
+
+
+CM_ SG_ 1536 Accel_Vertical "Vertical acceleration. This is positive when the vehicle accelerates in an upwards direction, e.g. when travelling through a dip.";
+CM_ SG_ 1536 Accel_Lateral "Lateral acceleration. This is positive when the vehicle accelerates towards the right, e.g. when cornering around a right-hand bend.";
+CM_ SG_ 1536 Accel_Longitudinal "Longitudinal acceleration. This is positive when the vehicle accelerates in a forwards direction.";
+CM_ SG_ 1536 Accuracy_Accel "Dimensionless. Lower values imply but do not guarantee better accuracy than higher values.";
+CM_ SG_ 1536 Validity_Accel_Longitudinal "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1536 Validity_Accel_Lateral "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1536 Validity_Accel_Vertical "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1537 Accuracy_Speed "One-sigma standard deviation estimate";
+CM_ SG_ 1537 Validity_Speed "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1538 GPS_time "GPS time is the time in seconds since midnight GMT on Saturday night.";
+CM_ SG_ 1538 Validity_GPS_Week "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1538 Validity_GPS_Time "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1539 GPS_alt_acc "1-sigma standard deviation estimate";
+CM_ SG_ 1539 Accuracy_GPS_Pos_LLH_Longitude "1-sigma standard deviation estimate";
+CM_ SG_ 1539 Accuracy_GPS_Pos_LLH_Latitude "1-sigma standard deviation estimate";
+CM_ SG_ 1539 Validity_GPS_Pos_LLH_Altitude "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1539 Validity_GPS_Pos_LLH_Longitude "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1539 Validity_GPS_Pos_LLH_Latitude "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1541 GPS_Speed_3D "This is GPS scalar 3D speed - scalar speed with the local Z axis component included.";
+CM_ SG_ 1541 GPS_Speed_2D "This is GPS scalar 2D speed - scalar speed with no local Z axis component included.";
+CM_ SG_ 1541 Accuracy_GPS_Speed "This accuracy value applies to both 2D and 3D GPS speed.";
+CM_ SG_ 1541 Validity_GPS_Speed_3D "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1541 Validity_GPS_Speed_2D "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1546 analog_1 "Signed voltage channel with resolution of 1uV";
+CM_ SG_ 1547 analog_2 "Signed voltage channel with resolution of 1uV";
+CM_ SG_ 1548 analog_3 "Signed voltage channel with resolution of 1uV";
+CM_ SG_ 1549 analog_4 "Signed voltage channel with resolution of 1uV";
+CM_ SG_ 1550 analog_5 "Signed voltage channel with resolution of 1uV";
+CM_ SG_ 1551 Gyro_Rate_Roll "Roll rate is positive for clockwise rotation when looking at the rear of the vehicle from behind the vehicle.";
+CM_ SG_ 1551 Gyro_Rate_Pitch "Pitch rate is positive for clockwise rotation when looking at the left hand side of the vehicle from the left of the vehicle.";
+CM_ SG_ 1551 yaw_rate "Yaw rate is positive for clockwise rotation when looking down on the vehicle from above.";
+CM_ SG_ 1551 Accuracy_Gyro_Rates "Dimensionless. Lower values imply but do not guarantee better accuracy than higher values.";
+CM_ SG_ 1551 Validity_Gyro_Rate_Yaw "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1551 Validity_Gyro_Rate_Pitch "Valid when bit is set, invalid when bit is clear.";
+CM_ SG_ 1551 Validity_Gyro_Rate_Roll "Valid when bit is set, invalid when bit is clear.";
+BA_DEF_  "DBName" STRING ;
+BA_DEF_  "BusType" STRING ;
+BA_DEF_  "ProtocolType" STRING ;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","J1939PG";
+BA_DEF_ BO_  "RTDefaultCanId" INT 0 0;
+BA_DEF_DEF_  "DBName" "";
+BA_DEF_DEF_  "BusType" "CAN";
+BA_DEF_DEF_  "VFrameFormat" "StandardCAN";
+BA_DEF_DEF_  "RTDefaultCanId" 0;
+BA_ "DBName" "RTCANDB";
+BA_ "RTDefaultCanId" BO_ 1536 2155872292;
+BA_ "RTDefaultCanId" BO_ 1537 2155876388;
+BA_ "RTDefaultCanId" BO_ 1538 2156658980;
+BA_ "RTDefaultCanId" BO_ 1539 2156659236;
+BA_ "RTDefaultCanId" BO_ 1540 2156659492;
+BA_ "RTDefaultCanId" BO_ 1541 2156662820;
+BA_ "RTDefaultCanId" BO_ 1542 2157248804;
+BA_ "RTDefaultCanId" BO_ 1543 2157249060;
+BA_ "RTDefaultCanId" BO_ 1544 2157249316;
+BA_ "RTDefaultCanId" BO_ 1545 2157249572;
+BA_ "RTDefaultCanId" BO_ 1546 2156134692;
+BA_ "RTDefaultCanId" BO_ 1547 2156134948;
+BA_ "RTDefaultCanId" BO_ 1548 2156135204;
+BA_ "RTDefaultCanId" BO_ 1549 2156135460;
+BA_ "RTDefaultCanId" BO_ 1550 2156135716;
+BA_ "RTDefaultCanId" BO_ 1551 2155872548;
+

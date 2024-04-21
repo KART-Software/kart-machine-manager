@@ -6,11 +6,13 @@ from PyQt5.QtWidgets import (
     QApplication,
     QDialog,
     QGridLayout,
+    QVBoxLayout,
     QGroupBox,
     QLabel,
     QProgressBar,
+    QWidget,
 )
-from src.machine.can_master_base import (
+from src.models.models import (
     GearType,
     Rpm,
     RpmStatus,
@@ -20,14 +22,10 @@ from src.machine.can_master_base import (
     OilTempStatus,
     OilPress,
     OilPressStatus,
-    FuelRemain,
-    FuelRemainStatus,
-    Battery,
-    BatteryStatus,
     LapTime,
 )
 
-from src.machine.machine import MachineInfo
+from src.models.models import DashMachineInfo
 
 
 class WindowListener(metaclass=ABCMeta):
@@ -39,6 +37,8 @@ class WindowListener(metaclass=ABCMeta):
 class MainWindow(QDialog):
     def __init__(self, listener: WindowListener):
         super(MainWindow, self).__init__(None)
+
+        self.resize(800, 480)
 
         self.listener = listener
 
@@ -70,23 +70,24 @@ class MainWindow(QDialog):
         mainLayout.addWidget(self.leftGroupBox, 1, 0)
         mainLayout.addWidget(self.rightGroupBox, 1, 2)
 
-    def updateDashboard(self, machineInfo: MachineInfo):
-        self.setRpmBar(machineInfo.rpm)
-        self.setRpmLabel(machineInfo.rpm)
-        self.setWaterTempLabel(machineInfo.waterTemp)
-        self.setOilTempLabel(machineInfo.oilTemp)
-        self.setOilPressLabel(machineInfo.oilPress)
-        self.setFuelRemainLabel(machineInfo.fuelRemain)
-        self.setBatteryLabel(machineInfo.battery)
-        self.setLapTimeLabel(machineInfo.lapTime)
-        self.setGearLabel(machineInfo.gearType)
+    def updateDashboard(self, dashMachineInfo: DashMachineInfo):
+        self.setRpmBar(dashMachineInfo.rpm)
+        self.setRpmLabel(dashMachineInfo.rpm)
+        self.setWaterTempLabel(dashMachineInfo.waterTemp)
+        self.setOilTempLabel(dashMachineInfo.oilTemp)
+        self.setOilPressLabel(dashMachineInfo.oilPress)
+        # self.setFuelRemainLabel(machineInfo.fuelRemain)
+        # self.setBatteryLabel(dashMachineInfo.battery)
+        # self.setLapTimeLabel(machineInfo.lapTime)
+        self.setGearLabel(dashMachineInfo.gearVoltage.gearType)
 
     def createRpmBar(self):
         self.rpmBar = QProgressBar(self)
         self.rpmBar.setMaximum(Rpm.MAX)
         self.rpmBar.setValue(0)
         self.rpmBar.setTextVisible(False)
-        self.rpmBar.setStyleSheet("""
+        self.rpmBar.setStyleSheet(
+            """
             QProgressBar
                 {
                     background-color: #000;
@@ -100,7 +101,9 @@ class MainWindow(QDialog):
                     width: 8px;
                     margin: 1px;
                 }
-        """)
+        """
+        )
+        self.rpmBar.setFixedHeight(80)
 
     def setRpmBar(self, rpm: Rpm):
         self.rpmBar.setValue(int(rpm))
@@ -110,7 +113,8 @@ class MainWindow(QDialog):
             color = "#F00"
         elif rpm.status == RpmStatus.HIGH:
             color = "#00F"
-        self.rpmBar.setStyleSheet("""
+        self.rpmBar.setStyleSheet(
+            """
             QProgressBar
                 {
                     background-color: #000;
@@ -124,20 +128,24 @@ class MainWindow(QDialog):
                     width: 8px;
                     margin: 1px;
                 }
-        """ % (color))
+        """
+            % (color)
+        )
 
     def createCenterGroupBox(self):
         self.centerGroupBox = QGroupBox()
         self.centerGroupBox.setFlat(True)
         self.centerGroupBox.setStyleSheet("border:0;")
+        self.centerGroupBox.setGeometry(301, 81, 200, 400)
 
         layout = QGridLayout()
 
         self.rpmLabel = QLabel(self)
-        # self.rpmLabel.setText("3454")
-        self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.rpmLabel.setFont(QFont("Arial", 50))
-        self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # # self.rpmLabel.setText("3454")
+        # self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
+        # self.rpmLabel.setFont(QFont("Arial", 50))
+        # self.rpmLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # rpm表示なし#
 
         self.gearLabel = QLabel(self)
         # gearLabel.setText("2")
@@ -146,10 +154,11 @@ class MainWindow(QDialog):
         self.gearLabel.setStyleSheet("QLabel { color : #FFF; }")
 
         speedLabel = QLabel(self)
-        speedLabel.setText("16")
-        speedLabel.setAlignment(QtCore.Qt.AlignCenter)
-        speedLabel.setFont(QFont("Arial", 50))
-        speedLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # speedLabel.setText("16")
+        # speedLabel.setAlignment(QtCore.Qt.AlignCenter)
+        # speedLabel.setFont(QFont("Arial", 50))
+        # speedLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # 速度表示なし#
 
         layout.addWidget(self.rpmLabel, 0, 0)
         layout.addWidget(self.gearLabel, 1, 0)
@@ -171,23 +180,23 @@ class MainWindow(QDialog):
         self.waterTempGroupBox = QGroupBox()
         self.waterTempGroupBox.setFlat(True)
         self.waterTempGroupBox.setStyleSheet("border:0;")
-
+        self.waterTempGroupBox.setFixedSize(300, 100)
         layout = QGridLayout()
 
         waterTempTitleLabel = QLabel(self)
         waterTempTitleLabel.setText("Water Temp")
         waterTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         waterTempTitleLabel.setFont(self.dashboardTitleFont)
-        waterTempTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+        waterTempTitleLabel.setStyleSheet("QLabel { color : #000; }")
 
         self.waterTempLabel = QLabel(self)
         # self.waterTempLabel.setText("114")
-        self.waterTempLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.waterTempLabel.setFont(self.dashboardValueFont)
-        self.waterTempLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # self.waterTempLabel.setAlignment(QtCore.Qt.AlignCenter)
+        # self.waterTempLabel.setFont(self.dashboardValueFont)
+        # self.waterTempLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(waterTempTitleLabel, 0, 0)
-        layout.addWidget(self.waterTempLabel, 1, 0)
+        layout.addWidget(waterTempTitleLabel, 1, 0)
+        # layout.addWidget(self.waterTempLabel, 1, 0)
         layout.setRowStretch(1, 3)
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -206,14 +215,14 @@ class MainWindow(QDialog):
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
 
-        self.waterTempGroupBox.setStyleSheet("background-color: " + color +
-                                             ";")
+        self.waterTempGroupBox.setStyleSheet("background-color: " + color + ";")
 
     def createOilTempGroupBox(self):
 
         self.oilTempGroupBox = QGroupBox()
         self.oilTempGroupBox.setFlat(True)
         self.oilTempGroupBox.setStyleSheet("border:0;")
+        self.oilTempGroupBox.setFixedSize(300, 100)
 
         layout = QGridLayout()
 
@@ -221,16 +230,16 @@ class MainWindow(QDialog):
         oilTempTitleLabel.setText("Oil Temp")
         oilTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         oilTempTitleLabel.setFont(self.dashboardTitleFont)
-        oilTempTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+        oilTempTitleLabel.setStyleSheet("QLabel { color : #000; }")
 
         self.oilTempLabel = QLabel(self)
-        self.oilTempLabel.setText("114")
-        self.oilTempLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.oilTempLabel.setFont(self.dashboardValueFont)
-        self.oilTempLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # self.oilTempLabel.setText("114")
+        # self.oilTempLabel.setAlignment(QtCore.Qt.AlignCenter)
+        # self.oilTempLabel.setFont(self.dashboardValueFont)
+        # self.oilTempLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(oilTempTitleLabel, 0, 0)
-        layout.addWidget(self.oilTempLabel, 1, 0)
+        layout.addWidget(oilTempTitleLabel, 1, 0)
+        # layout.addWidget(self.oilTempLabel, 1, 0)
         layout.setRowStretch(1, 3)
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -255,6 +264,7 @@ class MainWindow(QDialog):
         self.oilPressGroupBox = QGroupBox()
         self.oilPressGroupBox.setFlat(True)
         self.oilPressGroupBox.setStyleSheet("border:0;")
+        self.oilPressGroupBox.setFixedSize(300, 100)
 
         layout = QGridLayout()
 
@@ -262,16 +272,16 @@ class MainWindow(QDialog):
         oilPressTitleLabel.setText("Oil Press")
         oilPressTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         oilPressTitleLabel.setFont(self.dashboardTitleFont)
-        oilPressTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+        oilPressTitleLabel.setStyleSheet("QLabel { color : #000; }")
 
         self.oilPressLabel = QLabel(self)
-        self.oilPressLabel.setText("114")
-        self.oilPressLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.oilPressLabel.setFont(self.dashboardValueFont)
-        self.oilPressLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # self.oilPressLabel.setText("114")
+        # self.oilPressLabel.setAlignment(QtCore.Qt.AlignCenter)
+        # self.oilPressLabel.setFont(self.dashboardValueFont)
+        # self.oilPressLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(oilPressTitleLabel, 0, 0)
-        layout.addWidget(self.oilPressLabel, 1, 0)
+        layout.addWidget(oilPressTitleLabel, 1, 0)
+        # layout.addWidget(self.oilPressLabel, 1, 0)
         layout.setRowStretch(1, 3)
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -289,72 +299,12 @@ class MainWindow(QDialog):
 
         self.oilPressGroupBox.setStyleSheet("background-color: " + color + ";")
 
-    def createLeftGroupBox(self):
-
-        self.leftGroupBox = QGroupBox()
-        self.leftGroupBox.setFlat(True)
-        self.leftGroupBox.setStyleSheet("border:0;")
-
-        layout = QGridLayout()
-
-        self.createWaterTempGroupBox()
-        self.createOilTempGroupBox()
-        self.createOilPressGroupBox()
-
-        layout.addWidget(self.waterTempGroupBox, 0, 0)
-        layout.addWidget(self.oilTempGroupBox, 1, 0)
-        layout.addWidget(self.oilPressGroupBox, 2, 0)
-
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(2)
-
-        self.leftGroupBox.setLayout(layout)
-
-    def createFuelRemainGroupBox(self):
-
-        self.fuelRemainGroupBox = QGroupBox()
-        self.fuelRemainGroupBox.setFlat(True)
-        self.fuelRemainGroupBox.setStyleSheet("border:0;")
-
-        layout = QGridLayout()
-
-        fuelRemainTitleLabel = QLabel(self)
-        fuelRemainTitleLabel.setText("Fuel Remain")
-        fuelRemainTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
-        fuelRemainTitleLabel.setFont(self.dashboardTitleFont)
-        fuelRemainTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
-
-        self.fuelRemainLabel = QLabel(self)
-        self.fuelRemainLabel.setText("30")
-        self.fuelRemainLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.fuelRemainLabel.setFont(self.dashboardValueFont)
-        self.fuelRemainLabel.setStyleSheet("QLabel { color : #FFF; }")
-
-        layout.addWidget(fuelRemainTitleLabel, 0, 0)
-        layout.addWidget(self.fuelRemainLabel, 1, 0)
-        layout.setRowStretch(1, 3)
-
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(1)
-
-        self.fuelRemainGroupBox.setLayout(layout)
-
-    def setFuelRemainLabel(self, fuelRemain: FuelRemain):
-        self.fuelRemainLabel.setText(str(round(fuelRemain, 2)))
-
-        if fuelRemain.status == FuelRemainStatus.LOW:
-            color = "red"
-        elif fuelRemain.status == FuelRemainStatus.HIGH:
-            color = "#000"
-
-        self.fuelRemainGroupBox.setStyleSheet("background-color: " + color +
-                                              ";")
-
     def createBatteryGroupBox(self):
 
         self.batteryGroupBox = QGroupBox()
         self.batteryGroupBox.setFlat(True)
         self.batteryGroupBox.setStyleSheet("border:0;")
+        self.batteryGroupBox.setFixedSize(300, 100)
 
         layout = QGridLayout()
 
@@ -362,16 +312,16 @@ class MainWindow(QDialog):
         batteryTitleLabel.setText("Battery")
         batteryTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
         batteryTitleLabel.setFont(self.dashboardTitleFont)
-        batteryTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+        batteryTitleLabel.setStyleSheet("QLabel { color : #000; }")
 
         self.batteryLabel = QLabel(self)
-        self.batteryLabel.setText("114")
-        self.batteryLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.batteryLabel.setFont(self.dashboardValueFont)
-        self.batteryLabel.setStyleSheet("QLabel { color : #FFF; }")
+        # self.batteryLabel.setText("114")
+        # self.batteryLabel.setAlignment(QtCore.Qt.AlignCenter)
+        # self.batteryLabel.setFont(self.dashboardValueFont)
+        # self.batteryLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(batteryTitleLabel, 0, 0)
-        layout.addWidget(self.batteryLabel, 1, 0)
+        layout.addWidget(batteryTitleLabel, 1, 0)
+        # layout.addWidget(self.batteryLabel, 1, 0)
         layout.setRowStretch(1, 3)
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -379,51 +329,145 @@ class MainWindow(QDialog):
 
         self.batteryGroupBox.setLayout(layout)
 
-    def setBatteryLabel(self, battery: Battery):
-        self.batteryLabel.setText(str(round(battery, 2)))
+    def createLeftGroupBox(self):
 
-        if battery.status == BatteryStatus.LOW:
-            color = "red"
-        elif battery.status == BatteryStatus.HIGH:
-            color = "#000"
+        self.leftGroupBox = QGroupBox()
+        self.leftGroupBox.setFlat(True)
+        self.leftGroupBox.setStyleSheet("border:0;")
+        self.leftGroupBox.setGeometry(1, 81, 300, 400)
 
-        self.batteryGroupBox.setStyleSheet("background-color: " + color + ";")
+        layout = QVBoxLayout()
 
-    def createLapTimeGroupBox(self):
+        self.createWaterTempGroupBox()
+        self.createOilTempGroupBox()
+        self.createOilPressGroupBox()
+        self.createBatteryGroupBox()
 
-        self.lapTimeGroupBox = QGroupBox()
-        self.lapTimeGroupBox.setFlat(True)
-        self.lapTimeGroupBox.setStyleSheet("border:0;")
-
-        layout = QGridLayout()
-
-        lapTimeTitleLabel = QLabel(self)
-        lapTimeTitleLabel.setText("Lap Time")
-        lapTimeTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
-        lapTimeTitleLabel.setFont(self.dashboardTitleFont)
-        lapTimeTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
-
-        self.lapTimeLabel = QLabel(self)
-        # self.lapTimeLabel.setText("114")
-        self.lapTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.lapTimeLabel.setFont(self.dashboardValueFont)
-        self.lapTimeLabel.setStyleSheet("QLabel { color : #FFF; }")
-
-        layout.addWidget(lapTimeTitleLabel, 0, 0)
-        layout.addWidget(self.lapTimeLabel, 1, 0)
-        layout.setRowStretch(1, 3)
+        layout.addWidget(self.waterTempGroupBox, 0)
+        layout.addWidget(self.oilTempGroupBox, 1)
+        layout.addWidget(self.oilPressGroupBox, 2)
+        layout.addWidget(self.batteryGroupBox, 3)
 
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(1)
+        layout.setSpacing(0)
 
-        self.lapTimeGroupBox.setLayout(layout)
+        self.leftGroupBox.setLayout(layout)
 
-    def setLapTimeLabel(self, lapTime: LapTime):
-        minute = lapTime.seconds // 60
-        second = lapTime.seconds % 60
-        aftersecond = lapTime.microseconds // 10000
-        self.lapTimeLabel.setText(
-            str(minute) + "." + str(second) + "." + str(aftersecond))
+    # def createFuelRemainGroupBox(self):
+
+    #     self.fuelRemainGroupBox = QGroupBox()
+    #     self.fuelRemainGroupBox.setFlat(True)
+    #     self.fuelRemainGroupBox.setStyleSheet("border:0;")
+
+    #     layout = QGridLayout()
+
+    #     fuelRemainTitleLabel = QLabel(self)
+    #     fuelRemainTitleLabel.setText("Fuel Remain")
+    #     fuelRemainTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+    #     fuelRemainTitleLabel.setFont(self.dashboardTitleFont)
+    #     fuelRemainTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+
+    #     self.fuelRemainLabel = QLabel(self)
+    #     # self.fuelRemainLabel.setText("30")
+    #     # self.fuelRemainLabel.setAlignment(QtCore.Qt.AlignCenter)
+    #     # self.fuelRemainLabel.setFont(self.dashboardValueFont)
+    #     # self.fuelRemainLabel.setStyleSheet("QLabel { color : #FFF; }")
+
+    #     layout.addWidget(fuelRemainTitleLabel, 0, 0)
+    #     # layout.addWidget(self.fuelRemainLabel, 1, 0)
+    #     layout.setRowStretch(1, 3)
+
+    #     layout.setContentsMargins(0, 0, 0, 0)
+    #     layout.setSpacing(1)
+
+    #     self.fuelRemainGroupBox.setLayout(layout)
+
+    # def setFuelRemainLabel(self, fuelRemain: FuelRemain):
+    #     self.fuelRemainLabel.setText(str(round(fuelRemain, 2)))
+
+    #     if fuelRemain.status == FuelRemainStatus.LOW:
+    #         color = "red"
+    #     elif fuelRemain.status == FuelRemainStatus.HIGH:
+    #         color = "#000"
+
+    #     self.fuelRemainGroupBox.setStyleSheet("background-color: " + color +
+    #                                           ";")
+
+    # def createBatteryGroupBox(self):
+
+    #     self.batteryGroupBox = QGroupBox()
+    #     self.batteryGroupBox.setFlat(True)
+    #     self.batteryGroupBox.setStyleSheet("border:0;")
+    #     self.batteryGroupBox.setFixedSize(300,400)
+
+    #     layout = QGridLayout()
+
+    #     batteryTitleLabel = QLabel(self)
+    #     batteryTitleLabel.setText("Battery")
+    #     batteryTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+    #     batteryTitleLabel.setFont(self.dashboardTitleFont)
+    #     batteryTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+
+    #     self.batteryLabel = QLabel(self)
+    #     self.batteryLabel.setText("114")
+    #     self.batteryLabel.setAlignment(QtCore.Qt.AlignCenter)
+    #     self.batteryLabel.setFont(self.dashboardValueFont)
+    #     self.batteryLabel.setStyleSheet("QLabel { color : #FFF; }")
+
+    #     layout.addWidget(batteryTitleLabel, 0, 0)
+    #     layout.addWidget(self.batteryLabel, 1, 0)
+    #     layout.setRowStretch(1, 3)
+
+    #     layout.setContentsMargins(0, 0, 0, 0)
+    #     layout.setSpacing(1)
+
+    #     self.batteryGroupBox.setLayout(layout)
+
+    # def setBatteryLabel(self, battery: Battery):
+    #     self.batteryLabel.setText(str(round(battery, 2)))
+
+    #     if battery.status == BatteryStatus.LOW:
+    #         color = "red"
+    #     elif battery.status == BatteryStatus.HIGH:
+    #         color = "#000"
+
+    #     self.batteryGroupBox.setStyleSheet("background-color: " + color + ";")
+
+    # def createLapTimeGroupBox(self):
+
+    #     self.lapTimeGroupBox = QGroupBox()
+    #     self.lapTimeGroupBox.setFlat(True)
+    #     self.lapTimeGroupBox.setStyleSheet("border:0;")
+
+    #     layout = QGridLayout()
+
+    #     lapTimeTitleLabel = QLabel(self)
+    #     lapTimeTitleLabel.setText("Lap Time")
+    #     lapTimeTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+    #     lapTimeTitleLabel.setFont(self.dashboardTitleFont)
+    #     lapTimeTitleLabel.setStyleSheet("QLabel { color : #FFF; }")
+
+    #     self.lapTimeLabel = QLabel(self)
+    #     # # self.lapTimeLabel.setText("114")
+    #     # self.lapTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
+    #     # self.lapTimeLabel.setFont(self.dashboardValueFont)
+    #     # self.lapTimeLabel.setStyleSheet("QLabel { color : #FFF; }")
+
+    #     layout.addWidget(lapTimeTitleLabel, 0, 0)
+    #     # layout.addWidget(self.lapTimeLabel, 1, 0)
+    #     layout.setRowStretch(1, 3)
+
+    #     layout.setContentsMargins(0, 0, 0, 0)
+    #     layout.setSpacing(1)
+
+    #     self.lapTimeGroupBox.setLayout(layout)
+
+    # def setLapTimeLabel(self, lapTime: LapTime):
+    #     minute = lapTime.seconds // 60
+    #     second = lapTime.seconds % 60
+    #     aftersecond = lapTime.microseconds // 10000
+    #     self.lapTimeLabel.setText(
+    #         str(minute) + "." + str(second) + "." + str(aftersecond))
 
     def createRightGroupBox(self):
 
@@ -433,13 +477,13 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        self.createFuelRemainGroupBox()
-        self.createBatteryGroupBox()
-        self.createLapTimeGroupBox()
+        # self.createFuelRemainGroupBox()
+        # self.createBatteryGroupBox()
+        # self.createLapTimeGroupBox()
 
-        layout.addWidget(self.fuelRemainGroupBox, 0, 0)
-        layout.addWidget(self.batteryGroupBox, 1, 0)
-        layout.addWidget(self.lapTimeGroupBox, 2, 0)
+        # layout.addWidget(self.fuelRemainGroupBox, 0, 0)
+        # layout.addWidget(self.batteryGroupBox, 1, 0)
+        # layout.addWidget(self.lapTimeGroupBox, 2, 0)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(2)
