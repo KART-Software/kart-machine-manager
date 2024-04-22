@@ -141,3 +141,12 @@ class DashMachineInfo:
         self.oilTemp = OilTemp(0)
         self.oilPress = OilPress(0)
         self.gearVoltage = GearVoltage(GearVoltage.EACH_VOLTAGES[GearType.NEUTRAL])
+
+
+class Message:
+    text: str
+    lap: int
+
+    def __init__(self) -> None:
+        self.text = ""
+        self.lap = 0

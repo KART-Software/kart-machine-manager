@@ -4,9 +4,10 @@ import dotenv
 
 dotenv.load_dotenv()
 
-machineId = int(os.getenv("MACHINE_ID"))
-udpAddress = (os.getenv("UDP_ADDRESS"), int(os.getenv("UDP_PORT")))
-cloudRunApiEndpoint = os.getenv("CLOUD_RUN_API_ENDPOINT")
+machineId = int(os.environ["MACHINE_ID"])
+udpAddress = (os.environ["UDP_ADDRESS"], int(os.environ["UDP_PORT"]))
+cloudRunApiEndpoint = os.environ["CLOUD_RUN_API_ENDPOINT"]
+cloudMessageApiEndpoint = os.environ["CLOUD_MESSAGE_API_ENDPOINT"]
 
 
 debug = os.getenv("DEBUG", "False").lower() == "true"
