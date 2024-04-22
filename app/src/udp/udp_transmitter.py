@@ -4,7 +4,7 @@ import socket
 import threading
 import time
 
-import requests
+import requests  # type: ignore
 
 from src.can.can_listeners import UdpPayloadListener
 from src.util import config
