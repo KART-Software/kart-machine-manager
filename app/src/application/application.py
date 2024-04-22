@@ -23,5 +23,7 @@ class Application(WindowListener):
         sys.exit(self.app.exec_())
 
     def onUpdate(self) -> None:
-        self.window.updateDashboard(self.machine.canMaster.dashMachineInfo)
+        self.window.updateDashboard(
+            self.machine.canMaster.dashMachineInfo, self.machine.messenger.message
+        )
         return super().onUpdate()

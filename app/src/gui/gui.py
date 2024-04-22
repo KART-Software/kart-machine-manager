@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
 from src.models.models import (
     DashMachineInfo,
     GearType,
+    Message,
     OilPress,
     OilPressStatus,
     OilTemp,
@@ -69,7 +70,7 @@ class MainWindow(QDialog):
         mainLayout.addWidget(self.leftGroupBox, 1, 0)
         mainLayout.addWidget(self.rightGroupBox, 1, 2)
 
-    def updateDashboard(self, dashMachineInfo: DashMachineInfo):
+    def updateDashboard(self, dashMachineInfo: DashMachineInfo, message: Message):
         self.setRpmBar(dashMachineInfo.rpm)
         self.setRpmLabel(dashMachineInfo.rpm)
         self.setWaterTempLabel(dashMachineInfo.waterTemp)
