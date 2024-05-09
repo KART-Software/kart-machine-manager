@@ -77,22 +77,22 @@ class MockMachine:
     def toMessages(self) -> List[can.Message]:
         msgs = []
         bs = bytearray()
-        bs += (self.rpm & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.throttlePosition * 10) & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.engineTemperature * 10) & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.oilTemperature * 10) & 0xFFFF).to_bytes(2, "little")
+        bs += (self.rpm & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.throttlePosition * 10) & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.engineTemperature * 10) & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.oilTemperature * 10) & 0xFFFF).to_bytes(2, "big")
         msgs.append(can.Message(arbitration_id=0x5F0, is_extended_id=False, data=bs))
 
         bs = bytearray()
-        bs += (int(self.oilPressure) & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.gearVoltage * 1000) & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.batteryVoltage * 1000) & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.lambda_ * 1000) & 0xFFFF).to_bytes(2, "little")
+        bs += (int(self.oilPressure) & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.gearVoltage * 1000) & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.batteryVoltage * 1000) & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.lambda_ * 1000) & 0xFFFF).to_bytes(2, "big")
         msgs.append(can.Message(arbitration_id=0x5F1, is_extended_id=False, data=bs))
 
         bs = bytearray()
-        bs += (int(self.manifoldPressure) & 0xFFFF).to_bytes(2, "little")
-        bs += (int(self.fuelPressure) & 0xFFFF).to_bytes(2, "little")
+        bs += (int(self.manifoldPressure) & 0xFFFF).to_bytes(2, "big")
+        bs += (int(self.fuelPressure) & 0xFFFF).to_bytes(2, "big")
         msgs.append(can.Message(arbitration_id=0x5F2, is_extended_id=False, data=bs))
 
         msgs += list(
