@@ -1,14 +1,13 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
-from src.can.can_master import CanMaster
+
 from src.machine.machine import Machine
 
 from ..gui.gui import MainWindow, WindowListener
 
 
 class Application(WindowListener):
-
     machine: Machine
 
     def __init__(self):
@@ -24,5 +23,7 @@ class Application(WindowListener):
         sys.exit(self.app.exec_())
 
     def onUpdate(self) -> None:
-        self.window.updateDashboard(self.machine.canMaster.dashMachineInfo)
+        self.window.updateDashboard(
+            self.machine.canMaster.dashMachineInfo, self.machine.messenger.message
+        )
         return super().onUpdate()

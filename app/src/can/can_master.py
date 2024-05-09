@@ -3,11 +3,10 @@ import logging
 import os
 import subprocess
 
+import can
+
 from src.can.can_listeners import DashInfoListener, UdpPayloadListener
 from src.can.mock_can_sender import MockCanSender
-from src.models.models import DashMachineInfo
-
-import can
 
 
 class CanMaster:

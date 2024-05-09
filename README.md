@@ -1,49 +1,58 @@
 # kart-machine-manager
 全日本学生フォーミュラ大会 インパネ
-## 開発環境
 
-pipenvでパッケージ管理しています  
-ビルドツールはmakeを使用してください
+## App
 
-参考  
-https://qiita.com/y-tsutsu/items/54c10e0b2c6b565c887a  
+ryeでパッケージ管理をしています
+
+参考\
+https://zenn.dev/3w36zj6/scraps/de5a102362c405
+https://rye-up.com/
+
+makeコマンドもインストールしてください\
 https://blog.mktia.com/make-command-on-windows/
+
 
 以下のコマンドはappディレクトリで行ってください
 
-### pipenv環境構築
-    pipenv install --dev
-
-### 推奨
-環境構築前に以下のコマンドでプロジェクトの配下に仮想環境を作成できます  
+* rye環境構築
 ```
-export PIPENV_VENV_IN_PROJECT=true
+rye sync
 ```
 
-### 起動（本番）
-    make prod
-
-### 起動(デバッグ)
-    make debug
-
-### テスト
-    make test
-
-### 型チェック
-    make type-check
-
-### フォーマット
-    make format
-
-### 静的解析
-    make lint
-
-### 速度評価(cProfile)
-    make prod-cProfile
-or
+* 起動（本番）
 ```
-make debug-cProfile
+make prod
 ```
 
-### requirements.txt作成
-    pipenv lock -r > requirements.txt
+* 起動（デバッグ）
+```
+make debug
+```
+
+* テスト
+```
+make test
+```
+
+* 型チェック
+```
+make type-check
+```
+
+* フォーマット
+```
+make format
+```
+
+* 静的解析
+```
+make lint
+```
+```
+make lint-fix
+```
+
+## CAN Mock
+CANの疑似信号を出すだけのArduinoのコードです\
+PlatformIO拡張機能をいれて使用してください

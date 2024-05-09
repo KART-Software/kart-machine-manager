@@ -2,7 +2,9 @@ import time
 from dataclasses import dataclass
 from typing import List
 
+import can
 import cantools.database
+
 from src.models.models import (
     DashMachineInfo,
     GearVoltage,
@@ -11,8 +13,6 @@ from src.models.models import (
     Rpm,
     WaterTemp,
 )
-
-import can
 
 
 @dataclass
@@ -49,7 +49,6 @@ class DashInfoListener(can.Listener):
 
 
 class UdpPayloadListener(can.Listener):
-
     MOTEC_CAN_ID_LENGTHS = [
         CanIdLength(0x5F0, 8),
         CanIdLength(0x5F1, 8),
@@ -61,9 +60,10 @@ class UdpPayloadListener(can.Listener):
 
     def __init__(self) -> None:
         dl1Dbc = cantools.database.load_file("./spec/can/dl1.dbc")
-        dl1CanIdLengths = list(
-            map(lambda m: CanIdLength(m.frame_id, m.length), dl1Dbc.messages)
-        )
+        if isinstance(dl1Dbc, cantools.database.can.database.Database):
+            dl1CanIdLengths = list(
+                map(lambda m: CanIdLength(m.frame_id, m.length), dl1Dbc.messages)
+            )
         # CAN IDの小さい方から順に並べる
         self.canIdLength = sorted(
             self.MOTEC_CAN_ID_LENGTHS + dl1CanIdLengths, key=lambda il: il.id
