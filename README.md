@@ -9,9 +9,6 @@ ryeでパッケージ管理をしています
 https://zenn.dev/3w36zj6/scraps/de5a102362c405
 https://rye-up.com/
 
-makeコマンドもインストールしてください\
-https://blog.mktia.com/make-command-on-windows/
-
 
 以下のコマンドはappディレクトリで行ってください
 
@@ -22,35 +19,35 @@ rye sync
 
 * 起動（本番）
 ```
-make prod
+rye run prod
 ```
 
 * 起動（デバッグ）
 ```
-make debug
+rye run debug
 ```
 
 * テスト
 ```
-make test
+rye test
 ```
 
 * 型チェック
 ```
-make type-check
+rye run mypy .
 ```
 
 * フォーマット
 ```
-make format
+rye run ruff format
 ```
 
 * 静的解析
 ```
-make lint
+rye run ruff check
 ```
 ```
-make lint-fix
+rye run ruff check --fix
 ```
 
 ## CAN Mock
