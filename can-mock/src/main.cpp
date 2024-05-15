@@ -58,8 +58,8 @@ struct MachineLog
     uint16_t data[4] = {r, tp, et, ot};
     for (int i = 0; i < 4; i++)
     {
-      sendData[2 * i] = lowByte(data[i]);
-      sendData[2 * i + 1] = highByte(data[i]);
+      sendData[2 * i] = highByte(data[i]);
+      sendData[2 * i + 1] = lowByte(data[i]);
     }
   }
 
@@ -68,8 +68,8 @@ struct MachineLog
     uint16_t data[4] = {op, gv, bv, l};
     for (int i = 0; i < 4; i++)
     {
-      sendData[2 * i] = lowByte(data[i]);
-      sendData[2 * i + 1] = highByte(data[i]);
+      sendData[2 * i] = highByte(data[i]);
+      sendData[2 * i + 1] = lowByte(data[i]);
     }
   }
 
@@ -78,8 +78,8 @@ struct MachineLog
     uint16_t data[2] = {mp, fp};
     for (int i = 0; i < 2; i++)
     {
-      sendData[2 * i] = lowByte(data[i]);
-      sendData[2 * i + 1] = highByte(data[i]);
+      sendData[2 * i] = highByte(data[i]);
+      sendData[2 * i + 1] = lowByte(data[i]);
     }
   }
 };
