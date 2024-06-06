@@ -120,11 +120,11 @@ class MockCanSender:
 
     def updateMachine(self):
         t = int(time.time() * 1000)
-        self.machine.rpm = t % 9500
+        self.machine.rpm = t % 10000
         self.machine.throttlePosition = (t % 1000) / 20.0
         self.machine.engineTemperature = (t % 1200) / 10.0
         self.machine.oilTemperature = (t % 1200) / 10.0
-        self.machine.oilPressure = (t % 2000) / 10.0
+        self.machine.oilPressure = (t % 1200) / 10.0
         self.machine.gearVoltage = (t % 5000) / 1000.0
         self.machine.batteryVoltage = (t % 12000) / 1000.0
         self.machine.lambda_ = 0.7 + (t % 600) / 1000.0

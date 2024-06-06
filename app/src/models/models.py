@@ -6,12 +6,14 @@ class RpmStatus(IntEnum):
     LOW = 0
     MIDDLE = 1
     HIGH = 2
+    SHIFT = 3
 
 
 class Rpm(int):
-    LOW_THRESHOLD = 3200
-    HIGH_THRESHOLD = 6400
-    MAX = 9600
+    LOW_THRESHOLD = 4000
+    HIGH_THRESHOLD = 7000
+    SHIFT_THRESHOLD = 9000
+    MAX = 10000
 
     @property
     def status(self) -> RpmStatus:
@@ -19,8 +21,10 @@ class Rpm(int):
             return RpmStatus.LOW
         elif self < self.HIGH_THRESHOLD:
             return RpmStatus.MIDDLE
-        else:
+        elif self < self.SHIFT_THRESHOLD:
             return RpmStatus.HIGH
+        else:
+            return RpmStatus.SHIFT
 
 
 class WaterTempStatus(IntEnum):
@@ -31,7 +35,7 @@ class WaterTempStatus(IntEnum):
 
 class WaterTemp(int):
     LOW_THRESHOLD = 50
-    HIGH_THRESHOLD = 100
+    HIGH_THRESHOLD = 98
 
     @property
     def status(self) -> WaterTempStatus:
@@ -126,6 +130,22 @@ def getGearType(voltage: float) -> GearType:
     return GearType(gearNum)
 
 
+class BatteryStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+
+class Battery(int):
+    THRESHOLD = 11
+
+    @property
+    def status(self) -> BatteryStatus:
+        if self < self.THRESHOLD:
+            return BatteryStatus.LOW
+        else:
+            return BatteryStatus.HIGH
+
+
 class DashMachineInfo:
     rpm: Rpm
     throttlePosition: float
@@ -133,6 +153,7 @@ class DashMachineInfo:
     oilTemp: OilTemp
     oilPress: OilPress
     gearVoltage: GearVoltage
+    battery: Battery
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
@@ -141,6 +162,7 @@ class DashMachineInfo:
         self.oilTemp = OilTemp(0)
         self.oilPress = OilPress(0)
         self.gearVoltage = GearVoltage(GearVoltage.EACH_VOLTAGES[GearType.NEUTRAL])
+        self.battery = Battery(0)
 
 
 class Message:
