@@ -52,13 +52,14 @@ class MainWindow(QDialog):
         palette.setColor(self.foregroundRole(), QColor("#FFF"))
         self.setPalette(palette)
 
-        self.dashboardTitleFontSmall = QFont("Calibri", 18)
-        self.dashboardTitleFont = QFont("Calibri", 20)
-        self.dashboardTitleFont.setBold(True)
-        self.dashboardValueFont = QFont("Calibri", 40)
-        self.dashboardValueFont.setBold(True)
-        self.borderColor = "#666"
-        self.labelBackgroundColor = "#666"
+        self.dashboardTitleFontSmall = QFont("Arial", 18)
+        self.dashboardTitleFont = QFont("Arial", 15)
+        # self.dashboardTitleFont.setBold(True)
+        self.dashboardValueFont = QFont("Arial", 40)
+        # self.dashboardValueFont.setBold(True)
+        self.borderColor = "#FFF"
+        self.labelBackgroundColor = "#000"
+        self.dashboardTitleColor = "#FD6"
 
         # self.createRpmBar()
         self.createTopGroupBox()
@@ -159,11 +160,13 @@ class MainWindow(QDialog):
             % (color)
         )
 
-    # region new RPM light--------------------------------------
     def createTopGroupBox(self):
         self.topGroupBox = QGroupBox()
         self.topGroupBox.setFlat(True)
         self.topGroupBox.setStyleSheet("border:0;")
+        # self.topGroupBox.setStyleSheet(
+        #     "border: 2px solid; border-color:" + self.borderColor
+        # )
         # self.topGroupBox.setGeometry(1, 81, 200, 320)
         self.topGroupBox.setFixedSize(800, 50)
 
@@ -214,10 +217,12 @@ class MainWindow(QDialog):
         layout.addWidget(self.rpmLightBox11, 0, 10)
         layout.addWidget(self.rpmLightBox12, 0, 11)
 
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
+        # layout.setContentsMargins(0, 0, 0, 0)
+        # layout.setSpacing(0)
 
         self.topGroupBox.setLayout(layout)
+
+    # region new RPM light--------------------------------------
 
     def createRpmLightBox1(self):
         self.rpmLightBox1 = QGroupBox()
@@ -417,9 +422,9 @@ class MainWindow(QDialog):
         self.leftGroupBox = QGroupBox()
         self.leftGroupBox.setFlat(True)
         self.leftGroupBox.setStyleSheet("border:0;")
-        self.leftGroupBox.setStyleSheet(
-            "border: 1px solid; border-color:" + self.borderColor
-        )
+        # self.leftGroupBox.setStyleSheet(
+        #     "border: 1px solid; border-color:" + self.borderColor
+        # )
         # self.leftGroupBox.setGeometry(1, 81, 200, 320)
         self.leftGroupBox.setFixedSize(300, 380)
 
@@ -430,12 +435,18 @@ class MainWindow(QDialog):
         self.createOilTempGroupBox()
         self.createOilPressGroupBox()
         self.createFuelPressGroupBox()
+        self.createFanSwitchStateGroupBox()
+        self.createBrakeBiasGroupBox()
 
         layout.addWidget(self.waterTempGroupBox, 0, 0)
         layout.addWidget(self.oilTempGroupBox, 1, 0)
         layout.addWidget(self.oilPressGroupBox, 1, 1)
         layout.addWidget(self.fuelPressGroupBox, 0, 1)
-        # layout.setRowStretch(1, 3)
+        layout.addWidget(self.fanSwitchStateGroupBox, 2, 0)
+        layout.addWidget(self.brakeBiasGroupBox, 2, 1)
+        layout.setRowStretch(0, 1)
+        layout.setRowStretch(1, 1)
+        layout.setRowStretch(2, 1)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -445,9 +456,10 @@ class MainWindow(QDialog):
     def createCenterGroupBox(self):
         self.centerGroupBox = QGroupBox()
         self.centerGroupBox.setFlat(True)
-        self.centerGroupBox.setStyleSheet(
-            "border: 2px solid; border-color:" + self.borderColor
-        )
+        self.centerGroupBox.setStyleSheet("border: 0px;")
+        # self.centerGroupBox.setStyleSheet(
+        #     "border: 1px solid; border-color:" + self.borderColor
+        # )
         # self.centerGroupBox.setGeometry(301, 81, 200, 320)
         self.centerGroupBox.setFixedSize(200, 380)
 
@@ -456,28 +468,28 @@ class MainWindow(QDialog):
         self.rpmLabel = QLabel(self)
         # self.rpmLabel.setText("3454")
         self.rpmLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.rpmLabel.setFont(QFont("Calibri", 50))
+        self.rpmLabel.setFont(QFont("Arial", 30))
         self.rpmLabel.setStyleSheet("color : #FFF; background-color: #000")
 
         self.gearLabel = QLabel(self)
         # gearLabel.setText("2")
         self.gearLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.gearLabel.setFont(QFont("Calibri", 180))
+        self.gearLabel.setFont(QFont("Arial", 180))
         self.gearLabel.setStyleSheet("color : #FFF; background-color: #000")
 
-        self.kartLogoIcon = QPixmap("src\gui\icons\kart_logo.png")
-        self.kartLogoIconLable = QLabel(self)
-        self.kartLogoIconLable.setPixmap(self.kartLogoIcon)
-        self.kartLogoIconLable.setStyleSheet("background-color: #000")
-        self.kartLogoIconLable.setFixedSize(196, 50)
-        self.kartLogoIconLable.setAlignment(QtCore.Qt.AlignCenter)
-        self.kartLogoIconLable.setScaledContents(True)
+        # self.kartLogoIcon = QPixmap("src\gui\icons\kart_logo.png")
+        # self.kartLogoIconLable = QLabel(self)
+        # self.kartLogoIconLable.setPixmap(self.kartLogoIcon)
+        # self.kartLogoIconLable.setStyleSheet("background-color: #000")
+        # self.kartLogoIconLable.setFixedSize(196, 50)
+        # self.kartLogoIconLable.setAlignment(QtCore.Qt.AlignCenter)
+        # self.kartLogoIconLable.setScaledContents(True)
 
-        # self.carLabel = QLabel(self)
-        # self.carLabel.setText("KZ-R20")
-        # self.carLabel.setAlignment(QtCore.Qt.AlignCenter)
-        # self.carLabel.setFont(QFont("Times New Roman", 25))
-        # self.carLabel.setStyleSheet("color : #000; background-color: #FFF")
+        self.timeLabel = QLabel(self)
+        self.timeLabel.setText("15:40:39")
+        self.timeLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.timeLabel.setFont(QFont("Times New Roman", 35))
+        self.timeLabel.setStyleSheet("color : #FFF; background-color: #000")
 
         # speedLabel = QLabel(self)
         # speedLabel.setText("16")
@@ -488,8 +500,8 @@ class MainWindow(QDialog):
 
         layout.addWidget(self.rpmLabel, 0, 0, 1, 2)
         layout.addWidget(self.gearLabel, 1, 0, 1, 2)
-        layout.addWidget(self.kartLogoIconLable, 2, 0, 1, 2)
-        # layout.addWidget(self.carLabel, 2, 1, 1, 1)
+        # layout.addWidget(self.kartLogoIconLable, 2, 0, 1, 2)
+        layout.addWidget(self.timeLabel, 2, 0, 1, 2)
         # layout.addWidget(speedLabel, 2, 0)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -499,44 +511,53 @@ class MainWindow(QDialog):
     def createRightGroupBox(self):
         self.rightGroupBox = QGroupBox()
         self.rightGroupBox.setFlat(True)
-        self.rightGroupBox.setStyleSheet(
-            "border: 1px solid; border-color:" + self.borderColor
-        )
-        # self.rightGroupBox.setGeometry(501, 81, 200, 320)
+        self.rightGroupBox.setStyleSheet("border:0;")
+        # self.rightGroupBox.setStyleSheet(
+        #     "border: 1px solid; border-color:" + self.borderColor
+        # )
+        self.rightGroupBox.setGeometry(501, 81, 200, 320)
         self.rightGroupBox.setFixedSize(300, 380)
 
         layout = QGridLayout()
 
         # self.createFuelRemainGroupBox()
         self.createThrottlePositionGroupBox()
-        self.createBrakePressGroupBox()
-        self.createFanStateGroupBox()
-        self.createWaterPumpStateGroupBox()
-        # self.createTpsBar()
-        # self.createBpsBar()
+        self.createTpsBar()
+        self.createAccelerationPedalPositionGroupBox()
+        self.createAppsBar()
+        self.createBrakePressFrontGroupBox()
+        self.createBpsFrontBar()
+        self.createBrakePressRearGroupBox()
+        self.createBpsRearBar()
 
         # layout.addWidget(self.fuelRemainGroupBox, 0, 0)
         layout.addWidget(self.throttlePositionGroupBox, 0, 0)
-        layout.addWidget(self.brakePressGroupBox, 1, 0)
-        layout.addWidget(self.fanStateGroupBox, 0, 1)
-        layout.addWidget(self.waterPumpStateGroupBox, 1, 1)
-        # layout.addWidget(self.tpsBar, 0, 1)
-        # layout.addWidget(self.bpsBar, 0, 2)
+        layout.addWidget(self.tpsBar, 0, 1)
+        layout.addWidget(self.appsBar, 0, 2)
+        layout.addWidget(self.accelerationPedalPositionGroupBox, 0, 3)
+        layout.addWidget(self.BrakePressFrontGroupBox, 1, 0)
+        layout.addWidget(self.bpsFrontBar, 1, 1)
+        layout.addWidget(self.bpsRearBar, 1, 2)
+        layout.addWidget(self.brakePressRGroupBox, 1, 3)
 
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
+        # layout.setColumnStretch(0, 2)
+        # layout.setColumnStretch(1, 1)
+        # layout.setColumnStretch(2, 1)
+        # layout.setColumnStretch(3, 2)
+        # layout.setContentsMargins(0, 0, 0, 0)
+        # layout.setSpacing(2)
 
         self.rightGroupBox.setLayout(layout)
 
     def createBottomGroupBox(self):
         self.bottomGroupBox = QGroupBox()
         self.bottomGroupBox.setFlat(True)
-        # self.bottomGroupBox.setStyleSheet("border: 1px solid; border-color:#AAA")
+        self.bottomGroupBox.setStyleSheet("border: 0px;")
+        # self.bottomGroupBox.setStyleSheet(
+        #     "border: 1px solid; border-color:" + self.borderColor
+        # )
         # self.bottomGroupBox.setGeometry(1, 401, 800, 80)
         self.bottomGroupBox.setFixedSize(800, 50)
-        self.bottomGroupBox.setStyleSheet(
-            "border: 0px solid; border-color:" + self.borderColor
-        )
 
         layout = QGridLayout()
 
@@ -566,8 +587,10 @@ class MainWindow(QDialog):
     def setGearLabel(self, gearType: GearType):
         if int(gearType) == GearType.NEUTRAL:
             self.gearLabel.setText("N")
+            self.gearLabel.setStyleSheet("color : #FD6;")
         else:
             self.gearLabel.setText(str(int(gearType)))
+            self.gearLabel.setStyleSheet("color : #FFF;")
 
     # ---Water tempreture---
     def createWaterTempGroupBox(self):
@@ -577,11 +600,14 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         waterTempTitleLabel = QLabel(self)
-        waterTempTitleLabel.setText("Water T(°C)")
-        waterTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+        waterTempTitleLabel.setText("Water Temp")
+        waterTempTitleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
         waterTempTitleLabel.setFont(self.dashboardTitleFont)
         waterTempTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
         self.waterTempLabel = QLabel(self)
@@ -593,7 +619,7 @@ class MainWindow(QDialog):
         layout.addWidget(waterTempTitleLabel, 0, 0)
         layout.addWidget(self.waterTempLabel, 1, 0)
         layout.setRowStretch(0, 1)
-        layout.setRowStretch(1, 2)
+        layout.setRowStretch(1, 1)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -622,11 +648,14 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         oilTempTitleLabel = QLabel(self)
-        oilTempTitleLabel.setText("Oil T. (°C)")
-        oilTempTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+        oilTempTitleLabel.setText("Oil Temp")
+        oilTempTitleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
         oilTempTitleLabel.setFont(self.dashboardTitleFont)
         oilTempTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
         self.oilTempLabel = QLabel(self)
@@ -638,7 +667,7 @@ class MainWindow(QDialog):
         layout.addWidget(oilTempTitleLabel, 0, 0)
         layout.addWidget(self.oilTempLabel, 1, 0)
         layout.setRowStretch(0, 1)
-        layout.setRowStretch(1, 2)
+        layout.setRowStretch(1, 1)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -665,11 +694,14 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         oilPressTitleLabel = QLabel(self)
-        oilPressTitleLabel.setText("Oil P. (kPa)")
-        oilPressTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+        oilPressTitleLabel.setText("Oil Press")
+        oilPressTitleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
         oilPressTitleLabel.setFont(self.dashboardTitleFont)
         oilPressTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
         self.oilPressLabel = QLabel(self)
@@ -681,7 +713,7 @@ class MainWindow(QDialog):
         layout.addWidget(oilPressTitleLabel, 0, 0)
         layout.addWidget(self.oilPressLabel, 1, 0)
         layout.setRowStretch(0, 1)
-        layout.setRowStretch(1, 2)
+        layout.setRowStretch(1, 1)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -709,11 +741,14 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         fuelPressTitleLabel = QLabel(self)
-        fuelPressTitleLabel.setText("Fuel P. (kPa)")
-        fuelPressTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+        fuelPressTitleLabel.setText("Fuel Press")
+        fuelPressTitleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
         fuelPressTitleLabel.setFont(self.dashboardTitleFont)
         fuelPressTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
         self.fuelPressLabel = QLabel(self)
@@ -725,14 +760,82 @@ class MainWindow(QDialog):
         layout.addWidget(fuelPressTitleLabel, 0, 0)
         layout.addWidget(self.fuelPressLabel, 1, 0)
         layout.setRowStretch(0, 1)
-        layout.setRowStretch(1, 2)
+        layout.setRowStretch(1, 1)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
         self.fuelPressGroupBox.setLayout(layout)
 
-    #     self.oilPressGroupBox.setStyleSheet("background-color: " + color + ";")
+    # ---Fans switch state---
+    def createFanSwitchStateGroupBox(self):
+        self.fanSwitchStateGroupBox = QGroupBox()
+        self.fanSwitchStateGroupBox.setFlat(True)
+        # self.fanStateGroupBox.setFixedSize(150, 190)
+        layout = QGridLayout()
+
+        fanSwitchStateTitleLabel = QLabel(self)
+        fanSwitchStateTitleLabel.setText("Fan Switch")
+        fanSwitchStateTitleLabel.setAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom
+        )
+        fanSwitchStateTitleLabel.setFont(self.dashboardTitleFont)
+        fanSwitchStateTitleLabel.setStyleSheet(
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
+        )
+
+        self.fanSwitchStateLabel = QLabel(self)
+        self.fanSwitchStateLabel.setText("ON")
+        self.fanSwitchStateLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.fanSwitchStateLabel.setFont(self.dashboardValueFont)
+        self.fanSwitchStateLabel.setStyleSheet("color : #FFF; background-color: #0F0")
+
+        layout.addWidget(fanSwitchStateTitleLabel, 0, 0)
+        layout.addWidget(self.fanSwitchStateLabel, 1, 0)
+        layout.setRowStretch(0, 1)
+        layout.setRowStretch(1, 1)
+
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        self.fanSwitchStateGroupBox.setLayout(layout)
+
+    # ---Brake Bias---
+    def createBrakeBiasGroupBox(self):
+        self.brakeBiasGroupBox = QGroupBox()
+        self.brakeBiasGroupBox.setFlat(True)
+        # self.fanStateGroupBox.setFixedSize(150, 190)
+        layout = QGridLayout()
+
+        brakeBiasTitleLabel = QLabel(self)
+        brakeBiasTitleLabel.setText("Brk Bias(F%)")
+        brakeBiasTitleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
+        brakeBiasTitleLabel.setFont(self.dashboardTitleFont)
+        brakeBiasTitleLabel.setStyleSheet(
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
+        )
+
+        self.brakeBiasLabel = QLabel(self)
+        self.brakeBiasLabel.setText("0.61")
+        self.brakeBiasLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.brakeBiasLabel.setFont(self.dashboardValueFont)
+        self.brakeBiasLabel.setStyleSheet("color : #FFF; background-color: #000")
+
+        layout.addWidget(brakeBiasTitleLabel, 0, 0)
+        layout.addWidget(self.brakeBiasLabel, 1, 0)
+        layout.setRowStretch(0, 1)
+        layout.setRowStretch(1, 1)
+
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        self.brakeBiasGroupBox.setLayout(layout)
 
     # def createBatteryGroupBox(self):
     #     self.batteryGroupBox = QGroupBox()
@@ -812,15 +915,20 @@ class MainWindow(QDialog):
         layout = QGridLayout()
 
         throttlePositionTitleLabel = QLabel(self)
-        throttlePositionTitleLabel.setText("TPS (%)")
-        throttlePositionTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+        throttlePositionTitleLabel.setText("TPS")
+        throttlePositionTitleLabel.setAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom
+        )
         throttlePositionTitleLabel.setFont(self.dashboardTitleFont)
         throttlePositionTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
         self.throttlePositionLabel = QLabel(self)
-        self.throttlePositionLabel.setText("100.0")
+        self.throttlePositionLabel.setText("100")
         self.throttlePositionLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.throttlePositionLabel.setFont(self.dashboardValueFont)
         self.throttlePositionLabel.setStyleSheet("QLabel { color : #FFF; }")
@@ -837,17 +945,19 @@ class MainWindow(QDialog):
 
     def createTpsBar(self):
         self.tpsBar = QProgressBar(self)
-        self.tpsBar.setFixedSize(50, 300)
+        self.tpsBar.setFixedSize(30, 150)
         self.tpsBar.setMaximum(Rpm.MAX)
         self.tpsBar.setValue(0)
         self.tpsBar.setTextVisible(1)
-        self.tpsBar.setOrientation(2)
+        self.tpsBar.setOrientation(1)
         self.tpsBar.setStyleSheet(
             """
             QProgressBar
                 {
+                    border: 2px solid;
+                    border-color: #FFF;
                     background-color: #0F0;
-                    border-radius: 5px;
+                    border-radius: 0px;
                     height: 30px;
                     padding: 0px;
                 }
@@ -859,7 +969,6 @@ class MainWindow(QDialog):
                 }
         """
         )
-        # self.tpsBar.setFixedHeight(30)
 
     # def setTpsBar(self, tps: Rpm):
     #     self.tpsBar.setValue(int(tps))
@@ -890,51 +999,58 @@ class MainWindow(QDialog):
     #     % (color)
     # )
 
-    # ---Brake pressure---
-    def createBrakePressGroupBox(self):
-        self.brakePressGroupBox = QGroupBox()
-        self.brakePressGroupBox.setFlat(True)
-        # self.brakePressGroupBox.setFixedSize(150, 190)
+    # ---Throttle position---
+    def createAccelerationPedalPositionGroupBox(self):
+        self.accelerationPedalPositionGroupBox = QGroupBox()
+        self.accelerationPedalPositionGroupBox.setFlat(True)
+        # self.accelerationPedalPositionGroupBox.setFixedSize(150, 190)
 
         layout = QGridLayout()
 
-        brakePressTitleLabel = QLabel(self)
-        brakePressTitleLabel.setText("BPS (kPa)")
-        brakePressTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
-        brakePressTitleLabel.setFont(self.dashboardTitleFont)
-        brakePressTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+        accelerationPedalPositionTitleLabel = QLabel(self)
+        accelerationPedalPositionTitleLabel.setText("APPS")
+        accelerationPedalPositionTitleLabel.setAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom
+        )
+        accelerationPedalPositionTitleLabel.setFont(self.dashboardTitleFont)
+        accelerationPedalPositionTitleLabel.setStyleSheet(
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
-        self.brakePressLabel = QLabel(self)
-        self.brakePressLabel.setText("300.3")
-        self.brakePressLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.brakePressLabel.setFont(self.dashboardValueFont)
-        self.brakePressLabel.setStyleSheet("QLabel { color : #FFF; }")
+        self.accelerationPedalPositionLabel = QLabel(self)
+        self.accelerationPedalPositionLabel.setText("100")
+        self.accelerationPedalPositionLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.accelerationPedalPositionLabel.setFont(self.dashboardValueFont)
+        self.accelerationPedalPositionLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(brakePressTitleLabel, 0, 0)
-        layout.addWidget(self.brakePressLabel, 1, 0)
+        layout.addWidget(accelerationPedalPositionTitleLabel, 0, 0)
+        layout.addWidget(self.accelerationPedalPositionLabel, 1, 0)
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 2)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        self.brakePressGroupBox.setLayout(layout)
+        self.accelerationPedalPositionGroupBox.setLayout(layout)
 
-    def createBpsBar(self):
-        self.bpsBar = QProgressBar(self)
-        self.bpsBar.setFixedSize(50, 300)
-        self.bpsBar.setMaximum(Rpm.MAX)
-        self.bpsBar.setValue(0)
-        self.bpsBar.setTextVisible(1)
-        self.bpsBar.setOrientation(2)
-        self.bpsBar.setStyleSheet(
+    def createAppsBar(self):
+        self.appsBar = QProgressBar(self)
+        self.appsBar.setFixedSize(30, 150)
+        self.appsBar.setMaximum(Rpm.MAX)
+        self.appsBar.setValue(0)
+        self.appsBar.setTextVisible(1)
+        self.appsBar.setOrientation(1)
+        self.appsBar.setStyleSheet(
             """
             QProgressBar
                 {
-                    background-color: #F00;
-                    border-radius: 5px;
+                    border: 2px solid;
+                    border-color: #FFF;
+                    background-color: #0F0;
+                    border-radius: 0px;
                     height: 30px;
                     padding: 0px;
                 }
@@ -946,19 +1062,18 @@ class MainWindow(QDialog):
                 }
         """
         )
-        # self.bpsBar.setFixedHeight(30)
 
-    # def setBpsBar(self, bps: Rpm):
-    #     self.bpsBar.setValue(int(bps))
-    #     if bps.status == RpmStatus.LOW:
+    # def setAppsBar(self, tps: Rpm):
+    #     self.AppsBar.setValue(int(tps))
+    #     if Apps.status == RpmStatus.LOW:
     #         color = "#0F0"
-    #     elif bps.status == RpmStatus.MIDDLE:
+    #     elif Apps.status == RpmStatus.MIDDLE:
     #         color = "#FF0"
-    #     elif bps.status == RpmStatus.HIGH:
+    #     elif Apps.status == RpmStatus.HIGH:
     #         color = "#F00"
-    #     elif bps.status == RpmStatus.SHIFT:
+    #     elif Apps.status == RpmStatus.SHIFT:
     #         color = "#00F"
-    #     self.bpsBar.setStyleSheet(
+    #     self.AppsBar.setStyleSheet(
     #     """
     #     QProgressBar
     #         {
@@ -977,67 +1092,192 @@ class MainWindow(QDialog):
     #     % (color)
     # )
 
-    # ---Fans state---
-    def createFanStateGroupBox(self):
-        self.fanStateGroupBox = QGroupBox()
-        self.fanStateGroupBox.setFlat(True)
-        # self.fanStateGroupBox.setFixedSize(150, 190)
+    # ---Brake pressure---
+    def createBrakePressFrontGroupBox(self):
+        self.BrakePressFrontGroupBox = QGroupBox()
+        self.BrakePressFrontGroupBox.setFlat(True)
+        # self.BrakePressFrontGroupBox.setFixedSize(150, 190)
+
         layout = QGridLayout()
 
-        fanStateTitleLabel = QLabel(self)
-        fanStateTitleLabel.setText("Fan")
-        fanStateTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
-        fanStateTitleLabel.setFont(self.dashboardTitleFont)
-        fanStateTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+        BrakePressFrontTitleLabel = QLabel(self)
+        BrakePressFrontTitleLabel.setText("BPS F")
+        BrakePressFrontTitleLabel.setAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom
+        )
+        BrakePressFrontTitleLabel.setFont(self.dashboardTitleFont)
+        BrakePressFrontTitleLabel.setStyleSheet(
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
-        self.fanStateLabel = QLabel(self)
-        self.fanStateLabel.setText("ON")
-        self.fanStateLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.fanStateLabel.setFont(self.dashboardValueFont)
-        self.fanStateLabel.setStyleSheet("color : #FFF; background-color: #0F0")
+        self.BrakePressFrontLabel = QLabel(self)
+        self.BrakePressFrontLabel.setText("300")
+        self.BrakePressFrontLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.BrakePressFrontLabel.setFont(self.dashboardValueFont)
+        self.BrakePressFrontLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(fanStateTitleLabel, 0, 0)
-        layout.addWidget(self.fanStateLabel, 1, 0)
+        layout.addWidget(BrakePressFrontTitleLabel, 0, 0)
+        layout.addWidget(self.BrakePressFrontLabel, 1, 0)
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 2)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        self.fanStateGroupBox.setLayout(layout)
+        self.BrakePressFrontGroupBox.setLayout(layout)
 
-    # ---Fans state---
-    def createWaterPumpStateGroupBox(self):
-        self.waterPumpStateGroupBox = QGroupBox()
-        self.waterPumpStateGroupBox.setFlat(True)
-        # self.waterPumpStateGroupBox.setFixedSize(150, 190)
+    def createBpsFrontBar(self):
+        self.bpsFrontBar = QProgressBar(self)
+        self.bpsFrontBar.setFixedSize(30, 150)
+        self.bpsFrontBar.setMaximum(Rpm.MAX)
+        self.bpsFrontBar.setValue(0)
+        self.bpsFrontBar.setTextVisible(1)
+        self.bpsFrontBar.setOrientation(2)
+        self.bpsFrontBar.setStyleSheet(
+            """
+            QProgressBar
+                {
+                    border: 2px solid;
+                    border-color: #FFF;
+                    background-color: #F00;
+                    border-radius: 0px;
+                    height: 30px;
+                    padding: 0px;
+                }
+            QProgressBar::chunk
+                {
+                    background-color: #0F0;
+                    width: 8px;
+                    margin: 1px;
+                }
+        """
+        )
+        # self.bpsFrontBar.setFixedHeight(30)
+
+    # def setbpsFrontBar(self, bps: Rpm):
+    #     self.bpsFrontBar.setValue(int(bps))
+    #     if bpsF.status == RpmStatus.LOW:
+    #         color = "#0F0"
+    #     elif bpsF.status == RpmStatus.MIDDLE:
+    #         color = "#FF0"
+    #     elif bpsF.status == RpmStatus.HIGH:
+    #         color = "#F00"
+    #     elif bpsF.status == RpmStatus.SHIFT:
+    #         color = "#00F"
+    #     self.bpsFrontBar.setStyleSheet(
+    #     """
+    #     QProgressBar
+    #         {
+    #             background-color: #000;
+    #             border-radius: 5px;
+    #             height: 30px;
+    #             padding: 0px;
+    #         }
+    #     QProgressBar::chunk
+    #         {
+    #             background-color: %s;
+    #             width: 8px;
+    #             margin: 1px;
+    #         }
+    # """
+    #     % (color)
+    # )
+
+    def createBrakePressRearGroupBox(self):
+        self.brakePressRGroupBox = QGroupBox()
+        self.brakePressRGroupBox.setFlat(True)
+        # self.brakePressRGroupBox.setFixedSize(150, 190)
+
         layout = QGridLayout()
 
-        waterPumpStateTitleLabel = QLabel(self)
-        waterPumpStateTitleLabel.setText("Water Pump")
-        waterPumpStateTitleLabel.setAlignment(QtCore.Qt.AlignCenter)
-        waterPumpStateTitleLabel.setFont(self.dashboardTitleFont)
-        waterPumpStateTitleLabel.setStyleSheet(
-            "color : #FFF; background-color:" + self.labelBackgroundColor
+        brakePressRTitleLabel = QLabel(self)
+        brakePressRTitleLabel.setText("BPS R")
+        brakePressRTitleLabel.setAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom
+        )
+        brakePressRTitleLabel.setFont(self.dashboardTitleFont)
+        brakePressRTitleLabel.setStyleSheet(
+            "color :"
+            + self.dashboardTitleColor
+            + "; background-color:"
+            + self.labelBackgroundColor
         )
 
-        self.waterPumpStateLabel = QLabel(self)
-        self.waterPumpStateLabel.setText("ON")
-        self.waterPumpStateLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.waterPumpStateLabel.setFont(self.dashboardValueFont)
-        self.waterPumpStateLabel.setStyleSheet("color : #FFF; background-color: #0F0")
+        self.brakePressRLabel = QLabel(self)
+        self.brakePressRLabel.setText("270")
+        self.brakePressRLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.brakePressRLabel.setFont(self.dashboardValueFont)
+        self.brakePressRLabel.setStyleSheet("QLabel { color : #FFF; }")
 
-        layout.addWidget(waterPumpStateTitleLabel, 0, 0)
-        layout.addWidget(self.waterPumpStateLabel, 1, 0)
+        layout.addWidget(brakePressRTitleLabel, 0, 0)
+        layout.addWidget(self.brakePressRLabel, 1, 0)
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 2)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        self.waterPumpStateGroupBox.setLayout(layout)
+        self.brakePressRGroupBox.setLayout(layout)
+
+    def createBpsRearBar(self):
+        self.bpsRearBar = QProgressBar(self)
+        self.bpsRearBar.setFixedSize(30, 150)
+        self.bpsRearBar.setMaximum(Rpm.MAX)
+        self.bpsRearBar.setValue(0)
+        self.bpsRearBar.setTextVisible(1)
+        self.bpsRearBar.setOrientation(2)
+        self.bpsRearBar.setStyleSheet(
+            """
+            QProgressBar
+                {
+                    border: 2px solid;
+                    border-color: #FFF;
+                    background-color: #F00;
+                    border-radius: 0px;
+                    height: 30px;
+                    padding: 0px;
+                }
+            QProgressBar::chunk
+                {
+                    background-color: #0F0;
+                    width: 8px;
+                    margin: 1px;
+                }
+        """
+        )
+        # self.bpsRearBar.setFixedHeight(30)
+
+    # def setbpsRearBar(self, bps: Rpm):
+    #     self.bpsRearBar.setValue(int(bps))
+    #     if bpsR.status == RpmStatus.LOW:
+    #         color = "#0F0"
+    #     elif bpsR.status == RpmStatus.MIDDLE:
+    #         color = "#FF0"
+    #     elif bpsR.status == RpmStatus.HIGH:
+    #         color = "#F00"
+    #     elif bpsR.status == RpmStatus.SHIFT:
+    #         color = "#00F"
+    #     self.bpsRearBar.setStyleSheet(
+    #     """
+    #     QProgressBar
+    #         {
+    #             background-color: #000;
+    #             border-radius: 5px;
+    #             height: 30px;
+    #             padding: 0px;
+    #         }
+    #     QProgressBar::chunk
+    #         {
+    #             background-color: %s;
+    #             width: 8px;
+    #             margin: 1px;
+    #         }
+    # """
+    #     % (color)
+    # )
 
     # ---Message---
     def createMessageGroupBox(self):
