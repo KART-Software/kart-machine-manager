@@ -72,20 +72,39 @@ class OilPressStatus(IntEnum):
     HIGH = 1
 
 
-class OilPress(float):
-    requiredOilPress: float = 0.0
+class OilPress:
+    oilPress: float
+    rpm: int
 
     COEFFICIENT = 0.00000241088030949
 
-    def setRequiredOilPress(self, rpm: Rpm):
-        self.requiredOilPress = OilPress.COEFFICIENT * rpm * rpm
+    def __init__(self):
+        self.oilPress = 0.0
+        self.rpm = 0
 
     @property
     def status(self) -> OilPressStatus:
-        if self < self.requiredOilPress:
+        requiredOilPress = self.COEFFICIENT * self.rpm**2
+        if self.oilPress < requiredOilPress:
             return OilPressStatus.LOW
         else:
             return OilPressStatus.HIGH
+
+
+class FuelPressStatus(IntEnum):
+    LOW = 0
+    HIGH = 1
+
+
+class FuelPress(float):
+    THRESHOLD = 50.0
+
+    @property
+    def status(self) -> FuelPressStatus:
+        if self < self.THRESHOLD:
+            return FuelPressStatus.LOW
+        else:
+            return FuelPressStatus.HIGH
 
 
 class LapTime(timedelta):
@@ -135,7 +154,7 @@ class BatteryStatus(IntEnum):
     HIGH = 1
 
 
-class Battery(int):
+class BatteryVoltage(int):
     THRESHOLD = 11
 
     @property
@@ -146,6 +165,24 @@ class Battery(int):
             return BatteryStatus.HIGH
 
 
+class BrakePress:
+    front: float
+    rear: float
+
+    def __init__(self):
+        self.front = 0.0
+        self.rear = 0.0
+
+    @property
+    def bias(self) -> float:
+        if self.front <= 0.0 and self.rear <= 0.0:
+            return 0.0
+        else:
+            front = max(0.0, self.front)
+            rear = max(0.0, self.rear)
+            return 100.0 * front / (front + rear)
+
+
 class DashMachineInfo:
     rpm: Rpm
     throttlePosition: float
@@ -153,16 +190,26 @@ class DashMachineInfo:
     oilTemp: OilTemp
     oilPress: OilPress
     gearVoltage: GearVoltage
-    battery: Battery
+    batteryVoltage: BatteryVoltage
+    fanEnabled: bool
+    fuelPress: FuelPress
+    brakePress: BrakePress
 
     def __init__(self) -> None:
         self.rpm = Rpm(0)
         self.throttlePosition = 0.0
         self.waterTemp = WaterTemp(0)
         self.oilTemp = OilTemp(0)
-        self.oilPress = OilPress(0)
+        self.oilPress = OilPress()
         self.gearVoltage = GearVoltage(GearVoltage.EACH_VOLTAGES[GearType.NEUTRAL])
-        self.battery = Battery(0)
+        self.batteryVoltage = BatteryVoltage(0)
+        self.fanEnabled = False
+        self.fuelPress = FuelPress(0.0)
+        self.brakePress = BrakePress()
+
+    def setRpm(self, rpm: int):
+        self.rpm = Rpm(rpm)
+        self.oilPress.rpm = rpm
 
 
 class Message:
@@ -172,3 +219,7 @@ class Message:
     def __init__(self) -> None:
         self.text = ""
         self.lap = 0
+
+
+# class LapTime(timedelta):
+#     pass
