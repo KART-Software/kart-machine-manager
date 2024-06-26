@@ -214,11 +214,11 @@ class DashMachineInfo:
 
 class Message:
     text: str
-    lap: int
+    laptime: float
 
     def __init__(self) -> None:
         self.text = ""
-        self.lap = 0
+        self.laptime = 0.0
 
 
 # class LapTime(timedelta):

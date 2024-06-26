@@ -30,8 +30,7 @@ class DashInfoListener(can.Listener):
 
     def on_message_received(self, msg: can.Message) -> None:
         if msg.arbitration_id == 0x5F0:
-            self.dashMachineInfo.rpm = Rpm.from_bytes(msg.data[0:2], "big")
-            self.dashMachineInfo.oilPress.setRequiredOilPress(self.dashMachineInfo.rpm)
+            self.dashMachineInfo.setRpm(int.from_bytes(msg.data[0:2], "big"))
             self.dashMachineInfo.waterTemp = WaterTemp(
                 int.from_bytes(msg.data[4:6], "big") // 10
             )
@@ -39,7 +38,7 @@ class DashInfoListener(can.Listener):
                 int.from_bytes(msg.data[6:8], "big") // 10
             )
         elif msg.arbitration_id == 0x5F1:
-            self.dashMachineInfo.oilPress = OilPress(
+            self.dashMachineInfo.oilPress.oilPress = (
                 int.from_bytes(msg.data[0:2], "big") / 10
             )
             self.dashMachineInfo.gearVoltage = GearVoltage(
