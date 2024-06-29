@@ -180,7 +180,7 @@ class MainWindow(QDialog):
         self.gearLabel = GearLabel()
         self.timeLabel = TimeLabel()
 
-        # self.kartLogoIcon = QPixmap("src\gui\icons\kart_logo.png")
+        # self.kartLogoIcon = QPixmap("src/gui/icons/kart_logo.png")
         # self.kartLogoIconLable = QLabel(self)
         # self.kartLogoIconLable.setPixmap(self.kartLogoIcon)
         # self.kartLogoIconLable.setStyleSheet("background-color: #000")
@@ -251,9 +251,9 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        self.batteryIconValueBox = IconValueBox("src\gui\icons\BatteryIcon.png")
-        self.lapTimeIconValueBox = IconValueBox("src\gui\icons\LaptimeIcon.png")
-        self.messageIconValueBox = IconValueBox("src\gui\icons\MeesageIcon.png")
+        self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
+        self.lapTimeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
+        self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
         self.messageIconValueBox.valueLabel.setAlignment(QtCore.Qt.AlignVCenter)
         self.messageIconValueBox.layout.setColumnStretch(0, 1)
         self.messageIconValueBox.layout.setColumnStretch(1, 6)
