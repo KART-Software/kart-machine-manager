@@ -180,7 +180,7 @@ class BrakePress:
         else:
             front = max(0.0, self.front)
             rear = max(0.0, self.rear)
-            return 100.0 * front / (front + rear)
+            return round(100.0 * front / (front + rear), 1)
 
 
 class DashMachineInfo:

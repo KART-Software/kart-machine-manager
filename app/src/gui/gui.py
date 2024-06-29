@@ -13,10 +13,10 @@ from PyQt5.QtWidgets import (
 from src.gui.self_defined_widgets import (
     GearLabel,
     IconValueBox,
+    LapTimeLabel,
     PedalBar,
     RpmLabel,
     RpmLightBar,
-    TimeLabel,
     TitleValueBox,
 )
 from src.models.models import (
@@ -48,6 +48,7 @@ class MainWindow(QDialog):
         palette.setColor(self.foregroundRole(), QColor("#FFF"))
         self.setPalette(palette)
 
+        self.createAllWidgets()
         self.createTopGroupBox()
         self.createLeftGroupBox()
         self.createCenterGroupBox()
@@ -67,15 +68,14 @@ class MainWindow(QDialog):
         mainLayout.setColumnStretch(0, 3)
         mainLayout.setColumnStretch(1, 2)
         mainLayout.setColumnStretch(2, 3)
-        mainLayout.setRowStretch(0, 5)
-        mainLayout.setRowStretch(1, 38)
-        mainLayout.setRowStretch(2, 5)
+        mainLayout.setRowStretch(0, 1)
+        mainLayout.setRowStretch(1, 6)
+        mainLayout.setRowStretch(2, 1)
 
     def updateDashboard(self, dashMachineInfo: DashMachineInfo, message: Message):
         self.rpmLightBar.updateRpmBar(dashMachineInfo.rpm)
         self.rpmLabel.updateRpmLabel(dashMachineInfo.rpm)
         self.gearLabel.updateGearLabel(dashMachineInfo.gearVoltage.gearType)
-        self.timeLabel.updateTime()
         self.waterTempTitleValueBox.updateValueLabel(dashMachineInfo.waterTemp)
         self.waterTempTitleValueBox.updateWaterTempWarning(dashMachineInfo.waterTemp)
         self.oilTempTitleValueBox.updateValueLabel(dashMachineInfo.oilTemp)
@@ -83,12 +83,14 @@ class MainWindow(QDialog):
         self.oilPressTitleValueBox.updateValueLabel(dashMachineInfo.oilPress.oilPress)
         self.oilPressTitleValueBox.updateOilPressWarning(dashMachineInfo.oilPress)
         self.messageIconValueBox.updateMessageLabel(message)
-        self.lapTimeIconValueBox.updateLapTimeLabel(message)
+        self.lapTimeLabel.updateLapTimeLabel(message)
+        self.timeIconValueBox.updateTime()
         # no mock data-----------
         self.fuelPressTitleValueBox.updateValueLabel(dashMachineInfo.fuelPress)
-        self.fanSwitchStateTitleValueBox.valueLabel.setText(
-            str(dashMachineInfo.fanEnabled)
+        self.fanSwitchStateTitleValueBox.updateBoolValueLabel(
+            dashMachineInfo.fanEnabled
         )
+        self.fanSwitchStateTitleValueBox.updateFanWarning(dashMachineInfo.fanEnabled)
         self.brakeBiasTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.bias)
         self.tpsTitleValueBox.updateValueLabel(dashMachineInfo.throttlePosition)
         self.bpsFTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.front)
@@ -117,6 +119,35 @@ class MainWindow(QDialog):
         # self.batteryIconValueBox.updateBatteryValueLabel(testData / 10)
         # -----------------------
 
+    def createAllWidgets(self):
+        self.rpmLabel = RpmLabel()
+        self.gearLabel = GearLabel()
+        self.lapTimeLabel = LapTimeLabel()
+
+        self.waterTempTitleValueBox = TitleValueBox("Water Temp")
+        self.oilTempTitleValueBox = TitleValueBox("Oil Temp")
+        self.oilPressTitleValueBox = TitleValueBox("Oil Press")
+        self.fuelPressTitleValueBox = TitleValueBox("Fuel Press")
+        self.fanSwitchStateTitleValueBox = TitleValueBox("Fan Switch")
+        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias(F%)")
+
+        self.tpsTitleValueBox = TitleValueBox("TPS")
+        self.tpsTitleValueBox.valueLabel.setAlignment(QtCore.Qt.AlignHCenter)
+        self.bpsFTitleValueBox = TitleValueBox("BPS F")
+        self.bpsRTitleValueBox = TitleValueBox("BPS R")
+        self.tpsBar = PedalBar("#0F0", 100)
+        self.bpsFBar = PedalBar("#F00", 600)
+        self.bpsRBar = PedalBar("#F00", 600)
+        self.bpsRBar.setInvertedAppearance(True)
+
+        self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
+        self.lapTimeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
+        self.timeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
+        self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
+        self.messageIconValueBox.valueLabel.setAlignment(QtCore.Qt.AlignVCenter)
+        self.messageIconValueBox.layout.setColumnStretch(0, 1)
+        self.messageIconValueBox.layout.setColumnStretch(1, 6)
+
     # ------------------------------Define Overall Layout Group Box---------------------
     def createTopGroupBox(self):
         self.topGroupBox = QGroupBox()
@@ -144,13 +175,6 @@ class MainWindow(QDialog):
         layout = QGridLayout()
         # layout = QVBoxLayout()
 
-        self.waterTempTitleValueBox = TitleValueBox("Water Temp")
-        self.oilTempTitleValueBox = TitleValueBox("Oil Temp")
-        self.oilPressTitleValueBox = TitleValueBox("Oil Press")
-        self.fuelPressTitleValueBox = TitleValueBox("Fuel Press")
-        self.fanSwitchStateTitleValueBox = TitleValueBox("Fan Switch")
-        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias(F%)")
-
         layout.addWidget(self.waterTempTitleValueBox, 0, 0)
         layout.addWidget(self.oilTempTitleValueBox, 1, 0)
         layout.addWidget(self.oilPressTitleValueBox, 1, 1)
@@ -176,34 +200,13 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        self.rpmLabel = RpmLabel()
-        self.gearLabel = GearLabel()
-        self.timeLabel = TimeLabel()
-
-        # self.kartLogoIcon = QPixmap("src/gui/icons/kart_logo.png")
-        # self.kartLogoIconLable = QLabel(self)
-        # self.kartLogoIconLable.setPixmap(self.kartLogoIcon)
-        # self.kartLogoIconLable.setStyleSheet("background-color: #000")
-        # self.kartLogoIconLable.setFixedSize(196, 50)
-        # self.kartLogoIconLable.setAlignment(QtCore.Qt.AlignCenter)
-        # self.kartLogoIconLable.setScaledContents(True)
-        # logo表示なし#
-
-        # speedLabel = QLabel(self)
-        # speedLabel.setText("16")
-        # speedLabel.setAlignment(QtCore.Qt.AlignCenter)
-        # speedLabel.setFont(QFont("Arial", 50))
-        # speedLabel.setStyleSheet("QLabel { color : #FFF; }")
-        # 速度表示なし#
-
         layout.addWidget(self.rpmLabel, 0, 0, 1, 2)
         layout.addWidget(self.gearLabel, 1, 0, 1, 2)
-        # layout.addWidget(self.kartLogoIconLable, 2, 0, 1, 2)
-        layout.addWidget(self.timeLabel, 2, 0, 1, 2)
-        # layout.addWidget(speedLabel, 2, 0)
-        layout.setRowStretch(0, 1)
-        layout.setRowStretch(1, 4)
-        layout.setRowStretch(2, 1)
+        layout.addWidget(self.lapTimeLabel, 2, 0, 1, 2)
+
+        layout.setRowStretch(0, 2)
+        layout.setRowStretch(1, 10)
+        layout.setRowStretch(2, 3)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
@@ -222,21 +225,17 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        self.tpsTitleValueBox = TitleValueBox("TPS")
-        self.tpsTitleValueBox.valueLabel.setAlignment(QtCore.Qt.AlignHCenter)
-        self.bpsFTitleValueBox = TitleValueBox("BPS F")
-        self.bpsRTitleValueBox = TitleValueBox("BPS R")
-        self.tpsBar = PedalBar(30, 340, "#0F0", 100)
-        self.bpsFBar = PedalBar(30, 150, "#F00", 400)
-        self.bpsRBar = PedalBar(30, 150, "#F00", 400)
-        self.bpsRBar.setInvertedAppearance(True)
-
         layout.addWidget(self.tpsTitleValueBox, 0, 0, 2, 1)
         layout.addWidget(self.tpsBar, 0, 1, 2, 1)
         layout.addWidget(self.bpsFBar, 0, 2)
         layout.addWidget(self.bpsFTitleValueBox, 0, 3)
         layout.addWidget(self.bpsRBar, 1, 2)
         layout.addWidget(self.bpsRTitleValueBox, 1, 3)
+
+        layout.setColumnStretch(0, 2)
+        layout.setColumnStretch(1, 1)
+        layout.setColumnStretch(2, 1)
+        layout.setColumnStretch(3, 2)
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -256,16 +255,10 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
-        self.lapTimeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
-        self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
-        self.messageIconValueBox.valueLabel.setAlignment(QtCore.Qt.AlignVCenter)
-        self.messageIconValueBox.layout.setColumnStretch(0, 1)
-        self.messageIconValueBox.layout.setColumnStretch(1, 6)
-
         layout.addWidget(self.messageIconValueBox, 0, 0)
-        layout.addWidget(self.lapTimeIconValueBox, 0, 1)
-        layout.addWidget(self.batteryIconValueBox, 0, 2)
+        layout.addWidget(self.batteryIconValueBox, 0, 1)
+        layout.addWidget(self.timeIconValueBox, 0, 2)
+
         layout.setColumnStretch(0, 3)
         layout.setColumnStretch(1, 1)
         layout.setColumnStretch(2, 1)

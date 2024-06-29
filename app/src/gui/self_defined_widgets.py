@@ -96,6 +96,12 @@ class TitleValueBox(QGroupBox):
     def updateValueLabel(self, value):
         self.valueLabel.setText(str(value))
 
+    def updateBoolValueLabel(self, value: bool):
+        if value:
+            self.valueLabel.setText("ON")
+        else:
+            self.valueLabel.setText("OFF")
+
     # --------------- update background warning color  ----------
     def updateWaterTempWarning(self, waterTemp: WaterTemp):
         if waterTemp.status == WaterTempStatus.LOW:
@@ -121,6 +127,13 @@ class TitleValueBox(QGroupBox):
             color = "#F00"
         elif oilPress.status == OilPressStatus.HIGH:
             color = "#000"
+        self.setStyleSheet("color : #FFF; background-color:" + color + ";")
+
+    def updateFanWarning(self, fanEnable: bool):
+        if fanEnable:
+            color = "#000"
+        else:
+            color = "#F00"
         self.setStyleSheet("color : #FFF; background-color:" + color + ";")
 
 
@@ -182,14 +195,15 @@ class IconValueBox(QGroupBox):
     def updateMessageLabel(self, message: Message):
         self.valueLabel.setText(message.text)
 
-    def updateLapTimeLabel(self, message: Message):
-        self.valueLabel.setText(str(round(message.laptime, 2)) + " s")
+    def updateTime(self):
+        dt_now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
+        self.valueLabel.setText(dt_now.strftime("%H:%M"))
 
 
 class PedalBar(QProgressBar):
-    def __init__(self, width, height, barColor, maxValue):
+    def __init__(self, barColor, maxValue):
         super(PedalBar, self).__init__(None)
-        self.setFixedSize(width, height)
+        self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         # self.adjustSize()
         # self.setMaximum(Rpm.MAX)
         self.setMaximum(maxValue)
@@ -219,6 +233,7 @@ class PedalBar(QProgressBar):
             QProgressBar::chunk
                 {
                     background-color: %s;
+                    height: 1px;
                 }
             """
             % (barColor)
@@ -329,7 +344,7 @@ class GearLabel(QCustomLabel):
         super(GearLabel, self).__init__()
         self.setAlignment(QtCore.Qt.AlignCenter)
         self.setFontFamily("Arial")
-        self.setFontScale(2)
+        self.setFontScale(2.5)
         self.setStyleSheet("color : #FFF; background-color: #000")
 
     def updateGearLabel(self, gearType: GearType):
@@ -346,22 +361,21 @@ class RpmLabel(QCustomLabel):
         super(RpmLabel, self).__init__()
         self.setAlignment(QtCore.Qt.AlignCenter)
         self.setFontFamily("Arial")
-        self.setFontScale(0.5)
+        self.setFontScale(0.6)
         self.setStyleSheet("color : #FFF; background-color: #000")
 
     def updateRpmLabel(self, rpm: Rpm):
         self.setText(str(rpm))
 
 
-class TimeLabel(QCustomLabel):
+class LapTimeLabel(QCustomLabel):
     def __init__(self):
-        super(TimeLabel, self).__init__()
+        super(LapTimeLabel, self).__init__()
 
         self.setAlignment(QtCore.Qt.AlignCenter)
         self.setFontFamily("Times New Roman")
-        self.setFontScale(0.7)
-        self.setStyleSheet("color : #FFF; background-color: #000")
+        self.setFontScale(0.8)
+        self.setStyleSheet("color : #B6F; background-color: #000")
 
-    def updateTime(self):
-        dt_now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
-        self.setText(dt_now.strftime("%H:%M:%S"))
+    def updateLapTimeLabel(self, message: Message):
+        self.setText(str(round(message.laptime, 2)) + " s")
