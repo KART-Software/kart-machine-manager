@@ -57,7 +57,6 @@ class TitleValueBox(QGroupBox):
         super(TitleValueBox, self).__init__(None)
         self.setFlat(True)
         self.layout = QGridLayout()
-
         self.TitleFont = "Arial"
         self.titleColor = "#FD6"
         self.valueFont = "Arial"
@@ -110,7 +109,7 @@ class TitleValueBox(QGroupBox):
             color = "#000"
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
-        self.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
 
     def updateOilTempWarning(self, oilTemp: OilTemp):
         if oilTemp.status == OilTempStatus.LOW:
@@ -119,7 +118,7 @@ class TitleValueBox(QGroupBox):
             color = "#000"
         elif oilTemp.status == OilTempStatus.HIGH:
             color = "#F00"
-        self.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
 
     def updateOilPressWarning(self, oilPress: OilPress):
         # self.valueLabel.setText(str(round(oilPress, 2)))
@@ -127,14 +126,14 @@ class TitleValueBox(QGroupBox):
             color = "#F00"
         elif oilPress.status == OilPressStatus.HIGH:
             color = "#000"
-        self.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
 
     def updateFanWarning(self, fanEnable: bool):
         if fanEnable:
             color = "#000"
         else:
             color = "#F00"
-        self.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
 
 
 class IconValueBox(QGroupBox):
