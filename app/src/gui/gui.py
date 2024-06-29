@@ -1,4 +1,3 @@
-import time
 from abc import ABCMeta, abstractmethod
 
 from PyQt5 import QtCore
@@ -60,44 +59,37 @@ class MainWindow(QDialog):
         mainLayout.setSpacing(0)
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.topGroupBox, 0, 0, 1, 3)
-        mainLayout.addWidget(self.leftGroupBox, 1, 0)
-        mainLayout.addWidget(self.centerGroupBox, 1, 1)
-        mainLayout.addWidget(self.rightGroupBox, 1, 2)
+        mainLayout.addWidget(self.leftGroupBox, 1, 0, 1, 1)
+        mainLayout.addWidget(self.centerGroupBox, 1, 1, 1, 1)
+        mainLayout.addWidget(self.rightGroupBox, 1, 2, 1, 1)
         mainLayout.addWidget(self.bottomGroupBox, 2, 0, 1, 3)
 
-    def updateDashboard(self, dashMachineInfo: DashMachineInfo, message: Message):
-        self.topGroupBox.light_1.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_2.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_3.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_4.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_5.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_6.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_7.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_8.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_9.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_10.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_11.updateRpmLightColor(dashMachineInfo.rpm)
-        self.topGroupBox.light_12.updateRpmLightColor(dashMachineInfo.rpm)
+        mainLayout.setColumnStretch(0, 3)
+        mainLayout.setColumnStretch(1, 2)
+        mainLayout.setColumnStretch(2, 3)
+        mainLayout.setRowStretch(0, 5)
+        mainLayout.setRowStretch(1, 38)
+        mainLayout.setRowStretch(2, 5)
 
+    def updateDashboard(self, dashMachineInfo: DashMachineInfo, message: Message):
+        self.rpmLightBar.updateRpmBar(dashMachineInfo.rpm)
         self.rpmLabel.updateRpmLabel(dashMachineInfo.rpm)
         self.gearLabel.updateGearLabel(dashMachineInfo.gearVoltage.gearType)
         self.timeLabel.updateTime()
-
         self.waterTempTitleValueBox.updateValueLabel(dashMachineInfo.waterTemp)
         self.waterTempTitleValueBox.updateWaterTempWarning(dashMachineInfo.waterTemp)
         self.oilTempTitleValueBox.updateValueLabel(dashMachineInfo.oilTemp)
         self.oilTempTitleValueBox.updateOilTempWarning(dashMachineInfo.oilTemp)
         self.oilPressTitleValueBox.updateValueLabel(dashMachineInfo.oilPress.oilPress)
         self.oilPressTitleValueBox.updateOilPressWarning(dashMachineInfo.oilPress)
-
         self.messageIconValueBox.updateMessageLabel(message)
-
+        self.lapTimeIconValueBox.updateLapTimeLabel(message)
         # no mock data-----------
         self.fuelPressTitleValueBox.updateValueLabel(dashMachineInfo.fuelPress)
         self.fanSwitchStateTitleValueBox.valueLabel.setText(
             str(dashMachineInfo.fanEnabled)
         )
-        self.brakeBiasTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.front)
+        self.brakeBiasTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.bias)
         self.tpsTitleValueBox.updateValueLabel(dashMachineInfo.throttlePosition)
         self.bpsFTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.front)
         self.bpsRTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.rear)
@@ -127,17 +119,27 @@ class MainWindow(QDialog):
 
     # ------------------------------Define Overall Layout Group Box---------------------
     def createTopGroupBox(self):
-        self.topGroupBox = RpmLightBar()
+        self.topGroupBox = QGroupBox()
+        self.topGroupBox.setFlat(True)
+        # self.topGroupBox.setObjectName("TopBox")
+        # self.topGroupBox.setStyleSheet("QGroupBox#TopBox { border: 1px solid white;}")
+
+        layout = QGridLayout()
+        self.rpmLightBar = RpmLightBar()
+        layout.addWidget(self.rpmLightBar, 0, 0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        self.topGroupBox.setLayout(layout)
 
     def createLeftGroupBox(self):
         self.leftGroupBox = QGroupBox()
         self.leftGroupBox.setFlat(True)
-        self.leftGroupBox.setStyleSheet("border:0;")
-        # self.leftGroupBox.setStyleSheet(
-        #     "border: 1px solid; border-color:" + self.borderColor
-        # )
+        # self.leftGroupBox.setStyleSheet("border:0;")
+        self.leftGroupBox.setObjectName("LeftBox")
+        self.leftGroupBox.setStyleSheet("QGroupBox#LeftBox { border: 2px solid white;}")
         # self.leftGroupBox.setGeometry(1, 81, 200, 320)
-        self.leftGroupBox.setFixedSize(300, 380)
+        # self.leftGroupBox.setFixedSize(300, 380)
 
         layout = QGridLayout()
         # layout = QVBoxLayout()
@@ -145,7 +147,7 @@ class MainWindow(QDialog):
         self.waterTempTitleValueBox = TitleValueBox("Water Temp")
         self.oilTempTitleValueBox = TitleValueBox("Oil Temp")
         self.oilPressTitleValueBox = TitleValueBox("Oil Press")
-        self.fuelPressTitleValueBox = TitleValueBox("Fule Press")
+        self.fuelPressTitleValueBox = TitleValueBox("Fuel Press")
         self.fanSwitchStateTitleValueBox = TitleValueBox("Fan Switch")
         self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias(F%)")
 
@@ -167,12 +169,10 @@ class MainWindow(QDialog):
     def createCenterGroupBox(self):
         self.centerGroupBox = QGroupBox()
         self.centerGroupBox.setFlat(True)
-        self.centerGroupBox.setStyleSheet("border: 0px;")
-        # self.centerGroupBox.setStyleSheet(
-        #     "border: 1px solid; border-color:" + self.borderColor
-        # )
+        self.centerGroupBox.setStyleSheet("border: 2px solid white;")
+        # self.centerGroupBox.setStyleSheet("QGroupBox { border: 2px solid white;}")
         # self.centerGroupBox.setGeometry(301, 81, 200, 320)
-        self.centerGroupBox.setFixedSize(200, 380)
+        # self.centerGroupBox.setFixedSize(200, 380)
 
         layout = QGridLayout()
 
@@ -201,6 +201,9 @@ class MainWindow(QDialog):
         # layout.addWidget(self.kartLogoIconLable, 2, 0, 1, 2)
         layout.addWidget(self.timeLabel, 2, 0, 1, 2)
         # layout.addWidget(speedLabel, 2, 0)
+        layout.setRowStretch(0, 1)
+        layout.setRowStretch(1, 4)
+        layout.setRowStretch(2, 1)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
@@ -209,12 +212,13 @@ class MainWindow(QDialog):
     def createRightGroupBox(self):
         self.rightGroupBox = QGroupBox()
         self.rightGroupBox.setFlat(True)
-        self.rightGroupBox.setStyleSheet("border:0;")
-        # self.rightGroupBox.setStyleSheet(
-        #     "border: 1px solid; border-color:" + self.borderColor
-        # )
-        self.rightGroupBox.setGeometry(501, 81, 200, 320)
-        self.rightGroupBox.setFixedSize(300, 380)
+        # self.rightGroupBox.setStyleSheet("border:0;")
+        self.rightGroupBox.setObjectName("RightBox")
+        self.rightGroupBox.setStyleSheet(
+            "QGroupBox#RightBox { border: 2px solid white;}"
+        )
+        # self.rightGroupBox.setGeometry(501, 81, 200, 320)
+        # self.rightGroupBox.setFixedSize(300, 380)
 
         layout = QGridLayout()
 
@@ -243,11 +247,12 @@ class MainWindow(QDialog):
         self.bottomGroupBox = QGroupBox()
         self.bottomGroupBox.setFlat(True)
         self.bottomGroupBox.setStyleSheet("border: 0px;")
+        # self.bottomGroupBox.setObjectName("BottomBox")
         # self.bottomGroupBox.setStyleSheet(
-        #     "border: 1px solid; border-color:" + self.borderColor
+        #     "QGroupBox#BottomBox { border: 0px solid white;}"
         # )
         # self.bottomGroupBox.setGeometry(1, 401, 800, 80)
-        self.bottomGroupBox.setFixedSize(800, 50)
+        # self.bottomGroupBox.setFixedSize(800, 50)
 
         layout = QGridLayout()
 
@@ -261,7 +266,7 @@ class MainWindow(QDialog):
         layout.addWidget(self.messageIconValueBox, 0, 0)
         layout.addWidget(self.lapTimeIconValueBox, 0, 1)
         layout.addWidget(self.batteryIconValueBox, 0, 2)
-        layout.setColumnStretch(0, 4)
+        layout.setColumnStretch(0, 3)
         layout.setColumnStretch(1, 1)
         layout.setColumnStretch(2, 1)
 

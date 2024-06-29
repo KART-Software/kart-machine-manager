@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QLabel,
     QProgressBar,
+    QSizePolicy,
 )
 
 from src.models.models import (
@@ -23,25 +24,51 @@ from src.models.models import (
 )
 
 
+class QCustomLabel(QLabel):
+    def __init__(self):
+        super(QCustomLabel, self).__init__()
+        self._font = QFont()
+        # self.setFont(self._font)
+        self.setAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+        self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self._fontScale = 1.0
+
+    def setFontFamily(self, face):
+        self._font.setFamily(face)
+
+    def setFontScale(self, scale):
+        self._fontScale = scale
+
+    def resizeEvent(self, evt):
+        width = self.size().width() / 2
+        height = self.size().height()
+        baseSize = 0
+        if width > height:
+            baseSize = height
+        else:
+            baseSize = width
+
+        self._font.setPixelSize(int(baseSize * self._fontScale))
+        self.setFont(self._font)
+
+
 class TitleValueBox(QGroupBox):
     def __init__(self, titleLabel):
         super(TitleValueBox, self).__init__(None)
         self.setFlat(True)
         self.layout = QGridLayout()
 
-        self.TitleFont = QFont("Arial", 15)
+        self.TitleFont = "Arial"
         self.titleColor = "#FD6"
-        # self.TitleFont.setBold(True)
-        self.valueFont = QFont("Arial", 40)
+        self.valueFont = "Arial"
         self.valueColor = "#FFF"
-        # self.ValueFont.setBold(True)
-        self.borderColor = "#FFF"
         self.titleBackgroundColor = "#000"
 
-        self.titleLabel = QLabel(self)
+        self.titleLabel = QCustomLabel()
         self.titleLabel.setText(titleLabel)
         self.titleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
-        self.titleLabel.setFont(self.TitleFont)
+        self.titleLabel.setFontFamily(self.TitleFont)
+        self.titleLabel.setFontScale(0.4)
         self.titleLabel.setStyleSheet(
             "color :"
             + self.titleColor
@@ -49,9 +76,10 @@ class TitleValueBox(QGroupBox):
             + self.titleBackgroundColor
         )
 
-        self.valueLabel = QLabel(self)
+        self.valueLabel = QCustomLabel()
         self.valueLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.valueLabel.setFont(self.valueFont)
+        self.valueLabel.setFontFamily(self.valueFont)
+        self.valueLabel.setFontScale(0.8)
         self.valueLabel.setStyleSheet("color :" + self.valueColor + ";")
 
         self.layout.addWidget(self.titleLabel, 0, 0)
@@ -107,23 +135,21 @@ class IconValueBox(QGroupBox):
 
         self.iconLabel = QLabel(self)
         self.iconLabel.setPixmap(QPixmap(iconPath))
-        # self.iconLabel.setPixmap(QPixmap("src\gui\icons\BatteryIcon.png"))
-        # self.iconLabel.setFixedSize(40, 40)
         self.iconLabel.setAlignment(QtCore.Qt.AlignCenter)
         # self.iconLabel.setScaledContents(True)
 
-        self.valueLabel = QLabel(self)
-        # self.valueLabel.setText("12.4 V")
-        # self.valueLabel.setFixedSize(100, 50)
+        # self.valueLabel = QLabel(self)
+        self.valueLabel = QCustomLabel()
         self.valueLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.valueLabel.setFont(self.valueFont)
+        self.valueLabel.setFontScale(0.6)
+        self.valueLabel.setFontFamily("Arial")
         self.valueLabel.setStyleSheet("QLabel { color : " + self.valueColor + "; }")
 
         # self.layout.addWidget(batteryTitleLabel, 0, 0)
         self.layout.addWidget(self.iconLabel, 0, 0)
         self.layout.addWidget(self.valueLabel, 0, 1)
         self.layout.setColumnStretch(0, 1)
-        self.layout.setColumnStretch(1, 2)
+        self.layout.setColumnStretch(1, 3)
 
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
@@ -156,15 +182,19 @@ class IconValueBox(QGroupBox):
     def updateMessageLabel(self, message: Message):
         self.valueLabel.setText(message.text)
 
+    def updateLapTimeLabel(self, message: Message):
+        self.valueLabel.setText(str(round(message.laptime, 2)) + " s")
+
 
 class PedalBar(QProgressBar):
     def __init__(self, width, height, barColor, maxValue):
         super(PedalBar, self).__init__(None)
         self.setFixedSize(width, height)
+        # self.adjustSize()
         # self.setMaximum(Rpm.MAX)
         self.setMaximum(maxValue)
         # self.setValue(40)
-        self.setTextVisible(True)
+        self.setTextVisible(False)
         self.setOrientation(QtCore.Qt.Vertical)
         self.setStyleSheet(
             """
@@ -192,11 +222,6 @@ class RpmLightBar(QGroupBox):
         super(RpmLightBar, self).__init__(None)
         self.setFlat(True)
         self.setStyleSheet("border:0;")
-        # self.topGroupBox.setStyleSheet(
-        #     "border: 2px solid; border-color:" + self.borderColor
-        # )
-        # self.topGroupBox.setGeometry(1, 81, 200, 320)
-        self.setFixedSize(800, 50)
 
         self.layout = QGridLayout()
 
@@ -249,13 +274,27 @@ class RpmLightBar(QGroupBox):
 
         self.setLayout(self.layout)
 
+    def updateRpmBar(self, rpm: Rpm):
+        self.light_1.updateRpmLightColor(rpm)
+        self.light_2.updateRpmLightColor(rpm)
+        self.light_3.updateRpmLightColor(rpm)
+        self.light_4.updateRpmLightColor(rpm)
+        self.light_5.updateRpmLightColor(rpm)
+        self.light_6.updateRpmLightColor(rpm)
+        self.light_7.updateRpmLightColor(rpm)
+        self.light_8.updateRpmLightColor(rpm)
+        self.light_9.updateRpmLightColor(rpm)
+        self.light_10.updateRpmLightColor(rpm)
+        self.light_11.updateRpmLightColor(rpm)
+        self.light_12.updateRpmLightColor(rpm)
+
 
 class RpmLight(QGroupBox):
     def __init__(self, onRpm, onColor):
         super(RpmLight, self).__init__(None)
         self.setFlat(True)
         self.setStyleSheet("border:0;")
-        self.setFixedSize(51, 40)
+        # self.setFixedSize(51, 40)
 
         self.offColor = "#333"  # dark gray
         self.shiftRpm = 9000
@@ -274,11 +313,12 @@ class RpmLight(QGroupBox):
         self.setStyleSheet("background-color: " + color + ";")
 
 
-class GearLabel(QLabel):
+class GearLabel(QCustomLabel):
     def __init__(self):
-        super(GearLabel, self).__init__(None)
+        super(GearLabel, self).__init__()
         self.setAlignment(QtCore.Qt.AlignCenter)
-        self.setFont(QFont("Arial", 180))
+        self.setFontFamily("Arial")
+        self.setFontScale(2)
         self.setStyleSheet("color : #FFF; background-color: #000")
 
     def updateGearLabel(self, gearType: GearType):
@@ -290,24 +330,25 @@ class GearLabel(QLabel):
             self.setStyleSheet("color : #FFF;")
 
 
-class RpmLabel(QLabel):
+class RpmLabel(QCustomLabel):
     def __init__(self):
-        super(RpmLabel, self).__init__(None)
+        super(RpmLabel, self).__init__()
         self.setAlignment(QtCore.Qt.AlignCenter)
-        self.setFont(QFont("Arial", 30))
+        self.setFontFamily("Arial")
+        self.setFontScale(0.5)
         self.setStyleSheet("color : #FFF; background-color: #000")
 
     def updateRpmLabel(self, rpm: Rpm):
         self.setText(str(rpm))
 
 
-class TimeLabel(QLabel):
+class TimeLabel(QCustomLabel):
     def __init__(self):
-        super(TimeLabel, self).__init__(None)
+        super(TimeLabel, self).__init__()
 
-        self.setText("15:40:39")
         self.setAlignment(QtCore.Qt.AlignCenter)
-        self.setFont(QFont("Times New Roman", 35))
+        self.setFontFamily("Times New Roman")
+        self.setFontScale(0.7)
         self.setStyleSheet("color : #FFF; background-color: #000")
 
     def updateTime(self):
