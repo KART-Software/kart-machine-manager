@@ -81,6 +81,7 @@ class TitleValueBox(QGroupBox):
         self.valueLabel.setFontFamily(self.valueFont)
         self.valueLabel.setFontScale(0.8)
         self.valueLabel.setStyleSheet("color :" + self.valueColor + ";")
+        self.setStyleSheet("color : #FFF; background-color: #000;")
 
         self.layout.addWidget(self.titleLabel, 0, 0)
         self.layout.addWidget(self.valueLabel, 1, 0)
@@ -94,7 +95,6 @@ class TitleValueBox(QGroupBox):
 
     def updateValueLabel(self, value):
         self.valueLabel.setText(str(value))
-        self.setStyleSheet("color : #FFF; background-color: #000;")
 
     # --------------- update background warning color  ----------
     def updateWaterTempWarning(self, waterTemp: WaterTemp):
@@ -196,6 +196,17 @@ class PedalBar(QProgressBar):
         # self.setValue(40)
         self.setTextVisible(False)
         self.setOrientation(QtCore.Qt.Vertical)
+        # self.setStyleSheet(
+        #     """
+        #     QProgressBar
+        #         {
+        #             border: 2px solid;
+        #             border-color: #AAA;
+        #             border-radius: 5px;
+        #             background-color: #333;
+        #         }
+        #     """
+        # )
         self.setStyleSheet(
             """
             QProgressBar
