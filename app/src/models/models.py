@@ -154,7 +154,7 @@ class BatteryStatus(IntEnum):
     HIGH = 1
 
 
-class BatteryVoltage(int):
+class BatteryVoltage(float):
     THRESHOLD = 11
 
     @property
