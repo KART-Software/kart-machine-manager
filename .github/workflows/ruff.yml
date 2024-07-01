@@ -13,4 +13,4 @@ jobs:
         uses: chartboost/ruff-action@v1
         with:
           src: "./app"
-          args: --config ./app/ruff.toml
+          args: check --config ./app/ruff.toml
