@@ -6,11 +6,11 @@ import can
 import cantools.database
 
 from src.models.models import (
+    BatteryVoltage,
     DashMachineInfo,
+    FuelPress,
     GearVoltage,
-    OilPress,
     OilTemp,
-    Rpm,
     WaterTemp,
 )
 
@@ -30,8 +30,8 @@ class DashInfoListener(can.Listener):
 
     def on_message_received(self, msg: can.Message) -> None:
         if msg.arbitration_id == 0x5F0:
-            self.dashMachineInfo.rpm = Rpm.from_bytes(msg.data[0:2], "big")
-            self.dashMachineInfo.oilPress.setRequiredOilPress(self.dashMachineInfo.rpm)
+            self.dashMachineInfo.setRpm(int.from_bytes(msg.data[0:2], "big"))
+            self.dashMachineInfo.throttlePosition = int.from_bytes(msg.data[2:4]) / 10
             self.dashMachineInfo.waterTemp = WaterTemp(
                 int.from_bytes(msg.data[4:6], "big") // 10
             )
@@ -39,12 +39,28 @@ class DashInfoListener(can.Listener):
                 int.from_bytes(msg.data[6:8], "big") // 10
             )
         elif msg.arbitration_id == 0x5F1:
-            self.dashMachineInfo.oilPress = OilPress(
+            self.dashMachineInfo.oilPress.oilPress = (
                 int.from_bytes(msg.data[0:2], "big") / 10
             )
             self.dashMachineInfo.gearVoltage = GearVoltage(
                 int.from_bytes(msg.data[2:4], "big") / 1000
             )
+            self.dashMachineInfo.batteryVoltage = BatteryVoltage(
+                int.from_bytes(msg.data[4:6], "big") / 100
+            )
+        elif msg.arbitration_id == 0x5F2:
+            self.dashMachineInfo.fuelPress = FuelPress(
+                int.from_bytes(msg.data[2:4]) / 10
+            )
+            self.dashMachineInfo.brakePress.front = (
+                int.from_bytes(msg.data[4:6], "big") / 10
+            )
+            self.dashMachineInfo.brakePress.rear = (
+                int.from_bytes(msg.data[6:8], "big") / 10
+            )
+        elif msg.arbitration_id == 0x5F3:
+            self.dashMachineInfo.fanEnabled = bool(msg.data[1])
+
         # ここの数字は後で変更
 
 
@@ -52,7 +68,9 @@ class UdpPayloadListener(can.Listener):
     MOTEC_CAN_ID_LENGTHS = [
         CanIdLength(0x5F0, 8),
         CanIdLength(0x5F1, 8),
-        CanIdLength(0x5F2, 4),
+        CanIdLength(0x5F2, 8),
+        CanIdLength(0x5F3, 8),
+        CanIdLength(0x5F4, 6),
     ]
 
     canIdLength: List[CanIdLength]

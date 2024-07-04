@@ -26,7 +26,7 @@ class CanMaster:
             else:
                 logging.error("CAN interface can0 down failed!")
             r = subprocess.run(
-                "sudo ip link set can0 type can bitrate 500000", shell=True
+                "sudo ip link set can0 type can bitrate 1000000", shell=True
             )
             if r.returncode == 0:
                 logging.info("CAN interface can0 setting succeeded!")

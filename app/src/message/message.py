@@ -9,7 +9,7 @@ from src.util import config
 
 
 class Messenger:
-    GET_INTERVAL_TIME = 2
+    GET_INTERVAL_TIME = 5
 
     thread: threading.Thread
     message: Message
@@ -23,6 +23,11 @@ class Messenger:
             self.message.text = str(res.json()["message"]["text"])
         except BaseException:
             logging.warning("Get message failed!")
+        try:
+            res = requests.get(config.cloudLaptimeApiEndpoint)
+            self.message.laptime = float(res.json()["laptime"])
+        except BaseException:
+            logging.warning("Get laptime failed!")
 
     def getEvery(self):
         while True:
