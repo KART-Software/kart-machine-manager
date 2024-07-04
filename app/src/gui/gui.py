@@ -129,10 +129,10 @@ class MainWindow(QDialog):
         self.oilPressTitleValueBox = TitleValueBox("Oil Press")
         self.fuelPressTitleValueBox = TitleValueBox("Fuel Press")
         self.fanSwitchStateTitleValueBox = TitleValueBox("Fan Switch")
-        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias(F%)")
+        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias F%")
 
         self.tpsTitleValueBox = TitleValueBox("TPS")
-        self.tpsTitleValueBox.valueLabel.setAlignment(QtCore.Qt.AlignHCenter)
+        # self.tpsTitleValueBox.valueLabel.setAlignment(QtCore.Qt.AlignHCenter)
         self.bpsFTitleValueBox = TitleValueBox("BPS F")
         self.bpsRTitleValueBox = TitleValueBox("BPS R")
         self.tpsBar = PedalBar("#0F0", 100)
@@ -141,7 +141,7 @@ class MainWindow(QDialog):
         self.bpsRBar.setInvertedAppearance(True)
 
         self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
-        self.lapTimeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
+        # self.lapTimeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
         self.timeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
         self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
         self.messageIconValueBox.valueLabel.setAlignment(QtCore.Qt.AlignVCenter)
@@ -225,7 +225,7 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        layout.addWidget(self.tpsTitleValueBox, 0, 0, 2, 1)
+        layout.addWidget(self.tpsTitleValueBox, 0, 0, 1, 1)
         layout.addWidget(self.tpsBar, 0, 1, 2, 1)
         layout.addWidget(self.bpsFBar, 0, 2)
         layout.addWidget(self.bpsFTitleValueBox, 0, 3)
