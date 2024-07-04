@@ -57,6 +57,10 @@ class TitleValueBox(QGroupBox):
         super(TitleValueBox, self).__init__(None)
         self.setFlat(True)
         self.layout = QGridLayout()
+        self.setObjectName("TitleValueBox")
+        self.setStyleSheet(
+            "QGroupBox#TitleValueBox { border: 1px solid #333; border-radius: 3px;}"
+        )
         self.TitleFont = "Arial"
         self.titleColor = "#FD6"
         self.valueFont = "Arial"
@@ -65,9 +69,9 @@ class TitleValueBox(QGroupBox):
 
         self.titleLabel = QCustomLabel()
         self.titleLabel.setText(titleLabel)
-        self.titleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
+        # self.titleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
         self.titleLabel.setFontFamily(self.TitleFont)
-        self.titleLabel.setFontScale(0.4)
+        self.titleLabel.setFontScale(0.5)
         self.titleLabel.setStyleSheet(
             "color :"
             + self.titleColor
@@ -78,14 +82,14 @@ class TitleValueBox(QGroupBox):
         self.valueLabel = QCustomLabel()
         self.valueLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.valueLabel.setFontFamily(self.valueFont)
-        self.valueLabel.setFontScale(0.8)
+        self.valueLabel.setFontScale(0.7)
         self.valueLabel.setStyleSheet("color :" + self.valueColor + ";")
-        self.setStyleSheet("color : #FFF; background-color: #000;")
+        # self.setStyleSheet("color : #FFF; background-color: #000;")
 
         self.layout.addWidget(self.titleLabel, 0, 0)
         self.layout.addWidget(self.valueLabel, 1, 0)
         self.layout.setRowStretch(0, 1)
-        self.layout.setRowStretch(1, 1)
+        self.layout.setRowStretch(1, 2)
 
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
@@ -109,7 +113,9 @@ class TitleValueBox(QGroupBox):
             color = "#000"
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
-        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet(
+            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+        )
 
     def updateOilTempWarning(self, oilTemp: OilTemp):
         if oilTemp.status == OilTempStatus.LOW:
@@ -118,7 +124,9 @@ class TitleValueBox(QGroupBox):
             color = "#000"
         elif oilTemp.status == OilTempStatus.HIGH:
             color = "#F00"
-        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet(
+            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+        )
 
     def updateOilPressWarning(self, oilPress: OilPress):
         # self.valueLabel.setText(str(round(oilPress, 2)))
@@ -126,14 +134,18 @@ class TitleValueBox(QGroupBox):
             color = "#F00"
         elif oilPress.status == OilPressStatus.HIGH:
             color = "#000"
-        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet(
+            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+        )
 
     def updateFanWarning(self, fanEnable: bool):
         if fanEnable:
             color = "#000"
         else:
             color = "#F00"
-        self.valueLabel.setStyleSheet("color : #FFF; background-color:" + color + ";")
+        self.valueLabel.setStyleSheet(
+            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+        )
 
 
 class IconValueBox(QGroupBox):
@@ -266,7 +278,7 @@ class RpmLightBar(QGroupBox):
         self.greenLightColor = "#0F0"
         self.yellowLightColor = "#FF0"
         self.redLightColor = "#F00"
-        self.blueLightColor = "#22F"
+        self.blueLightColor = "#8FF"
 
         self.light_1 = RpmLight(self.lightRpm_1, self.greenLightColor)
         self.light_2 = RpmLight(self.lightRpm_2, self.greenLightColor)
@@ -323,7 +335,7 @@ class RpmLight(QGroupBox):
 
         self.offColor = "#333"  # dark gray
         self.shiftRpm = 9000
-        self.shiftColor = "#22F"  # blue
+        self.shiftColor = "#8FF"  # lightblue
 
         self.onRpm = onRpm
         self.onColor = onColor
