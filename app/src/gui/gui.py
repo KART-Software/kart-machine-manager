@@ -45,7 +45,7 @@ class MainWindow(QDialog):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.listener.onUpdate)
-        self.timer.start(100)
+        self.timer.start(50)
 
         palette = QApplication.palette()
         palette.setColor(self.backgroundRole(), QColor("#000"))
