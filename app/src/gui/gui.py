@@ -85,7 +85,6 @@ class MainWindow(QDialog):
         self.messageIconValueBox.updateMessageLabel(message)
         self.lapTimeLabel.updateLapTimeLabel(message)
         self.timeIconValueBox.updateTime()
-        # no mock data-----------
         self.fuelPressTitleValueBox.updateValueLabel(dashMachineInfo.fuelPress)
         self.fanSwitchStateTitleValueBox.updateBoolValueLabel(
             dashMachineInfo.fanEnabled
@@ -100,25 +99,6 @@ class MainWindow(QDialog):
         self.bpsRBar.updatePedalBar(dashMachineInfo.brakePress.rear)
         self.batteryIconValueBox.updateBatteryValueLabel(dashMachineInfo.batteryVoltage)
 
-        # mock data for testing----------
-        # testData = int(time.time() * 100) * 10 % 10000
-        # self.fuelPressTitleValueBox.updateValueLabel(testData)
-        # self.fanSwitchStateTitleValueBox.valueLabel.setText("OFF")
-        # self.fanSwitchStateTitleValueBox.valueLabel.setStyleSheet(
-        #     "color : #FFF; background-color: #F00"
-        # )
-        # self.brakeBiasTitleValueBox.updateValueLabel(testData)
-        # self.tpsTitleValueBox.updateValueLabel(testData)
-        # self.bpsFTitleValueBox.updateValueLabel(testData)
-        # self.bpsRTitleValueBox.updateValueLabel(testData)
-        # self.tpsBar.updatePedalBar(testData)
-        # self.bpsFBar.updatePedalBar(testData)
-        # self.bpsRBar.updatePedalBar(testData)
-        # self.lapTimeIconValueBox.updateBatteryValueLabel(testData / 10)
-        # self.lapTimeIconValueBox.valueLabel.setText("55.3s")
-        # self.batteryIconValueBox.updateBatteryValueLabel(testData / 10)
-        # -----------------------
-
     def createAllWidgets(self):
         self.rpmLabel = RpmLabel()
         self.gearLabel = GearLabel()
@@ -129,20 +109,25 @@ class MainWindow(QDialog):
         self.oilPressTitleValueBox = TitleValueBox("Oil Press")
         self.fuelPressTitleValueBox = TitleValueBox("Fuel Press")
         self.fanSwitchStateTitleValueBox = TitleValueBox("Fan Switch")
-        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias F%")
+        self.switchStateRemiderLabel = TitleValueBox(
+            "SWITCH CHECK! \n1. Fan \n2. TPS MAX"
+        )
+        self.switchStateRemiderLabel.titleLabel.setAlignment(QtCore.Qt.AlignVCenter)
+        self.switchStateRemiderLabel.titleLabel.setFontScale(0.25)
+        self.switchStateRemiderLabel.layout.setRowStretch(0, 1)
+        self.switchStateRemiderLabel.layout.setRowStretch(1, 0)
 
         self.tpsTitleValueBox = TitleValueBox("TPS")
-        # self.tpsTitleValueBox.valueLabel.setAlignment(QtCore.Qt.AlignHCenter)
         self.bpsFTitleValueBox = TitleValueBox("BPS F")
         self.bpsRTitleValueBox = TitleValueBox("BPS R")
+        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias\n F%")
         self.tpsBar = PedalBar("#0F0", 100)
         self.bpsFBar = PedalBar("#F00", 600)
         self.bpsRBar = PedalBar("#F00", 600)
         self.bpsRBar.setInvertedAppearance(True)
 
         self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
-        # self.lapTimeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
-        self.timeIconValueBox = IconValueBox("src/gui/icons/LaptimeIcon.png")
+        self.timeIconValueBox = IconValueBox("src/gui/icons/Timeicon.png")
         self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
         self.messageIconValueBox.valueLabel.setAlignment(QtCore.Qt.AlignVCenter)
         self.messageIconValueBox.layout.setColumnStretch(0, 1)
@@ -152,8 +137,6 @@ class MainWindow(QDialog):
     def createTopGroupBox(self):
         self.topGroupBox = QGroupBox()
         self.topGroupBox.setFlat(True)
-        # self.topGroupBox.setObjectName("TopBox")
-        # self.topGroupBox.setStyleSheet("QGroupBox#TopBox { border: 1px solid white;}")
 
         layout = QGridLayout()
         self.rpmLightBar = RpmLightBar()
@@ -169,18 +152,16 @@ class MainWindow(QDialog):
         # self.leftGroupBox.setStyleSheet("border:0;")
         self.leftGroupBox.setObjectName("LeftBox")
         self.leftGroupBox.setStyleSheet("QGroupBox#LeftBox { border: 2px solid white;}")
-        # self.leftGroupBox.setGeometry(1, 81, 200, 320)
-        # self.leftGroupBox.setFixedSize(300, 380)
 
         layout = QGridLayout()
-        # layout = QVBoxLayout()
 
         layout.addWidget(self.waterTempTitleValueBox, 0, 0)
         layout.addWidget(self.oilTempTitleValueBox, 1, 0)
         layout.addWidget(self.oilPressTitleValueBox, 1, 1)
         layout.addWidget(self.fuelPressTitleValueBox, 0, 1)
         layout.addWidget(self.fanSwitchStateTitleValueBox, 2, 0)
-        layout.addWidget(self.brakeBiasTitleValueBox, 2, 1)
+        # layout.addWidget(self.brakeBiasTitleValueBox, 2, 1)
+        layout.addWidget(self.switchStateRemiderLabel, 2, 1)
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 1)
         layout.setRowStretch(2, 1)
@@ -194,9 +175,6 @@ class MainWindow(QDialog):
         self.centerGroupBox = QGroupBox()
         self.centerGroupBox.setFlat(True)
         self.centerGroupBox.setStyleSheet("border: 2px solid white;")
-        # self.centerGroupBox.setStyleSheet("QGroupBox { border: 2px solid white;}")
-        # self.centerGroupBox.setGeometry(301, 81, 200, 320)
-        # self.centerGroupBox.setFixedSize(200, 380)
 
         layout = QGridLayout()
 
@@ -220,12 +198,11 @@ class MainWindow(QDialog):
         self.rightGroupBox.setStyleSheet(
             "QGroupBox#RightBox { border: 2px solid white;}"
         )
-        # self.rightGroupBox.setGeometry(501, 81, 200, 320)
-        # self.rightGroupBox.setFixedSize(300, 380)
 
         layout = QGridLayout()
 
         layout.addWidget(self.tpsTitleValueBox, 0, 0, 1, 1)
+        layout.addWidget(self.brakeBiasTitleValueBox, 1, 0, 1, 1)
         layout.addWidget(self.tpsBar, 0, 1, 2, 1)
         layout.addWidget(self.bpsFBar, 0, 2)
         layout.addWidget(self.bpsFTitleValueBox, 0, 3)
@@ -246,12 +223,6 @@ class MainWindow(QDialog):
         self.bottomGroupBox = QGroupBox()
         self.bottomGroupBox.setFlat(True)
         self.bottomGroupBox.setStyleSheet("border: 0px;")
-        # self.bottomGroupBox.setObjectName("BottomBox")
-        # self.bottomGroupBox.setStyleSheet(
-        #     "QGroupBox#BottomBox { border: 0px solid white;}"
-        # )
-        # self.bottomGroupBox.setGeometry(1, 401, 800, 80)
-        # self.bottomGroupBox.setFixedSize(800, 50)
 
         layout = QGridLayout()
 
