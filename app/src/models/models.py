@@ -34,8 +34,8 @@ class WaterTempStatus(IntEnum):
 
 
 class WaterTemp(int):
-    LOW_THRESHOLD = 50
-    HIGH_THRESHOLD = 98
+    LOW_THRESHOLD = 100
+    HIGH_THRESHOLD = 108
 
     @property
     def status(self) -> WaterTempStatus:
@@ -54,8 +54,8 @@ class OilTempStatus(IntEnum):
 
 
 class OilTemp(int):
-    LOW_THRESHOLD = 50
-    HIGH_THRESHOLD = 120
+    LOW_THRESHOLD = 120
+    HIGH_THRESHOLD = 140
 
     @property
     def status(self) -> OilTempStatus:
@@ -69,14 +69,16 @@ class OilTemp(int):
 
 class OilPressStatus(IntEnum):
     LOW = 0
-    HIGH = 1
+    MIDDLE = 1
+    HIGH = 2
 
 
 class OilPress:
     oilPress: float
     rpm: int
 
-    COEFFICIENT = 0.00000241088030949
+    COEFFICIENT_LOW = 0.00000172
+    COEFFICIENT_HIGH = 0.00000241088030949
 
     def __init__(self):
         self.oilPress = 0.0
@@ -84,9 +86,11 @@ class OilPress:
 
     @property
     def status(self) -> OilPressStatus:
-        requiredOilPress = self.COEFFICIENT * self.rpm**2
-        if self.oilPress < requiredOilPress:
+        # requiredOilPress = self.COEFFICIENT_HIGH * self.rpm**2
+        if self.oilPress < self.COEFFICIENT_LOW * self.rpm**2:
             return OilPressStatus.LOW
+        elif self.oilPress < self.COEFFICIENT_HIGH * self.rpm**2:
+            return OilPressStatus.MIDDLE
         else:
             return OilPressStatus.HIGH
 

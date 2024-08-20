@@ -156,8 +156,8 @@ class MockCanSender:
         t = int(time.time() * 1000)
         self.machine.rpm = t % 10000
         self.machine.throttlePosition = (t % 1000) / 10.0
-        self.machine.engineTemperature = (t % 1200) / 10.0
-        self.machine.oilTemperature = (t % 1400) / 10.0
+        self.machine.engineTemperature = (t % 1400) / 10.0
+        self.machine.oilTemperature = (t % 1600) / 10.0
         self.machine.oilPressure = (t % 1200) / 10.0
         self.machine.gearVoltage = (t % 5000) / 1000.0
         self.machine.batteryVoltage = (t % 13000) / 1000.0

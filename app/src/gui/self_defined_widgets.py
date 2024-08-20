@@ -71,19 +71,22 @@ class TitleValueBox(QGroupBox):
         self.titleLabel.setText(titleLabel)
         # self.titleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom)
         self.titleLabel.setFontFamily(self.TitleFont)
-        self.titleLabel.setFontScale(0.5)
+        self.titleLabel.setFontScale(0.55)
         self.titleLabel.setStyleSheet(
             "color :"
             + self.titleColor
             + "; background-color:"
             + self.titleBackgroundColor
+            + ";font-weight: bold"
         )
 
         self.valueLabel = QCustomLabel()
         self.valueLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.valueLabel.setFontFamily(self.valueFont)
-        self.valueLabel.setFontScale(0.7)
-        self.valueLabel.setStyleSheet("color :" + self.valueColor + ";")
+        self.valueLabel.setFontScale(0.75)
+        self.valueLabel.setStyleSheet(
+            "font-weight: bold; color :" + self.valueColor + ";"
+        )
         # self.setStyleSheet("color : #FFF; background-color: #000;")
 
         self.layout.addWidget(self.titleLabel, 0, 0)
@@ -108,34 +111,42 @@ class TitleValueBox(QGroupBox):
     # --------------- update background warning color  ----------
     def updateWaterTempWarning(self, waterTemp: WaterTemp):
         if waterTemp.status == WaterTempStatus.LOW:
-            color = "#00F"
-        elif waterTemp.status == WaterTempStatus.MIDDLE:
             color = "#000"
+        elif waterTemp.status == WaterTempStatus.MIDDLE:
+            color = "#FB0"
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
         self.valueLabel.setStyleSheet(
-            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
+            + color
+            + ";"
         )
 
     def updateOilTempWarning(self, oilTemp: OilTemp):
         if oilTemp.status == OilTempStatus.LOW:
-            color = "#00F"
-        elif oilTemp.status == OilTempStatus.MIDDLE:
             color = "#000"
+        elif oilTemp.status == OilTempStatus.MIDDLE:
+            color = "#FB0"
         elif oilTemp.status == OilTempStatus.HIGH:
             color = "#F00"
         self.valueLabel.setStyleSheet(
-            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
+            + color
+            + ";"
         )
 
     def updateOilPressWarning(self, oilPress: OilPress):
         # self.valueLabel.setText(str(round(oilPress, 2)))
         if oilPress.status == OilPressStatus.LOW:
-            color = "#F00"
-        elif oilPress.status == OilPressStatus.HIGH:
             color = "#000"
+        elif oilPress.status == OilPressStatus.MIDDLE:
+            color = "#FB0"
+        elif oilPress.status == OilPressStatus.HIGH:
+            color = "#F00"
         self.valueLabel.setStyleSheet(
-            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
+            + color
+            + ";"
         )
 
     def updateFanWarning(self, fanEnable: bool):
@@ -144,7 +155,9 @@ class TitleValueBox(QGroupBox):
         else:
             color = "#F00"
         self.valueLabel.setStyleSheet(
-            "border-radius: 5px; color: #FFF; background-color:" + color + ";"
+            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
+            + color
+            + ";"
         )
 
 
@@ -361,10 +374,10 @@ class GearLabel(QCustomLabel):
     def updateGearLabel(self, gearType: GearType):
         if int(gearType) == GearType.NEUTRAL:
             self.setText("N")
-            self.setStyleSheet("color : #FD6;")
+            self.setStyleSheet("font-weight: bold; color : #FD6;")
         else:
             self.setText(str(int(gearType)))
-            self.setStyleSheet("color : #FFF;")
+            self.setStyleSheet("font-weight: bold; color : #FFF;")
 
 
 class RpmLabel(QCustomLabel):
@@ -372,8 +385,8 @@ class RpmLabel(QCustomLabel):
         super(RpmLabel, self).__init__()
         self.setAlignment(QtCore.Qt.AlignCenter)
         self.setFontFamily("Arial")
-        self.setFontScale(0.6)
-        self.setStyleSheet("color : #FFF; background-color: #000")
+        self.setFontScale(0.8)
+        self.setStyleSheet("font-weight: bold; color : #FFF; background-color: #000")
 
     def updateRpmLabel(self, rpm: Rpm):
         self.setText(str(rpm))

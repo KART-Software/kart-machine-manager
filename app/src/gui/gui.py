@@ -120,7 +120,7 @@ class MainWindow(QDialog):
         self.tpsTitleValueBox = TitleValueBox("TPS")
         self.bpsFTitleValueBox = TitleValueBox("BPS F")
         self.bpsRTitleValueBox = TitleValueBox("BPS R")
-        self.brakeBiasTitleValueBox = TitleValueBox("Brk Bias\n F%")
+        self.brakeBiasTitleValueBox = TitleValueBox("Brake\nBias F%")
         self.tpsBar = PedalBar("#0F0", 100)
         self.bpsFBar = PedalBar("#F00", 600)
         self.bpsRBar = PedalBar("#F00", 600)
@@ -201,8 +201,8 @@ class MainWindow(QDialog):
 
         layout = QGridLayout()
 
-        layout.addWidget(self.tpsTitleValueBox, 0, 0, 1, 1)
-        layout.addWidget(self.brakeBiasTitleValueBox, 1, 0, 1, 1)
+        layout.addWidget(self.brakeBiasTitleValueBox, 0, 0, 1, 1)
+        layout.addWidget(self.tpsTitleValueBox, 1, 0, 1, 1)
         layout.addWidget(self.tpsBar, 0, 1, 2, 1)
         layout.addWidget(self.bpsFBar, 0, 2)
         layout.addWidget(self.bpsFTitleValueBox, 0, 3)
