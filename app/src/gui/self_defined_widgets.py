@@ -138,11 +138,11 @@ class TitleValueBox(QGroupBox):
     def updateOilPressWarning(self, oilPress: OilPress):
         # self.valueLabel.setText(str(round(oilPress, 2)))
         if oilPress.status == OilPressStatus.LOW:
-            color = "#000"
+            color = "#F00"
         elif oilPress.status == OilPressStatus.MIDDLE:
             color = "#FB0"
         elif oilPress.status == OilPressStatus.HIGH:
-            color = "#F00"
+            color = "#000"
         self.valueLabel.setStyleSheet(
             "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
             + color
