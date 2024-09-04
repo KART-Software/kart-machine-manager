@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import List
 
 import can
-import cantools.database
 
 from src.models.models import (
     BatteryVoltage,
@@ -73,18 +72,32 @@ class UdpPayloadListener(can.Listener):
         CanIdLength(0x5F4, 6),
     ]
 
+    DATA_LOGGER_CAN_ID_LENGTHS = [
+        CanIdLength(0x700, 8),
+        CanIdLength(0x701, 8),
+        CanIdLength(0x702, 8),
+        CanIdLength(0x703, 8),
+        CanIdLength(0x704, 8),
+        CanIdLength(0x705, 8),
+        CanIdLength(0x706, 8),
+        CanIdLength(0x707, 8),
+        CanIdLength(0x708, 8),
+        CanIdLength(0x709, 8),
+        CanIdLength(0x70A, 8),
+        CanIdLength(0x70B, 8),
+        CanIdLength(0x70C, 8),
+        CanIdLength(0x70D, 8),
+        CanIdLength(0x70E, 8),
+    ]
+
     canIdLength: List[CanIdLength]
     receivedMessages: dict[int, can.Message]
 
     def __init__(self) -> None:
-        dl1Dbc = cantools.database.load_file("./spec/can/dl1.dbc")
-        if isinstance(dl1Dbc, cantools.database.can.database.Database):
-            dl1CanIdLengths = list(
-                map(lambda m: CanIdLength(m.frame_id, m.length), dl1Dbc.messages)
-            )
         # CAN IDの小さい方から順に並べる
         self.canIdLength = sorted(
-            self.MOTEC_CAN_ID_LENGTHS + dl1CanIdLengths, key=lambda il: il.id
+            self.MOTEC_CAN_ID_LENGTHS + self.DATA_LOGGER_CAN_ID_LENGTHS,
+            key=lambda il: il.id,
         )
 
         # 最初は何も入っていない
