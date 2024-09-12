@@ -363,7 +363,7 @@ class RpmLight(QGroupBox):
 
         self.offColor = "#333"  # dark gray
         # self.shiftRpm = 8500
-        self.shiftRpm = 9000
+        self.shiftRpm = 8700
         self.shiftColor = "#8FF"  # lightblue
 
         self.onRpm = onRpm
