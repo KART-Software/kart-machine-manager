@@ -275,18 +275,33 @@ class RpmLightBar(QGroupBox):
 
         self.layout = QGridLayout()
 
+        # # shift point 8500
+        # self.lightRpm_1 = 1000
+        # self.lightRpm_2 = 2000
+        # self.lightRpm_3 = 3000
+        # self.lightRpm_4 = 4000
+        # self.lightRpm_5 = 4500
+        # self.lightRpm_6 = 5000
+        # self.lightRpm_7 = 5500
+        # self.lightRpm_8 = 6000
+        # self.lightRpm_9 = 6500
+        # self.lightRpm_10 = 7000
+        # self.lightRpm_11 = 7500
+        # self.lightRpm_12 = 8000
+
+        # shift point 9000
         self.lightRpm_1 = 1000
         self.lightRpm_2 = 2000
         self.lightRpm_3 = 3000
         self.lightRpm_4 = 4000
-        self.lightRpm_5 = 4500
-        self.lightRpm_6 = 5000
-        self.lightRpm_7 = 5500
-        self.lightRpm_8 = 6000
-        self.lightRpm_9 = 6500
-        self.lightRpm_10 = 7000
-        self.lightRpm_11 = 7500
-        self.lightRpm_12 = 8000
+        self.lightRpm_5 = 5000
+        self.lightRpm_6 = 5500
+        self.lightRpm_7 = 6000
+        self.lightRpm_8 = 6500
+        self.lightRpm_9 = 7000
+        self.lightRpm_10 = 7500
+        self.lightRpm_11 = 8000
+        self.lightRpm_12 = 8500
 
         self.greenLightColor = "#0F0"
         self.yellowLightColor = "#FF0"
@@ -347,7 +362,8 @@ class RpmLight(QGroupBox):
         # self.setFixedSize(51, 40)
 
         self.offColor = "#333"  # dark gray
-        self.shiftRpm = 8500
+        # self.shiftRpm = 8500
+        self.shiftRpm = 9000
         self.shiftColor = "#8FF"  # lightblue
 
         self.onRpm = onRpm
