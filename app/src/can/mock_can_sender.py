@@ -3,7 +3,6 @@ import time
 from typing import List
 
 import can
-import cantools.database
 
 
 class MockMachine:
@@ -27,31 +26,8 @@ class MockMachine:
     oilTemperature2: float
     oilTemperature3: float
     coolantTemperature: float
-    # data logger from here
-    wheelSpeedFrontLeft: float
-    wheelSpeedFrontRight: float
-    wheelSpeedRearLeft: float
-    wheelSpeedRearRight: float
-    strokeFrontLeft: float
-    strokeFrontRight: float
-    strokeRearLeft: float
-    strokeRearRight: float
-    latitude: float
-    longitude: float
-    altitude: float
-    gpsSpeed2D: float
-    gpsSpeed3D: float
-    verticalAccel: float
-    lateralAccel: float
-    longitudinalAccel: float
-    speed: float
-    yawRate: float
-    pitchRate: float
-    rollRate: float
 
     def __init__(self):
-        self.dl1Dbc = cantools.database.load_file("./spec/can/dl1.dbc")
-
         self.rpm = 0
         self.throttlePosition = 0
         self.engineTemperature = 0
@@ -62,26 +38,6 @@ class MockMachine:
         self.lambda_ = 0
         self.manifoldPressure = 0
         self.fuelPressure = 0
-        self.wheelSpeedFrontLeft = 0
-        self.wheelSpeedFrontRight = 0
-        self.wheelSpeedRearLeft = 0
-        self.wheelSpeedRearRight = 0
-        self.strokeFrontLeft = 0
-        self.strokeFrontRight = 0
-        self.strokeRearLeft = 0
-        self.strokeRearRight = 0
-        self.latitude = 0
-        self.longitude = 0
-        self.altitude = 0
-        self.gpsSpeed2D = 0
-        self.gpsSpeed3D = 0
-        self.verticalAccel = 0
-        self.lateralAccel = 0
-        self.longitudinalAccel = 0
-        self.speed = 0
-        self.yawRate = 0
-        self.pitchRate = 0
-        self.rollRate = 0
 
     def toMessages(self) -> List[can.Message]:
         msgs = []
@@ -126,18 +82,6 @@ class MockMachine:
         bs += (int(self.oilTemperature3 * 10) & 0xFFFF).to_bytes(2, "big")  # 51, 52
         bs += (int(self.coolantTemperature * 10) & 0xFFFF).to_bytes(2, "big")  # 53, 54
         msgs.append(can.Message(arbitration_id=0x5F4, is_extended_id=False, data=bs))
-
-        msgs += list(
-            map(
-                lambda m: can.Message(
-                    arbitration_id=m.frame_id,
-                    is_extended_id=False,
-                    dlc=m.length,
-                    data=bytes(m.length),
-                ),
-                self.dl1Dbc.messages,
-            )
-        )
 
         return msgs
 
