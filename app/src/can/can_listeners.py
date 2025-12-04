@@ -88,6 +88,8 @@ class UdpPayloadListener(can.Listener):
         CanIdLength(0x70C, 8),
         CanIdLength(0x70D, 8),
         CanIdLength(0x70E, 8),
+        CanIdLength(0x70F, 8),
+        CanIdLength(0x710, 8),
     ]
 
     canIdLength: List[CanIdLength]
