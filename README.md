@@ -3,51 +3,50 @@
 
 ## App
 
-ryeでパッケージ管理をしています
+uvでパッケージ管理をしています
 
 参考\
-https://zenn.dev/3w36zj6/scraps/de5a102362c405
-https://rye-up.com/
+https://docs.astral.sh/uv/
 
 
 以下のコマンドはappディレクトリで行ってください
 
-* rye環境構築
+* 環境構築
 ```
-rye sync
+uv sync
 ```
 
 * 起動（本番）
 ```
-rye run prod
+DISPLAY=:0 uv run prod
 ```
 
 * 起動（デバッグ）
 ```
-rye run debug
+DEBUG=TRUE uv run debug
 ```
 
 * テスト
 ```
-rye test
+uv run pytest
 ```
 
 * 型チェック
 ```
-rye run mypy .
+uv run mypy .
 ```
 
 * フォーマット
 ```
-rye run ruff format
+uv run ruff format
 ```
 
 * 静的解析
 ```
-rye run ruff check
+uv run ruff check
 ```
 ```
-rye run ruff check --fix
+uv run ruff check --fix
 ```
 
 ## CAN Mock
