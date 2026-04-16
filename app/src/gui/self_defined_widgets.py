@@ -1,8 +1,8 @@
 import datetime
 
-from PyQt5 import QtCore
-from PyQt5.QtGui import QFont, QPixmap
-from PyQt5.QtWidgets import (
+from PyQt6 import QtCore
+from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QLabel,
@@ -29,8 +29,10 @@ class QCustomLabel(QLabel):
         super(QCustomLabel, self).__init__()
         self._font = QFont()
         # self.setFont(self._font)
-        self.setAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-        self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignVCenter | QtCore.Qt.AlignmentFlag.AlignHCenter
+        )
+        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         self._fontScale = 1.0
 
     def setFontFamily(self, face):
@@ -81,7 +83,7 @@ class TitleValueBox(QGroupBox):
         )
 
         self.valueLabel = QCustomLabel()
-        self.valueLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.valueLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.valueLabel.setFontFamily(self.valueFont)
         self.valueLabel.setFontScale(0.75)
         self.valueLabel.setStyleSheet(
@@ -172,12 +174,12 @@ class IconValueBox(QGroupBox):
 
         self.iconLabel = QLabel(self)
         self.iconLabel.setPixmap(QPixmap(iconPath))
-        self.iconLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.iconLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         # self.iconLabel.setScaledContents(True)
 
         # self.valueLabel = QLabel(self)
         self.valueLabel = QCustomLabel()
-        self.valueLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.valueLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.valueLabel.setFontScale(0.6)
         self.valueLabel.setFontFamily("Arial")
         self.valueLabel.setStyleSheet("QLabel { color : " + self.valueColor + "; }")
@@ -227,13 +229,13 @@ class IconValueBox(QGroupBox):
 class PedalBar(QProgressBar):
     def __init__(self, barColor, maxValue):
         super(PedalBar, self).__init__(None)
-        self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         # self.adjustSize()
         # self.setMaximum(Rpm.MAX)
         self.setMaximum(maxValue)
         # self.setValue(40)
         self.setTextVisible(False)
-        self.setOrientation(QtCore.Qt.Vertical)
+        self.setOrientation(QtCore.Qt.Orientation.Vertical)
         # self.setStyleSheet(
         #     """
         #     QProgressBar
@@ -382,7 +384,7 @@ class RpmLight(QGroupBox):
 class GearLabel(QCustomLabel):
     def __init__(self):
         super(GearLabel, self).__init__()
-        self.setAlignment(QtCore.Qt.AlignCenter)
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setFontFamily("Arial")
         self.setFontScale(2.5)
         self.setStyleSheet("color : #FFF; background-color: #000")
@@ -399,7 +401,7 @@ class GearLabel(QCustomLabel):
 class RpmLabel(QCustomLabel):
     def __init__(self):
         super(RpmLabel, self).__init__()
-        self.setAlignment(QtCore.Qt.AlignCenter)
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setFontFamily("Arial")
         self.setFontScale(0.8)
         self.setStyleSheet("font-weight: bold; color : #FFF; background-color: #000")
@@ -412,7 +414,7 @@ class LapTimeLabel(QCustomLabel):
     def __init__(self):
         super(LapTimeLabel, self).__init__()
 
-        self.setAlignment(QtCore.Qt.AlignCenter)
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setFontFamily("Times New Roman")
         self.setFontScale(0.8)
         self.setStyleSheet("color : #B6F; background-color: #000")

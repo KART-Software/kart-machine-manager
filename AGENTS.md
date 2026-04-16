@@ -1,27 +1,27 @@
 # AGENTS.md — kart-machine-manager
 
 全日本学生フォーミュラ大会用カート インパネ (ダッシュボード) アプリケーション。  
-Raspberry Pi (800×480) 上で PyQt5 フルスクリーンGUI を表示し、CAN バス経由で ECU データを取得・表示する。
+Raspberry Pi (800×480) 上で PyQt6 フルスクリーンGUI を Wayland 上で表示し、CAN バス経由で ECU データを取得・表示する。
 
 ## Quick Reference
 
 | 操作 | コマンド (`app/` ディレクトリで実行) |
 |------|------|
-| 依存解決 | `rye sync` |
-| 起動 (本番) | `rye run prod` |
-| 起動 (デバッグ) | `rye run debug` |
-| テスト | `rye test` |
-| 型チェック | `rye run mypy .` |
-| フォーマット | `rye run ruff format` |
-| リント | `rye run ruff check` |
-| リント自動修正 | `rye run ruff check --fix` |
+| 依存解決 | `uv sync` |
+| 起動 (本番) | `uv run python main.py` |
+| 起動 (デバッグ) | `DEBUG=TRUE uv run python main.py` |
+| テスト | `uv run pytest` |
+| 型チェック | `uv run mypy .` |
+| フォーマット | `uv run ruff format` |
+| リント | `uv run ruff check` |
+| リント自動修正 | `uv run ruff check --fix` |
 
 > **注意**: コマンドはすべて `app/` ディレクトリで実行すること。
 
 ## Tech Stack
 
-- **Python 3.11+** / パッケージ管理: **rye**
-- **PyQt5** (GUI)、**python-can** (CAN バス通信)
+- **Python 3.12+** / パッケージ管理: **uv**
+- **PyQt6** (GUI, Wayland ネイティブ)、**python-can** (CAN バス通信)
 - **ruff** (フォーマット & リント, line-length=88)、**mypy** (型チェック)
 - **PlatformIO** (CAN Mock — Arduino UNO + MCP2515)
 
@@ -29,7 +29,7 @@ Raspberry Pi (800×480) 上で PyQt5 フルスクリーンGUI を表示し、CAN
 
 ```
 main.py → Application (WindowListener)
-              ├── MainWindow (PyQt5 GUI, 50ms QTimer更新)
+              ├── MainWindow (PyQt6 GUI, 50ms QTimer更新)
               └── Machine
                     ├── CanMaster → DashInfoListener → DashMachineInfo (モデル)
                     │              → UdpPayloadListener
@@ -62,7 +62,7 @@ main.py → Application (WindowListener)
 
 - `CanMaster.__init__` が `subprocess.run("sudo ...")` を呼ぶため、本番では **root 権限が必要**
 - `getRunId()` はクラウド API に接続できるまで**無限リトライ**する
-- テストファイルは未作成 (`rye test` は動くがテストが無い)
+- テストファイルは未作成 (`uv run pytest` は動くがテストが無い)
 - アイコンファイル名に typo: `MeesageIcon.png` (Message)
 
 ## Project Structure
@@ -74,7 +74,7 @@ app/
   src/
     application/           # Application (GUI ↔ Machine 橋渡し)
     can/                   # CAN 通信 (CanMaster, Listeners, MockSender)
-    gui/                   # PyQt5 ウィジェット群
+    gui/                   # PyQt6 ウィジェット群
     machine/               # Machine (初期化・各コンポーネント保持)
     message/               # クラウド HTTP ポーリング
     models/                # ドメインモデル (DashMachineInfo 等)

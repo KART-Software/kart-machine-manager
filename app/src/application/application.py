@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 
 from src.machine.machine import Machine
 
@@ -20,7 +20,7 @@ class Application(WindowListener):
         self.window = MainWindow(self)
         self.window.showFullScreen()
         # self.window.show()
-        sys.exit(self.app.exec_())
+        sys.exit(self.app.exec())
 
     def onUpdate(self) -> None:
         self.window.updateDashboard(

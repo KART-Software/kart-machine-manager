@@ -1,10 +1,11 @@
 {
-    "[python]": {
-      "editor.defaultFormatter": "charliermarsh.ruff",
-      "editor.formatOnSave": true,
-      "editor.codeActionsOnSave": {
-        "source.organizeImports": "always"
-      },
-    },
-    "python.terminal.activateEnvironment": false,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    }
+  },
+  "python.terminal.activateEnvironment": false,
+  "python-envs.defaultEnvManager": "ms-python.python:venv"
 }

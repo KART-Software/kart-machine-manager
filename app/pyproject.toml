@@ -5,7 +5,7 @@ description = "Add your description here"
 authors = [{ name = "Oryomei", email = "o.ryomei1020@gmail.com" }]
 dependencies = [
     "python-can>=4.3.1",
-    "pyqt5>=5.15.10",
+    "pyqt6>=6.7",
     "python-dotenv>=1.0.1",
     "requests>=2.31.0",
 ]

@@ -18,12 +18,12 @@ uv sync
 
 * 起動（本番）
 ```
-DISPLAY=:0 uv run prod
+uv run main.py
 ```
 
 * 起動（デバッグ）
 ```
-DEBUG=TRUE uv run debug
+DEBUG=TRUE uv run main.py
 ```
 
 * テスト
