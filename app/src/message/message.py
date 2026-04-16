@@ -16,18 +16,33 @@ class Messenger:
 
     def __init__(self) -> None:
         self.message = Message()
+        self._lock = threading.Lock()
 
     def tryGetMessage(self):
+        text: str | None = None
+        laptime: float | None = None
         try:
             res = requests.get(config.cloudMessageApiEndpoint)
-            self.message.text = str(res.json()["message"]["text"])
+            text = str(res.json()["message"]["text"])
         except BaseException:
             logging.warning("Get message failed!")
         try:
             res = requests.get(config.cloudLaptimeApiEndpoint)
-            self.message.laptime = float(res.json()["laptime"])
+            laptime = float(res.json()["laptime"])
         except BaseException:
             logging.warning("Get laptime failed!")
+        with self._lock:
+            if text is not None:
+                self.message.text = text
+            if laptime is not None:
+                self.message.laptime = laptime
+
+    def getMessageSnapshot(self) -> Message:
+        with self._lock:
+            snapshot = Message()
+            snapshot.text = self.message.text
+            snapshot.laptime = self.message.laptime
+            return snapshot
 
     def getEvery(self):
         while True:

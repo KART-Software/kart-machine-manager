@@ -24,6 +24,7 @@ class Application(WindowListener):
 
     def onUpdate(self) -> None:
         self.window.updateDashboard(
-            self.machine.canMaster.dashMachineInfo, self.machine.messenger.message
+            self.machine.canMaster.dashMachineInfo,
+            self.machine.messenger.getMessageSnapshot(),
         )
         return super().onUpdate()

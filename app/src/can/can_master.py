@@ -4,7 +4,6 @@ import os
 import subprocess
 
 import can
-
 from src.can.can_listeners import DashInfoListener, UdpPayloadListener
 from src.can.mock_can_sender import MockCanSender
 
@@ -48,4 +47,4 @@ class CanMaster:
         self.notifier.stop()
         self.bus.shutdown()
 
-    dashMachineInfo = property(lambda self: self.dashInfoListener.dashMachineInfo)
+    dashMachineInfo = property(lambda self: self.dashInfoListener.snapshot())
