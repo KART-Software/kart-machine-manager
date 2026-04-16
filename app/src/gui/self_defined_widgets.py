@@ -1,13 +1,14 @@
 import datetime
 
 from PyQt6 import QtCore
-from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtGui import QColor, QFont, QPalette, QPixmap
 from PyQt6.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QLabel,
     QProgressBar,
     QSizePolicy,
+    QWidget,
 )
 
 from src.models.models import (
@@ -101,6 +102,26 @@ class TitleValueBox(QGroupBox):
 
         self.setLayout(self.layout)
 
+        # Pre-cached warning styles & dirty check state
+        self._warningStyles: dict[str, str] = {}
+        self._lastWarningStyle: str | None = None
+
+    def _getWarningStyle(self, color: str) -> str:
+        style = self._warningStyles.get(color)
+        if style is None:
+            style = (
+                "font-weight: bold; border-radius: 5px;"
+                f" color: #FFF; background-color: {color};"
+            )
+            self._warningStyles[color] = style
+        return style
+
+    def _applyWarningStyle(self, color: str) -> None:
+        style = self._getWarningStyle(color)
+        if style != self._lastWarningStyle:
+            self._lastWarningStyle = style
+            self.valueLabel.setStyleSheet(style)
+
     def updateValueLabel(self, value):
         self.valueLabel.setText(str(value))
 
@@ -118,11 +139,7 @@ class TitleValueBox(QGroupBox):
             color = "#FB0"
         elif waterTemp.status == WaterTempStatus.HIGH:
             color = "#F00"
-        self.valueLabel.setStyleSheet(
-            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
-            + color
-            + ";"
-        )
+        self._applyWarningStyle(color)
 
     def updateOilTempWarning(self, oilTemp: OilTemp):
         if oilTemp.status == OilTempStatus.LOW:
@@ -131,11 +148,7 @@ class TitleValueBox(QGroupBox):
             color = "#FB0"
         elif oilTemp.status == OilTempStatus.HIGH:
             color = "#F00"
-        self.valueLabel.setStyleSheet(
-            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
-            + color
-            + ";"
-        )
+        self._applyWarningStyle(color)
 
     def updateOilPressWarning(self, oilPress: OilPress):
         # self.valueLabel.setText(str(round(oilPress, 2)))
@@ -145,22 +158,14 @@ class TitleValueBox(QGroupBox):
             color = "#FB0"
         elif oilPress.status == OilPressStatus.HIGH:
             color = "#000"
-        self.valueLabel.setStyleSheet(
-            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
-            + color
-            + ";"
-        )
+        self._applyWarningStyle(color)
 
     def updateFanWarning(self, fanEnable: bool):
         if fanEnable:
             color = "#000"
         else:
             color = "#F00"
-        self.valueLabel.setStyleSheet(
-            "font-weight: bold; border-radius: 5px; color: #FFF; background-color:"
-            + color
-            + ";"
-        )
+        self._applyWarningStyle(color)
 
 
 class IconValueBox(QGroupBox):
@@ -182,7 +187,9 @@ class IconValueBox(QGroupBox):
         self.valueLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.valueLabel.setFontScale(0.6)
         self.valueLabel.setFontFamily("Arial")
-        self.valueLabel.setStyleSheet("QLabel { color : " + self.valueColor + "; }")
+        self.valueLabel.setStyleSheet(
+            "QLabel { font-weight: bold; color : " + self.valueColor + "; }"
+        )
 
         # self.layout.addWidget(batteryTitleLabel, 0, 0)
         self.layout.addWidget(self.iconLabel, 0, 0)
@@ -223,7 +230,9 @@ class IconValueBox(QGroupBox):
 
     def updateTime(self):
         dt_now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
-        self.valueLabel.setText(dt_now.strftime("%H:%M"))
+        text = dt_now.strftime("%H:%M")
+        if text != self.valueLabel.text():
+            self.valueLabel.setText(text)
 
 
 class PedalBar(QProgressBar):
@@ -273,7 +282,8 @@ class RpmLightBar(QGroupBox):
     def __init__(self):
         super(RpmLightBar, self).__init__(None)
         self.setFlat(True)
-        self.setStyleSheet("border:0;")
+        self.setObjectName("RpmLightBar")
+        self.setStyleSheet("QGroupBox#RpmLightBar { border: 0; }")
 
         self.layout = QGridLayout()
 
@@ -356,29 +366,36 @@ class RpmLightBar(QGroupBox):
         self.light_12.updateRpmLightColor(rpm)
 
 
-class RpmLight(QGroupBox):
+class RpmLight(QWidget):
     def __init__(self, onRpm, onColor):
-        super(RpmLight, self).__init__(None)
-        self.setFlat(True)
-        self.setStyleSheet("border:0;")
-        # self.setFixedSize(51, 40)
-
-        self.offColor = "#333"  # dark gray
-        # self.shiftRpm = 8500
-        self.shiftRpm = 8700
-        self.shiftColor = "#8FF"  # lightblue
+        super().__init__()
+        self.setAutoFillBackground(True)
 
         self.onRpm = onRpm
-        self.onColor = onColor
+        self.shiftRpm = 8700
+
+        self._offColor = QColor("#333")
+        self._onColor = QColor(onColor)
+        self._shiftColor = QColor("#8FF")
+        self._lastColor: QColor | None = None
+
+        # Set initial off color
+        palette = self.palette()
+        palette.setColor(QPalette.ColorRole.Window, self._offColor)
+        self.setPalette(palette)
 
     def updateRpmLightColor(self, rpm: Rpm):
         if rpm < self.onRpm:
-            color = self.offColor
+            color = self._offColor
         elif rpm < self.shiftRpm:
-            color = self.onColor
+            color = self._onColor
         else:
-            color = self.shiftColor
-        self.setStyleSheet("background-color: " + color + ";")
+            color = self._shiftColor
+        if color != self._lastColor:
+            self._lastColor = color
+            palette = self.palette()
+            palette.setColor(QPalette.ColorRole.Window, color)
+            self.setPalette(palette)
 
 
 class GearLabel(QCustomLabel):
@@ -387,15 +404,25 @@ class GearLabel(QCustomLabel):
         self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setFontFamily("Arial")
         self.setFontScale(2.5)
-        self.setStyleSheet("color : #FFF; background-color: #000")
+        self.setStyleSheet("font-weight: bold; color: #FFF; background-color: #000")
+        self._lastGearType: GearType | None = None
+        self._neutralStyle = "font-weight: bold; color: #FD6; background-color: #000"
+        self._normalStyle = "font-weight: bold; color: #FFF; background-color: #000"
+        self._lastStyle: str | None = None
 
     def updateGearLabel(self, gearType: GearType):
+        if gearType == self._lastGearType:
+            return
+        self._lastGearType = gearType
         if int(gearType) == GearType.NEUTRAL:
             self.setText("N")
-            self.setStyleSheet("font-weight: bold; color : #FD6;")
+            style = self._neutralStyle
         else:
             self.setText(str(int(gearType)))
-            self.setStyleSheet("font-weight: bold; color : #FFF;")
+            style = self._normalStyle
+        if style != self._lastStyle:
+            self._lastStyle = style
+            self.setStyleSheet(style)
 
 
 class RpmLabel(QCustomLabel):

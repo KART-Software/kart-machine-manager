@@ -129,7 +129,7 @@ class MainWindow(QDialog):
         self.bpsRBar.setInvertedAppearance(True)
 
         self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
-        self.timeIconValueBox = IconValueBox("src/gui/icons/Timeicon.png")
+        self.timeIconValueBox = IconValueBox("src/gui/icons/TimeIcon.png")
         self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
         self.messageIconValueBox.valueLabel.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignVCenter
