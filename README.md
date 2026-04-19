@@ -16,15 +16,32 @@ https://docs.astral.sh/uv/
 uv sync
 ```
 
-* 起動（本番）
+* デーモン起動（本番）
 ```
 uv run main.py
 ```
 
-* 起動（デバッグ）
+* デーモン起動（デバッグ）
 ```
 DEBUG=TRUE uv run main.py
 ```
+
+* GUI起動通知（UnixソケットにSTART送信）
+```
+uv run python -m src.ipc.socket_notify START
+```
+
+* デーモン疎通確認
+```
+uv run python -m src.ipc.socket_notify PING
+```
+
+* デーモン停止
+```
+uv run python -m src.ipc.socket_notify STOP
+```
+
+デフォルトのソケットパスは `/run/user/<uid>/kmm.sock` です。ディレクトリに書き込み権限がない場合は `/tmp/kmm.sock` に自動フォールバックします。明示的に指定する場合は `KMM_SOCKET_PATH` 環境変数で上書きできます。
 
 * テスト
 ```
