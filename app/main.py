@@ -10,12 +10,16 @@ from src.util import config
 
 
 def setup_logging() -> None:
-    log_file_path = "log/app_{}.log".format(
-        datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    )
-    file_path = os.path.dirname(log_file_path)
-    if not os.path.exists(file_path):
-        os.makedirs(file_path)
+    log_dir = config.logDir
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+
+    base_name = "app_{}".format(datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+    log_file_path = os.path.join(log_dir, f"{base_name}.log")
+    seq = 1
+    while os.path.exists(log_file_path):
+        log_file_path = os.path.join(log_dir, f"{base_name}_{seq}.log")
+        seq += 1
 
     logging.config.dictConfig(
         {
@@ -27,12 +31,14 @@ def setup_logging() -> None:
             },
             "handlers": {
                 "logFileHandler": {
-                    "class": "logging.FileHandler",
+                    "class": "logging.handlers.RotatingFileHandler",
                     "level": "DEBUG",
                     "formatter": "common",
                     "filename": log_file_path,
                     "mode": "w",
                     "encoding": "utf-8",
+                    "maxBytes": 10_000_000,
+                    "backupCount": 10,
                 },
                 "info": {
                     "class": "logging.StreamHandler",

@@ -12,3 +12,4 @@ cloudLaptimeApiEndpoint = os.environ["CLOUD_LAPTIME_API_ENDPOINT"]
 
 
 debug = os.getenv("DEBUG", "False").lower() == "true"
+logDir = os.getenv("KMM_LOG_DIR", "log/")
