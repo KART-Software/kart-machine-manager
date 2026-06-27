@@ -1,0 +1,25 @@
+[project]
+name = "can-mock-py"
+version = "0.1.0"
+description = "slcan 経由で擬似マシンの CAN フレームを流す can-mock の Python 実装"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "python-can>=4.3.1",
+    "pyserial>=3.5",
+]
+
+[project.scripts]
+can-mock-py = "can_mock_py.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = ["mypy>=1.9.0", "ruff>=0.4.1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/can_mock_py"]
+
+[tool.mypy]
