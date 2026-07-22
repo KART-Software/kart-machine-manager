@@ -22,12 +22,12 @@ class Messenger:
         text: str | None = None
         laptime: float | None = None
         try:
-            res = requests.get(config.cloudMessageApiEndpoint)
+            res = requests.get(config.cloudMessageApiEndpoint, timeout=(3, 5))
             text = str(res.json()["message"]["text"])
         except BaseException:
             logging.warning("Get message failed!")
         try:
-            res = requests.get(config.cloudLaptimeApiEndpoint)
+            res = requests.get(config.cloudLaptimeApiEndpoint, timeout=(3, 5))
             laptime = float(res.json()["laptime"])
         except BaseException:
             logging.warning("Get laptime failed!")
