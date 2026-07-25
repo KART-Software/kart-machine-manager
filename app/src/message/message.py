@@ -2,8 +2,6 @@ import logging
 import threading
 import time
 
-import requests  # type: ignore
-
 from src.models.models import Message
 from src.util import config
 
@@ -19,6 +17,10 @@ class Messenger:
         self._lock = threading.Lock()
 
     def tryGetMessage(self):
+        # Deferred import: requests is heavy (~0.1-0.3s at boot) and only needed
+        # after START; keeping it out of the module top level shortens preload.
+        import requests  # type: ignore
+
         text: str | None = None
         laptime: float | None = None
         try:

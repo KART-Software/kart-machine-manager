@@ -3,10 +3,32 @@ import logging
 import logging.config
 import os
 import signal
+import threading
+from typing import TYPE_CHECKING
 
-from src.application.application import Application
 from src.ipc.socket_trigger_server import DEFAULT_SOCKET_PATH, UnixTriggerServer
 from src.util import config
+
+if TYPE_CHECKING:
+    from src.application.application import Application
+
+# Socket-first startup: open the trigger socket immediately and import the
+# heavy application stack (PyQt6, python-can, ...) in a background thread.
+# START then only waits for whichever finishes later (weston or the preload)
+# instead of serializing them.
+_preload_done = threading.Event()
+_preload_error: BaseException | None = None
+
+
+def _preload_application() -> None:
+    global _preload_error
+    try:
+        import src.application.application  # noqa: F401
+    except BaseException as exc:
+        _preload_error = exc
+        logging.exception("Preload of application modules failed")
+    finally:
+        _preload_done.set()
 
 
 def setup_logging() -> None:
@@ -68,9 +90,11 @@ def run_daemon() -> None:
     socket_path_env = os.getenv("KMM_SOCKET_PATH")
     server = UnixTriggerServer(socket_path)
 
+    threading.Thread(target=_preload_application, daemon=True).start()
+
     should_stop = False
     is_started = False
-    app: Application | None = None
+    app: "Application | None" = None
 
     def handle_signal(signum: int, _frame) -> None:
         nonlocal should_stop
@@ -123,10 +147,20 @@ def run_daemon() -> None:
                     conn.sendall(b"ACK_ALREADY_RUNNING\n")
                     continue
 
+                # Wait for the background preload before ACKing so that
+                # kmm-start completion still means "GUI is imminent" (delayed
+                # timers for resolved/timesyncd key off kmm-start).
+                _preload_done.wait()
+                if _preload_error is not None:
+                    conn.sendall(b"ERR_PRELOAD_FAILED\n")
+                    raise _preload_error
+
                 conn.sendall(b"ACK_STARTED\n")
                 is_started = True
 
             logging.info("START command received. Launching Application.")
+            from src.application.application import Application
+
             app = Application()
             logging.info("Initializing Application...")
             app.initialize()
