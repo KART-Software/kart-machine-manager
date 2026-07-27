@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Add your description here"
 authors = [{ name = "Oryomei", email = "o.ryomei1020@gmail.com" }]
 dependencies = [
-    "python-can>=4.3.1",
     "pyqt6>=6.7",
     "python-dotenv>=1.0.1",
     "requests>=2.31.0",
@@ -16,7 +15,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-dev-dependencies = ["mypy>=1.9.0", "ruff>=0.4.1"]
+dev-dependencies = ["mypy>=1.9.0", "ruff>=0.4.1", "pytest>=8.0.0"]
 
 [tool.hatch.metadata]
 allow-direct-references = true

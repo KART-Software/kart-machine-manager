@@ -2,7 +2,7 @@ import threading
 import time
 from typing import List
 
-import can
+from src import canbus as can
 
 
 class MockMachine:

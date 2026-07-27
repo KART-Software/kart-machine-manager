@@ -4,7 +4,7 @@ import time
 from dataclasses import dataclass
 from typing import List
 
-import can
+from src import canbus as can
 from src.models.models import (
     BatteryVoltage,
     DashMachineInfo,

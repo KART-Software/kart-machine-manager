@@ -1,7 +1,7 @@
 # from socket import *
 import os
 
-import can
+from src import canbus as can
 from src.can.can_listeners import DashInfoListener, UdpPayloadListener
 from src.can.mock_can_sender import MockCanSender
 
