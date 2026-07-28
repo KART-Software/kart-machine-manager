@@ -1,7 +1,6 @@
 import time
 
 import pytest
-
 from src.canbus.bus import VirtualBus, pack_frame, unpack_frame
 from src.canbus.message import Message
 from src.canbus.notifier import Listener, Notifier
