@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="BatteryIcon.png">icons/BatteryIcon.png</file>
+        <file alias="TimeIcon.png">icons/TimeIcon.png</file>
+        <file alias="MeesageIcon.png">icons/MeesageIcon.png</file>
+    </qresource>
+</RCC>
