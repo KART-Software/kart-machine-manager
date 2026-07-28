@@ -3,51 +3,67 @@
 
 ## App
 
-ryeでパッケージ管理をしています
+uvでパッケージ管理をしています
 
 参考\
-https://zenn.dev/3w36zj6/scraps/de5a102362c405
-https://rye-up.com/
+https://docs.astral.sh/uv/
 
 
 以下のコマンドはappディレクトリで行ってください
 
-* rye環境構築
+* 環境構築
 ```
-rye sync
-```
-
-* 起動（本番）
-```
-rye run prod
+uv sync
 ```
 
-* 起動（デバッグ）
+* デーモン起動（本番）
 ```
-rye run debug
+uv run main.py
 ```
+
+* デーモン起動（デバッグ）
+```
+DEBUG=TRUE uv run main.py
+```
+
+* GUI起動通知（UnixソケットにSTART送信）
+```
+uv run python -m src.ipc.socket_notify START
+```
+
+* デーモン疎通確認
+```
+uv run python -m src.ipc.socket_notify PING
+```
+
+* デーモン停止
+```
+uv run python -m src.ipc.socket_notify STOP
+```
+
+デフォルトのソケットパスは `/run/user/<uid>/kmm.sock` です。ディレクトリに書き込み権限がない場合は `/tmp/kmm.sock` に自動フォールバックします。明示的に指定する場合は `KMM_SOCKET_PATH` 環境変数で上書きできます。
 
 * テスト
 ```
-rye test
+uv run pytest
 ```
 
 * 型チェック
 ```
-rye run mypy .
+uv run mypy .
 ```
 
 * フォーマット
 ```
-rye run ruff format
+uv run ruff format
 ```
 
 * 静的解析
 ```
-rye run ruff check
+uv run ruff check
 ```
 ```
-rye run ruff check --fix
+uv run ruff check --fix
 ```
 
 ## CAN Mock

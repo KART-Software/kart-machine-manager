@@ -1,11 +1,15 @@
-import threading
-import time
 from typing import List
 
-from src import canbus as can
+import can
 
 
 class MockMachine:
+    """擬似マシンの状態と、それを CAN フレームへ変換するロジック。
+
+    app/src/can/mock_can_sender.py の MockMachine と同じ仕様。
+    0x5F0〜0x5F4 の 5 フレームを生成する。
+    """
+
     rpm: int
     throttlePosition: float
     engineTemperature: float
@@ -27,7 +31,7 @@ class MockMachine:
     oilTemperature3: float
     coolantTemperature: float
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.rpm = 0
         self.throttlePosition = 0
         self.engineTemperature = 0
@@ -38,6 +42,39 @@ class MockMachine:
         self.lambda_ = 0
         self.manifoldPressure = 0
         self.fuelPressure = 0
+        self.brakePresureFront = 0
+        self.brakePresureRear = 0
+        self.fanEnabled = False
+        self.istUp = False
+        self.istDown = False
+        self.inputRpm = 0
+        self.outputRpm = 0
+        self.oilTemperature2 = 0
+        self.oilTemperature3 = 0
+        self.coolantTemperature = 0
+
+    def update(self, t: int) -> None:
+        """経過ミリ秒 t に応じて各値を更新する。"""
+        self.rpm = t % 10000
+        self.throttlePosition = (t % 1000) / 10.0
+        self.engineTemperature = (t % 1400) / 10.0
+        self.oilTemperature = (t % 1600) / 10.0
+        self.oilPressure = (t % 1200) / 10.0
+        self.gearVoltage = (t % 5000) / 1000.0
+        self.batteryVoltage = (t % 13000) / 1000.0
+        self.lambda_ = 0.7 + (t % 600) / 1000.0
+        self.manifoldPressure = (t % 10000) / 100.0
+        self.fuelPressure = (t % 3000) / 10.0
+        self.brakePresureFront = (t % 6000) / 10.0
+        self.brakePresureRear = 600.0 - (t % 6000) / 10.0
+        self.fanEnabled = bool((t % 10000) // 5000)
+        self.istUp = bool((t % 8000) // 4000)
+        self.istDown = not bool((t % 8000) // 4000)
+        self.inputRpm = t % 5000
+        self.outputRpm = t % 4500
+        self.oilTemperature2 = (t % 1200) / 10.0
+        self.oilTemperature3 = (t % 1200) / 10.0
+        self.coolantTemperature = (t % 1200) / 10.0
 
     def toMessages(self) -> List[can.Message]:
         msgs = []
@@ -84,49 +121,3 @@ class MockMachine:
         msgs.append(can.Message(arbitration_id=0x5F4, is_extended_id=False, data=bs))
 
         return msgs
-
-
-class MockCanSender:
-    machine: MockMachine
-
-    def __init__(self) -> None:
-        self.bus = can.Bus(channel="debug", interface="virtual")
-        self.machine = MockMachine()
-
-    def __del__(self) -> None:
-        self.bus.shutdown()
-
-    def updateMachine(self):
-        t = int(time.time() * 1000)
-        self.machine.rpm = t % 10000
-        self.machine.throttlePosition = (t % 1000) / 10.0
-        self.machine.engineTemperature = (t % 1400) / 10.0
-        self.machine.oilTemperature = (t % 1600) / 10.0
-        self.machine.oilPressure = (t % 1200) / 10.0
-        self.machine.gearVoltage = (t % 5000) / 1000.0
-        self.machine.batteryVoltage = (t % 13000) / 1000.0
-        self.machine.lambda_ = 0.7 + (t % 600) / 1000.0
-        self.machine.manifoldPressure = (t % 10000) / 100.0
-        self.machine.fuelPressure = (t % 3000) / 10.0
-        self.machine.brakePresureFront = (t % 6000) / 10.0
-        self.machine.brakePresureRear = 600.0 - (t % 6000) / 10.0
-        self.machine.fanEnabled = bool((t % 10000) // 5000)
-        self.machine.istUp = bool((t % 8000) // 4000)
-        self.machine.istDown = not bool((t % 8000) // 4000)
-        self.machine.inputRpm = t % 5000
-        self.machine.outputRpm = t % 4500
-        self.machine.oilTemperature2 = (t % 1200) / 10.0
-        self.machine.oilTemperature3 = (t % 1200) / 10.0
-        self.machine.coolantTemperature = (t % 1200) / 10.0
-
-    def sendEvery(self):
-        while True:
-            self.updateMachine()
-            for msg in self.machine.toMessages():
-                self.bus.send(msg)
-            time.sleep(0.033)
-
-    def start(self):
-        t = threading.Thread(target=self.sendEvery)
-        t.setDaemon(True)
-        t.start()

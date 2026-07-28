@@ -130,3 +130,5 @@ dmypy.json
 
 log/
 .DS_Store
+# app-cpp out-of-source build dirs
+app-cpp/build*/

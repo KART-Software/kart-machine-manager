@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import QTimer
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import (
+from PyQt6 import QtCore
+from PyQt6.QtCore import QTimer
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (
     QApplication,
     QDialog,
     QGridLayout,
@@ -112,7 +112,9 @@ class MainWindow(QDialog):
         self.switchStateRemiderLabel = TitleValueBox(
             "SWITCH CHECK! \n1. Fan \n2. TPS MAX"
         )
-        self.switchStateRemiderLabel.titleLabel.setAlignment(QtCore.Qt.AlignVCenter)
+        self.switchStateRemiderLabel.titleLabel.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignVCenter
+        )
         self.switchStateRemiderLabel.titleLabel.setFontScale(0.25)
         self.switchStateRemiderLabel.layout.setRowStretch(0, 1)
         self.switchStateRemiderLabel.layout.setRowStretch(1, 0)
@@ -127,9 +129,11 @@ class MainWindow(QDialog):
         self.bpsRBar.setInvertedAppearance(True)
 
         self.batteryIconValueBox = IconValueBox("src/gui/icons/BatteryIcon.png")
-        self.timeIconValueBox = IconValueBox("src/gui/icons/Timeicon.png")
+        self.timeIconValueBox = IconValueBox("src/gui/icons/TimeIcon.png")
         self.messageIconValueBox = IconValueBox("src/gui/icons/MeesageIcon.png")
-        self.messageIconValueBox.valueLabel.setAlignment(QtCore.Qt.AlignVCenter)
+        self.messageIconValueBox.valueLabel.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignVCenter
+        )
         self.messageIconValueBox.layout.setColumnStretch(0, 1)
         self.messageIconValueBox.layout.setColumnStretch(1, 6)
 

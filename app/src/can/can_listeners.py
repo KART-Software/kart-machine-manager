@@ -1,9 +1,10 @@
+import copy
+import threading
 import time
 from dataclasses import dataclass
 from typing import List
 
-import can
-
+from src import canbus as can
 from src.models.models import (
     BatteryVoltage,
     DashMachineInfo,
@@ -26,41 +27,47 @@ class DashInfoListener(can.Listener):
     def __init__(self) -> None:
         super().__init__()
         self.dashMachineInfo = DashMachineInfo()
+        self._lock = threading.Lock()
 
     def on_message_received(self, msg: can.Message) -> None:
-        if msg.arbitration_id == 0x5F0:
-            self.dashMachineInfo.setRpm(int.from_bytes(msg.data[0:2], "big"))
-            self.dashMachineInfo.throttlePosition = int.from_bytes(msg.data[2:4]) / 10
-            self.dashMachineInfo.waterTemp = WaterTemp(
-                int.from_bytes(msg.data[4:6], "big") // 10
-            )
-            self.dashMachineInfo.oilTemp = OilTemp(
-                int.from_bytes(msg.data[6:8], "big") // 10
-            )
-        elif msg.arbitration_id == 0x5F1:
-            self.dashMachineInfo.oilPress.oilPress = (
-                int.from_bytes(msg.data[0:2], "big") / 10
-            )
-            self.dashMachineInfo.gearVoltage = GearVoltage(
-                int.from_bytes(msg.data[2:4], "big") / 1000
-            )
-            self.dashMachineInfo.batteryVoltage = BatteryVoltage(
-                int.from_bytes(msg.data[4:6], "big") / 100
-            )
-        elif msg.arbitration_id == 0x5F2:
-            self.dashMachineInfo.fuelPress = FuelPress(
-                int.from_bytes(msg.data[2:4]) / 10
-            )
-            self.dashMachineInfo.brakePress.front = (
-                int.from_bytes(msg.data[4:6], "big") / 10
-            )
-            self.dashMachineInfo.brakePress.rear = (
-                int.from_bytes(msg.data[6:8], "big") / 10
-            )
-        elif msg.arbitration_id == 0x5F3:
-            self.dashMachineInfo.fanEnabled = bool(msg.data[1])
+        with self._lock:
+            if msg.arbitration_id == 0x5F0:
+                self.dashMachineInfo.setRpm(int.from_bytes(msg.data[0:2], "big"))
+                self.dashMachineInfo.throttlePosition = (
+                    int.from_bytes(msg.data[2:4]) / 10
+                )
+                self.dashMachineInfo.waterTemp = WaterTemp(
+                    int.from_bytes(msg.data[4:6], "big") // 10
+                )
+                self.dashMachineInfo.oilTemp = OilTemp(
+                    int.from_bytes(msg.data[6:8], "big") // 10
+                )
+            elif msg.arbitration_id == 0x5F1:
+                self.dashMachineInfo.oilPress.oilPress = (
+                    int.from_bytes(msg.data[0:2], "big") / 10
+                )
+                self.dashMachineInfo.gearVoltage = GearVoltage(
+                    int.from_bytes(msg.data[2:4], "big") / 1000
+                )
+                self.dashMachineInfo.batteryVoltage = BatteryVoltage(
+                    int.from_bytes(msg.data[4:6], "big") / 100
+                )
+            elif msg.arbitration_id == 0x5F2:
+                self.dashMachineInfo.fuelPress = FuelPress(
+                    int.from_bytes(msg.data[2:4]) / 10
+                )
+                self.dashMachineInfo.brakePress.front = (
+                    int.from_bytes(msg.data[4:6], "big") / 10
+                )
+                self.dashMachineInfo.brakePress.rear = (
+                    int.from_bytes(msg.data[6:8], "big") / 10
+                )
+            elif msg.arbitration_id == 0x5F3:
+                self.dashMachineInfo.fanEnabled = bool(msg.data[1])
 
-        # ここの数字は後で変更
+    def snapshot(self) -> DashMachineInfo:
+        with self._lock:
+            return copy.deepcopy(self.dashMachineInfo)
 
 
 class UdpPayloadListener(can.Listener):
@@ -104,13 +111,17 @@ class UdpPayloadListener(can.Listener):
 
         # 最初は何も入っていない
         self.receivedMessages = {}
+        self._lock = threading.Lock()
 
         super().__init__()
 
     def on_message_received(self, msg: can.Message) -> None:
-        self.receivedMessages[msg.arbitration_id] = msg
+        with self._lock:
+            self.receivedMessages[msg.arbitration_id] = msg
 
     def getUdpPayload(self, machineId: int, runId: int, errorCode: int) -> bytes:
+        with self._lock:
+            messages = dict(self.receivedMessages)
         bs = bytearray()
         bs += (machineId & 0xFFFFFFFF).to_bytes(4, "little")
         bs += (runId & 0xFFFFFFFF).to_bytes(4, "little")
@@ -119,7 +130,7 @@ class UdpPayloadListener(can.Listener):
         for il in self.canIdLength:
             startIndex = len(bs)
             bs += bytes(il.length)
-            if il.id in self.receivedMessages:
-                for i in range(min(il.length, self.receivedMessages[il.id].dlc)):
-                    bs[startIndex + i] = self.receivedMessages[il.id].data[i]
+            if il.id in messages:
+                for i in range(min(il.length, messages[il.id].dlc)):
+                    bs[startIndex + i] = messages[il.id].data[i]
         return bytes(bs)
