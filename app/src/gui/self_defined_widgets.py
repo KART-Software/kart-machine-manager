@@ -405,7 +405,7 @@ class RpmLabel(QCustomLabel):
         self.setStyleSheet("font-weight: bold; color : #FFF; background-color: #000")
 
     def updateRpmLabel(self, rpm: Rpm):
-        self.setText(str(int(rpm) + 300))
+        self.setText(str(int(rpm) * 1.05))
 
 
 class LapTimeLabel(QCustomLabel):
