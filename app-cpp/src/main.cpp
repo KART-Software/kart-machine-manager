@@ -90,6 +90,30 @@ private:
     bool logged_ = false;
 };
 
+// weston と並行起動するための wayland ソケット待ち。
+// unit の After=weston を外して両者を同時に fork し、Qt ライブラリの
+// ロード/リンク (~0.4s) を weston の初期化と重ねる。QApplication は
+// ソケットが無いと即死するので、生成直前にここで待つ (kart-splash-wl と
+// 同じ 10ms ポーリング。weston 稼働済みなら一巡もせず抜ける)。
+void waitForWaylandSocket()
+{
+    const char* runtimeDir = std::getenv("XDG_RUNTIME_DIR");
+    const char* display = std::getenv("WAYLAND_DISPLAY");
+    if (runtimeDir == nullptr || display == nullptr) return;
+
+    std::string path = std::string(runtimeDir) + "/" + display;
+    for (int i = 0; i < 1000; ++i) {  // 最大 10s
+        if (::access(path.c_str(), F_OK) == 0) {
+            if (i > 0)
+                std::fprintf(stderr, "Wayland socket appeared after ~%d ms\n",
+                             i * 10);
+            return;
+        }
+        ::usleep(10 * 1000);
+    }
+    std::fprintf(stderr, "Wayland socket did not appear; proceeding\n");
+}
+
 }  // namespace
 
 int main(int argc, char** argv)
@@ -110,6 +134,7 @@ int main(int argc, char** argv)
     std::signal(SIGTERM, handleSignal);
     std::signal(SIGPIPE, SIG_IGN);
 
+    waitForWaylandSocket();
     QApplication app(argc, argv);
 
     // SIGINT/SIGTERM quit the event loop cleanly (self-pipe pattern).
