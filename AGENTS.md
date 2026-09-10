@@ -79,7 +79,7 @@ main.py (daemon)
 | `DEBUG` | `TRUE` で仮想 CAN + モック使用 | 未設定 (本番モード) |
 | `KMM_SOCKET_PATH` | Unix ソケットパスの上書き | `/run/user/<uid>/kmm.sock` |
 
-`.env` ファイルの設定値: `MACHINE_ID`, `UDP_ADDRESS`, `UDP_PORT`, `CLOUD_RUN_API_ENDPOINT`, `CLOUD_MESSAGE_API_ENDPOINT`, `CLOUD_LAPTIME_API_ENDPOINT`
+`.env` ファイルの設定値: `MACHINE_ID`, `UDP_ADDRESS`, `UDP_PORT`, `CLOUD_RUN_API_ENDPOINT`, `CLOUD_MESSAGE_API_ENDPOINT`, `CLOUD_LAPTIME_API_ENDPOINT`, `CAN_INTERFACE`(省略時 can0)
 
 ## CAN ID Map
 

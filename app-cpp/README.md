@@ -28,7 +28,8 @@ ExecStart=/usr/bin/kmm
 
 - **環境変数は Python 版と同一**: `MACHINE_ID`, `UDP_ADDRESS`, `UDP_PORT`,
   `CLOUD_RUN_API_ENDPOINT`, `CLOUD_MESSAGE_API_ENDPOINT`,
-  `CLOUD_LAPTIME_API_ENDPOINT`, `DEBUG`（`KMM_SOCKET_PATH` は廃止）。
+  `CLOUD_LAPTIME_API_ENDPOINT`, `DEBUG`, `CAN_INTERFACE`（読む SocketCAN IF、省略時 `can0`。
+  Cortex-M の CAN ゲートウェイ経由の板は `rpmsgcan0`）（`KMM_SOCKET_PATH` は廃止）。
   カレントディレクトリの `.env` も dotenv 同様に読む（既存環境変数は上書きしない）。
 - **UDP ペイロード形式同一**: machineId u32le + runId u32le + errorCode u8 +
   epoch-ms u64le + 固定スロット (0x5F0–0x5F4 = 8,8,8,8,6 / 0x700–0x70E = 8) = 175 bytes。

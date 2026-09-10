@@ -15,6 +15,9 @@ struct Config {
     QString cloudMessageApiEndpoint;
     QString cloudLaptimeApiEndpoint;
     bool debug = false;
+    // SocketCAN interface kmm reads (CAN_INTERFACE, default "can0"). Boards
+    // whose CAN comes through the Cortex-M gateway set rpmsgcan0.
+    QString canInterface;
 
     // Exits the process with a clear message when required keys are missing.
     static Config load();

@@ -57,6 +57,10 @@ Config Config::load()
     cfg.cloudMessageApiEndpoint = requireEnv("CLOUD_MESSAGE_API_ENDPOINT", missing);
     cfg.cloudLaptimeApiEndpoint = requireEnv("CLOUD_LAPTIME_API_ENDPOINT", missing);
 
+    const char* canIf = std::getenv("CAN_INTERFACE");
+    cfg.canInterface = (canIf != nullptr && *canIf != '\0') ? QString::fromUtf8(canIf)
+                                                             : QStringLiteral("can0");
+
     const char* debugEnv = std::getenv("DEBUG");
     cfg.debug = debugEnv != nullptr &&
                 QString::fromUtf8(debugEnv).toLower() == QStringLiteral("true");

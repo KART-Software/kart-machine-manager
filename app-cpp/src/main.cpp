@@ -146,12 +146,14 @@ int main(int argc, char** argv)
         app.quit();
     });
 
-    // CAN source: real can0 or the built-in mock generator (DEBUG=TRUE).
+    // CAN source: real SocketCAN (CAN_INTERFACE, default can0) or the built-in
+    // mock generator (DEBUG=TRUE).
     std::unique_ptr<CanSource> canSource;
     if (config.debug) {
         canSource = std::make_unique<MockCanSource>();
     } else {
-        canSource = std::make_unique<SocketCanSource>("can0");
+        std::fprintf(stderr, "CAN interface: %s\n", config.canInterface.toUtf8().constData());
+        canSource = std::make_unique<SocketCanSource>(config.canInterface.toStdString());
     }
 
     DashInfoStore dashInfoStore;
