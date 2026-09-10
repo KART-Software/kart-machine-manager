@@ -1,8 +1,11 @@
 #include "canbus.hpp"
 
+#include <cerrno>
+#include <chrono>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
+#include <thread>
 
 #include <linux/can.h>
 #include <linux/can/raw.h>
@@ -17,37 +20,69 @@ namespace kmm {
 // ---- SocketCanSource ----
 
 SocketCanSource::SocketCanSource(const std::string& interface)
+    : interface_(interface), created_(std::chrono::steady_clock::now())
 {
-    fd_ = ::socket(PF_CAN, SOCK_RAW, CAN_RAW);
-    if (fd_ < 0) {
+    open();  // binds immediately when the interface already exists
+}
+
+SocketCanSource::~SocketCanSource()
+{
+    close();
+}
+
+bool SocketCanSource::open()
+{
+    const int fd = ::socket(PF_CAN, SOCK_RAW, CAN_RAW);
+    if (fd < 0) {
         throw std::runtime_error("socket(PF_CAN) failed: " +
                                  std::string(std::strerror(errno)));
     }
 
     struct ifreq ifr {};
-    std::snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", interface.c_str());
-    if (::ioctl(fd_, SIOCGIFINDEX, &ifr) < 0) {
-        ::close(fd_);
-        throw std::runtime_error("CAN interface not found: " + interface);
+    std::snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", interface_.c_str());
+    if (::ioctl(fd, SIOCGIFINDEX, &ifr) < 0) {
+        ::close(fd);
+        if (!loggedWaiting_) {
+            std::fprintf(stderr, "CAN interface %s not present yet; waiting\n",
+                         interface_.c_str());
+            loggedWaiting_ = true;
+        }
+        return false;
     }
 
     struct sockaddr_can addr {};
     addr.can_family = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
-    if (::bind(fd_, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0) {
-        ::close(fd_);
-        throw std::runtime_error("bind(" + interface + ") failed: " +
+    if (::bind(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0) {
+        ::close(fd);
+        throw std::runtime_error("bind(" + interface_ + ") failed: " +
                                  std::string(std::strerror(errno)));
     }
+    fd_ = fd;
+    if (loggedWaiting_) {
+        const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                            std::chrono::steady_clock::now() - created_)
+                            .count();
+        std::fprintf(stderr, "CAN interface %s bound after ~%lld ms\n",
+                     interface_.c_str(), static_cast<long long>(ms));
+    }
+    return true;
 }
 
-SocketCanSource::~SocketCanSource()
+void SocketCanSource::close()
 {
     if (fd_ >= 0) ::close(fd_);
+    fd_ = -1;
 }
 
 std::optional<CanFrame> SocketCanSource::recv(int timeoutMs)
 {
+    if (fd_ < 0 && !open()) {
+        // Interface still missing: pace the retry with the caller's timeout.
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeoutMs));
+        return std::nullopt;
+    }
+
     struct pollfd pfd {};
     pfd.fd = fd_;
     pfd.events = POLLIN;
@@ -56,6 +91,13 @@ std::optional<CanFrame> SocketCanSource::recv(int timeoutMs)
 
     struct can_frame frame {};
     const ssize_t n = ::read(fd_, &frame, sizeof(frame));
+    if (n < 0 && (errno == ENODEV || errno == ENXIO || errno == ENETDOWN)) {
+        // Interface went away (e.g. gateway restarted): re-bind on next call.
+        std::fprintf(stderr, "CAN interface %s gone (%s); re-binding\n",
+                     interface_.c_str(), std::strerror(errno));
+        close();
+        return std::nullopt;
+    }
     if (n != static_cast<ssize_t>(sizeof(frame))) return std::nullopt;
 
     // Error frames are not data (mirror of bus.py filtering CAN_ERR_FLAG).
