@@ -91,11 +91,19 @@ std::optional<CanFrame> SocketCanSource::recv(int timeoutMs)
 
     struct can_frame frame {};
     const ssize_t n = ::read(fd_, &frame, sizeof(frame));
-    if (n < 0 && (errno == ENODEV || errno == ENXIO || errno == ENETDOWN)) {
-        // Interface went away (e.g. gateway restarted): re-bind on next call.
-        std::fprintf(stderr, "CAN interface %s gone (%s); re-binding\n",
-                     interface_.c_str(), std::strerror(errno));
-        close();
+    if (n < 0) {
+        if (errno == ENODEV || errno == ENXIO) {
+            // Interface went away (e.g. gateway restarted): re-bind on next call.
+            std::fprintf(stderr, "CAN interface %s gone (%s); re-binding\n",
+                         interface_.c_str(), std::strerror(errno));
+            close();
+        } else if (errno == ENETDOWN) {
+            // Interface exists but is still down (can0-up has not run yet):
+            // the socket stays bound and frames flow once it comes up. poll()
+            // reports the pending error immediately, so back off explicitly
+            // instead of spinning on it.
+            std::this_thread::sleep_for(std::chrono::milliseconds(timeoutMs));
+        }
         return std::nullopt;
     }
     if (n != static_cast<ssize_t>(sizeof(frame))) return std::nullopt;
