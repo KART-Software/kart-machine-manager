@@ -32,6 +32,18 @@ uv run can-mock-py --channel /dev/ttyUSB0 --bitrate 1000000 --interval 0.033
 | `-c`, `--channel` | `/dev/ttyACM0` | slcan アダプタのシリアルポート |
 | `-b`, `--bitrate` | `1000000` | CAN ビットレート [bps] |
 | `-i`, `--interval` | `0.033` | 送信間隔 [s] |
+| `--reinit-interval` | `1.0` | slcan チャネルを C/O 再初期化して bus-off 自動復帰する間隔 [s] (`<=0` で無効) |
+
+## bus-off 自動復帰
+
+ベンチはノードが CANable とボードの 2 つだけなので、ボードが落ちる (電源断 /
+M7 リセット / OTA) と ACK 相手が消え、CANable は数十 ms で **bus-off** に入り沈黙する。
+slcan の CANable2 は bus-off を報告しない (F/V 無応答) ため検知できないが、slcan の
+`C`→`O`(CAN チャネルだけ再初期化)を撃つと ~10ms で bus-off が晴れる (serial は
+閉じないので CDC-ACM リセット ~2s は起きない)。そこで **`--reinit-interval` 間隔で
+無条件に C/O 再初期化**する:健全時は 1 フレーム落ちる程度で無害、bus-off 時は次の
+周期で自動復帰。ボードとの IP 到達性に依存せず CANable 単体で動く。実機で電源
+サイクル→無操作で送信再開を確認 (2026-09-14)。
 
 ## 動作確認 (実機なし)
 

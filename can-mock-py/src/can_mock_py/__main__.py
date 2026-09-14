@@ -4,6 +4,7 @@ from can_mock_py.sender import (
     DEFAULT_BITRATE,
     DEFAULT_CHANNEL,
     DEFAULT_INTERVAL,
+    DEFAULT_REINIT_INTERVAL,
     MockCanSender,
 )
 
@@ -32,12 +33,21 @@ def main() -> None:
         default=DEFAULT_INTERVAL,
         help=f"送信間隔 [s] (default: {DEFAULT_INTERVAL})",
     )
+    parser.add_argument(
+        "--reinit-interval",
+        type=float,
+        default=DEFAULT_REINIT_INTERVAL,
+        help="この秒間隔で slcan チャネルを C/O 再初期化し bus-off から自動復帰する "
+        f"(default: {DEFAULT_REINIT_INTERVAL}s、<=0 で無効)。ボードとの IP 到達性に依存せず "
+        "CANable 単体で動く",
+    )
     args = parser.parse_args()
 
     sender = MockCanSender(
         channel=args.channel,
         bitrate=args.bitrate,
         interval=args.interval,
+        reinit_interval=args.reinit_interval,
     )
     print(
         f"slcan {args.channel} @ {args.bitrate}bps で送信開始 "
