@@ -86,10 +86,6 @@ class MainWindow(QDialog):
         self.lapTimeLabel.updateLapTimeLabel(message)
         self.timeIconValueBox.updateTime()
         self.fuelPressTitleValueBox.updateValueLabel(dashMachineInfo.fuelPress)
-        self.fanSwitchStateTitleValueBox.updateBoolValueLabel(
-            dashMachineInfo.fanEnabled
-        )
-        self.fanSwitchStateTitleValueBox.updateFanWarning(dashMachineInfo.fanEnabled)
         self.brakeBiasTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.bias)
         self.tpsTitleValueBox.updateValueLabel(dashMachineInfo.throttlePosition)
         self.bpsFTitleValueBox.updateValueLabel(dashMachineInfo.brakePress.front)
@@ -108,9 +104,8 @@ class MainWindow(QDialog):
         self.oilTempTitleValueBox = TitleValueBox("Oil Temp")
         self.oilPressTitleValueBox = TitleValueBox("Oil Press")
         self.fuelPressTitleValueBox = TitleValueBox("Fuel Press")
-        self.fanSwitchStateTitleValueBox = TitleValueBox("Fan Switch")
         self.switchStateRemiderLabel = TitleValueBox(
-            "SWITCH CHECK! \n1. Fan \n2. TPS MAX"
+            "SWITCH CHECK! \nTPS MAX"
         )
         self.switchStateRemiderLabel.titleLabel.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignVCenter
@@ -163,9 +158,8 @@ class MainWindow(QDialog):
         layout.addWidget(self.oilTempTitleValueBox, 1, 0)
         layout.addWidget(self.oilPressTitleValueBox, 1, 1)
         layout.addWidget(self.fuelPressTitleValueBox, 0, 1)
-        layout.addWidget(self.fanSwitchStateTitleValueBox, 2, 0)
         # layout.addWidget(self.brakeBiasTitleValueBox, 2, 1)
-        layout.addWidget(self.switchStateRemiderLabel, 2, 1)
+        layout.addWidget(self.switchStateRemiderLabel, 2, 0, 1, 2)
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 1)
         layout.setRowStretch(2, 1)
